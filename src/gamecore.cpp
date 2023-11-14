@@ -17,6 +17,7 @@
 #include "utilities.h"
 
 #include "player.h"
+#include "platform.h"
 
 const int SCENE_WIDTH = 1280;
 
@@ -37,6 +38,7 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
     
     // Instancier et initialiser les sprite ici :
     setupPlayer();
+    setupPlatforms();
 
     // Démarre le tick pour que les animations qui en dépendent fonctionnent correctement.
     // Attention : il est important que l'enclenchement du tick soit fait vers la fin de cette fonction,
@@ -50,8 +52,15 @@ void GameCore::setupPlayer()
 {
     m_pPlayer = new Player();
     m_pScene->addSpriteToScene(m_pPlayer);
-
     m_pPlayer->setScale(40.0 / m_pPlayer->width());
+}
+
+void GameCore::setupPlatforms()
+{
+    auto newPlatform = new Platform(QRect(0, 0, 200, 20));
+    m_pPlatforms.append(newPlatform);
+    m_pScene->addSpriteToScene(newPlatform);
+    newPlatform->setPos(0, 200);
 }
 
 //! Destructeur de GameCore : efface les scènes
@@ -78,6 +87,7 @@ void GameCore::keyReleased(int key) {
 //! Cadence.
 //! \param elapsedTimeInMilliseconds  Temps écoulé depuis le dernier appel.
 void GameCore::tick(long long elapsedTimeInMilliseconds) {
+    m_pPlayer->tick(static_cast<qreal>(elapsedTimeInMilliseconds));
 }
 
 //! La souris a été déplacée.

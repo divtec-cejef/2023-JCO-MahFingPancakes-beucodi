@@ -8,8 +8,16 @@
 #include "sprite.h"
 
 class Player: public Sprite {
-    public:
+public:
     Player();
+    void moveLeft(qreal deltaMs);
+    void moveRight(qreal deltaMs);
+    void jump();
+    void tick(qreal deltaMs);
+    bool isAirborne() const;
+
+private:
+    QPointF m_velocity = QPointF(0, 0);
 };
 
 

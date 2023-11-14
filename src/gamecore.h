@@ -14,6 +14,7 @@
 class GameCanvas;
 class GameScene;
 class Player;
+class Platform;
 
 //! \brief Classe qui gère la logique du jeu.
 //!
@@ -47,8 +48,10 @@ private:
     GameCanvas* m_pGameCanvas = nullptr;
     GameScene* m_pScene = nullptr;
     Player* m_pPlayer = nullptr;
+    QList<Platform*> m_pPlatforms = {};
 
     void setupPlayer();
+    void setupPlatforms();
 
 private slots:
 
