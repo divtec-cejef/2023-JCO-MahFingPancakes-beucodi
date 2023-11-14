@@ -16,6 +16,8 @@
 #include "resources.h"
 #include "utilities.h"
 
+#include "player.h"
+
 const int SCENE_WIDTH = 1280;
 
 //! Initialise le contrôleur de jeu.
@@ -34,14 +36,22 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
     m_pScene->addRect(m_pScene->sceneRect(), QPen(Qt::white));
     
     // Instancier et initialiser les sprite ici :
-    // ...
-
+    setupPlayer();
 
     // Démarre le tick pour que les animations qui en dépendent fonctionnent correctement.
     // Attention : il est important que l'enclenchement du tick soit fait vers la fin de cette fonction,
     // sinon le temps passé jusqu'au premier tick (ElapsedTime) peut être élevé et provoquer de gros
     // déplacements, surtout si le déboggueur est démarré.
     m_pGameCanvas->startTick();
+}
+
+//! Instancie et initialise le joueur.
+void GameCore::setupPlayer()
+{
+    m_pPlayer = new Player();
+    m_pScene->addSpriteToScene(m_pPlayer);
+
+    m_pPlayer->setScale(40.0 / m_pPlayer->width());
 }
 
 //! Destructeur de GameCore : efface les scènes
@@ -86,4 +96,3 @@ void GameCore::mouseButtonPressed(QPointF mousePosition, Qt::MouseButtons button
 void GameCore::mouseButtonReleased(QPointF mousePosition, Qt::MouseButtons buttons) {
     emit notifyMouseButtonReleased(mousePosition, buttons);
 }
-

@@ -13,6 +13,7 @@
 
 class GameCanvas;
 class GameScene;
+class Player;
 
 //! \brief Classe qui gère la logique du jeu.
 //!
@@ -45,6 +46,9 @@ private:
 
     GameCanvas* m_pGameCanvas = nullptr;
     GameScene* m_pScene = nullptr;
+    Player* m_pPlayer = nullptr;
+
+    void setupPlayer();
 
 private slots:
 
