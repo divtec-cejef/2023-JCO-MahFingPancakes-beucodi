@@ -30,5 +30,17 @@ namespace GameFramework {
         qApp->restoreOverrideCursor();
     }
 
+    //! Convertit une distance en mètres en une distance en pixels.
+    //! \param meter Distance en mètres.
+    qreal meterToPx(qreal meter)
+    {
+        return meter * METER_PX_RATIO;
+    }
 
+    //! Convertit une distance en pixels en une distance en mètres.
+    //! \param px Distance en pixels.
+    qreal pxToMeter(qreal px)
+    {
+        return px / METER_PX_RATIO;
+    }
 }

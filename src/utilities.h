@@ -20,5 +20,14 @@ namespace GameFramework {
     void hideMouseCursor();
     void showMouseCursor();
 
+    //! Rapport entre un mètre et un pixel.
+    constexpr qreal METER_PX_RATIO = 40;
+
+    //! Constante de gravité, en mètre par seconde au carré.
+    constexpr qreal GRAVITY = 9.81;
+
+    qreal meterToPx(qreal meter);
+    qreal pxToMeter(qreal px);
+
 }
 #endif // UTILITIES_H

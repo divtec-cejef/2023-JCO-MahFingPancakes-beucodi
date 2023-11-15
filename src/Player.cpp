@@ -4,7 +4,6 @@
 
 #include "player.h"
 
-#include "globals.h"
 
 #include "resources.h"
 #include "utilities.h"
@@ -20,13 +19,16 @@ Player::Player(): Sprite(GameFramework::imagesPath() + "/player.png")
 //! \returns true si l'ennemi est en l'air, false sinon
 bool Player::isAirborne() const
 {
-    auto colliding = collidingSprites();
+    auto colliding = collidingSprites(sceneBoundingRect());
 
-    for (auto sprite : colliding)
+    for (const auto sprite : colliding)
     {
-        if(auto platform = dynamic_cast<Platform*>(sprite))
+        if(const auto platform = dynamic_cast<Platform*>(sprite))
         {
-            return false;
+            if(platform->top() < bottom() - 3 &&
+            platform->left() < right() + 3 &&
+            platform->right() > left() - 3)
+                return false;
         }
     }
     return true;
@@ -34,13 +36,13 @@ bool Player::isAirborne() const
 
 //! Permet de mettre a jour le joueur et d'appliquer ses physiques
 //! \param deltaMs temps écoulé depuis le dernier appel de cette fonction
-void Player::tick(qreal deltaMs)
+void Player::tick(const qreal deltaMs)
 {
     setPos(pos() + m_velocity * deltaMs / 1000);
 
     if(isAirborne())
     {
-        m_velocity.setY(m_velocity.y() + Globals::GRAVITY * Globals::METER_PX_RATIO * deltaMs / 1000);
+        m_velocity.setY(m_velocity.y() + GameFramework::GRAVITY * GameFramework::METER_PX_RATIO * deltaMs / 1000);
         if(0 < m_longJumpCooldown)
         {
             if(m_longJumpCooldown <= 1 && m_keysPressed.contains(Qt::Key_Space))
@@ -54,38 +56,66 @@ void Player::tick(qreal deltaMs)
     } else
     {
         m_velocity.setY(0);
-        auto colliding = collidingSprites();
-        for (auto sprite : colliding)
+        auto colliding = collidingSprites(sceneBoundingRect());
+        for (const auto sprite : colliding)
         {
-            if(auto platform = dynamic_cast<Platform*>(sprite))
+            if(const auto platform = dynamic_cast<Platform*>(sprite))
             {
-                setY(platform->top() - height() + 3);
+                setY(platform->top() - height() + 4);
                 break;
             }
         }
 
-        if(m_keysPressed.contains(Qt::Key_Space))
+        for(const auto key: m_keysPressed)
         {
-            jump();
-            m_longJumpCooldown = 4;
+            if(key == Qt::Key_Space)
+            {
+                m_longJumpCooldown = 10;
+                jump();
+                break;
+            }
         }
     }
 }
 
 //! Permet de faire sauter le joueur
-void Player::jump(bool longJump)
+void Player::jump(const bool longJump)
 {
-    m_velocity.setY(Globals::METER_PX_RATIO * (longJump ? -6 : -4));
+    m_velocity.setY(GameFramework::METER_PX_RATIO * (longJump ? -6 : -4));
 }
 
 //! Permet de s'occuper des touches pressées
-void Player::keyPressed(int key)
+void Player::keyPressed(const int key)
 {
-m_keysPressed.append(key);
+    m_keysPressed.append(key);
+    switch (key)
+    {
+    case Qt::Key_A:
+        m_velocity.setX(m_velocity.x() - GameFramework::meterToPx(PLAYER_SPEED));
+        break;
+
+    case Qt::Key_D:
+        m_velocity.setX(m_velocity.x() + GameFramework::meterToPx(PLAYER_SPEED));
+        break;
+
+    default: break;
+    }
 }
 
 //! Permet de s'occuper des touches relachées
-void Player::keyReleased(int key)
+void Player::keyReleased(const int key)
 {
     m_keysPressed.removeAll(key);
+    switch (key)
+    {
+    case Qt::Key_A:
+        m_velocity.setX(m_velocity.x() + GameFramework::meterToPx(PLAYER_SPEED));
+        break;
+
+    case Qt::Key_D:
+        m_velocity.setX(m_velocity.x() - GameFramework::meterToPx(PLAYER_SPEED));
+        break;
+
+    default: break;
+    }
 }

@@ -21,6 +21,9 @@ private:
     QList<int> m_keysPressed = {};
     int m_longJumpCooldown = 0;
 
+    //! Vitesse du joueur, en mètre par seconde.
+    const qreal PLAYER_SPEED = 5;
+
 public slots:
     void keyPressed(int key);
     void keyReleased(int key);

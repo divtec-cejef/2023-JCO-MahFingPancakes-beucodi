@@ -28,7 +28,6 @@ qt_add_executable(MahFingPancakes main.cpp
         spritetickhandler.cpp
         utilities.cpp
         player.cpp
-        globals.cpp
         platform.cpp)
 
 target_link_libraries(MahFingPancakes PRIVATE
