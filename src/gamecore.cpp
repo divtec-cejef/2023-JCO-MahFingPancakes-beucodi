@@ -53,6 +53,9 @@ void GameCore::setupPlayer()
     m_pPlayer = new Player();
     m_pScene->addSpriteToScene(m_pPlayer);
     m_pPlayer->setScale(40.0 / m_pPlayer->width());
+
+    connect(this, &GameCore::notifyKeyPressed, m_pPlayer, &Player::keyPressed);
+    connect(this, &GameCore::notifyKeyReleased, m_pPlayer, &Player::keyReleased);
 }
 
 void GameCore::setupPlatforms()
