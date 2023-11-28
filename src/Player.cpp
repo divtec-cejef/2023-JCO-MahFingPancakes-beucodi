@@ -10,9 +10,18 @@
 #include "platform.h"
 
 //! Constructeur de player
-Player::Player(): Sprite(GameFramework::imagesPath() + "/player.png")
+Player::Player(): Sprite(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00_delay-0.03s.gif")
 {
+	for (int i = 1; i < 39; i++)
+	{
+	    QString currentI = "0" + QString::number(i);
+	    currentI = currentI.sliced(currentI.size() - 2, 2);
+	    addAnimationFrame(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_" + currentI + "_delay-0.03s.gif");
+	}
+    setAnimationSpeed(100);
+    //setScale(40.0 / width());
     setDebugModeEnabled(true);
+    startAnimation();
 }
 
 //! Permet de vérifier si l'ennemi est en l'air

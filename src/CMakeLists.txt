@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 project(MahFingPancakes)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC_PATH_PREFIX ON)
 set(CMAKE_PREFIX_PATH "~/Qt/6.6.0/macos/lib/cmake")
@@ -27,8 +27,8 @@ qt_add_executable(MahFingPancakes main.cpp
         sprite.cpp
         spritetickhandler.cpp
         utilities.cpp
-        player.cpp
-        platform.cpp)
+        platform.cpp
+        player.cpp)
 
 target_link_libraries(MahFingPancakes PRIVATE
         Qt::Core
