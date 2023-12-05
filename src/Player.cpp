@@ -79,13 +79,11 @@ void Player::tick(const qreal deltaMs)
         m_velocity.setX(qMax(m_velocity.x() - GameFramework::meterToPx(PLAYER_ACCELERATION) * deltaMs / 1000, limit));
     }
 
-    auto colliding = collidingSprites(sceneBoundingRect());
-    for (const auto sprite : colliding)
+    for (const auto sprite : collidingSprites(sceneBoundingRect()))
     {
         if(const auto platform = dynamic_cast<Platform*>(sprite))
         {
             collideWithPlatform(platform);
-            break;
         }
     }
 
@@ -156,47 +154,29 @@ void Player::keyReleased(const int key)
 
 void Player::collideWithPlatform(Platform* platform)
 {
-    // Relatif à la plateforme
-    QPointF side;
 
-    int overlapLeft = right() - platform->left();
-    int overlapRight = platform->right() - left();
-    int overlapTop = bottom() - platform->top();
-    int overlapBottom = platform->bottom() - top();
+    auto side = platform->collisionSide(this);
 
-    if(overlapLeft < overlapRight && overlapLeft < overlapTop && overlapLeft < overlapBottom)
-        side = QPointF(-1, 0);
-    else if(overlapRight < overlapLeft && overlapRight < overlapTop && overlapRight < overlapBottom)
-        side = QPointF(1, 0);
-    else if(overlapTop < overlapLeft && overlapTop < overlapRight && overlapTop < overlapBottom)
-        side = QPointF(0, -1);
-    else if(overlapBottom < overlapLeft && overlapBottom < overlapRight && overlapBottom < overlapTop)
-        side = QPointF(0, 1);
-
-
-    if(auto transparent = dynamic_cast<TransparentPlatform*>(platform))
+    if(dynamic_cast<SolidPlatform*>(platform))
     {
-
-    } else if(auto solid = dynamic_cast<SolidPlatform*>(platform))
-    {
-        if(side == QPointF(0, 1))
+        switch(side)
         {
+        case GameFramework::DOWN:
             m_velocity.setY(qMax(0.0, m_velocity.y()));
             setY(platform->bottom());
-        }
-        else if(side == QPointF(-1, 0))
-        {
+            break;
+        case GameFramework::LEFT:
             m_velocity.setX(qMin(0.0, m_velocity.x()));
             setX(platform->left() - width());
-        }
-        else if (side == QPointF(1, 0))
-        {
+            break;
+        case GameFramework::RIGHT:
             m_velocity.setX(qMax(0.0, m_velocity.x()));
             setX(platform->right());
+            break;
         }
     }
 
-    if(side == QPointF(0, -1) && overlapTop <= 4)
+    if(side == GameFramework::UP && (bottom() - platform->top()) <= 4)
     {
         m_velocity.setY(qMin(0.0, m_velocity.y()));
         setY(platform->top() - height() + 4);

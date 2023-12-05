@@ -5,13 +5,15 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 #include "sprite.h"
+#include "utilities.h"
 
+class Player;
 
 class Platform: public Sprite {
+public:
+    GameFramework::Direction collisionSide(Player* player) const;
 protected:
     Platform(QRect rect);
-
-protected:
     QImage* m_pImage = nullptr;
 };
 

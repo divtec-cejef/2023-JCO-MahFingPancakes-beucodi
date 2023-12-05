@@ -32,7 +32,9 @@ qt_add_executable(MahFingPancakes main.cpp
         transparentplatform.cpp
         transparentplatform.h
         solidplatform.cpp
-        solidplatform.h)
+        solidplatform.h
+        fallingplatform.cpp
+        fallingplatform.h)
 
 target_link_libraries(MahFingPancakes PRIVATE
         Qt::Core

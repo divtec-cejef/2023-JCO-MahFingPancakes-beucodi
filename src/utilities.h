@@ -14,6 +14,15 @@
 //! Espace de noms contenant les fonctions utilitaires.
 //!
 namespace GameFramework {
+    enum Direction
+    {
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN,
+        NEUTRAL
+    };
+
     double screenRatio();
     QSize screenSize();
 
