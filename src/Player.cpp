@@ -8,6 +8,8 @@
 #include "resources.h"
 #include "utilities.h"
 #include "platform.h"
+#include "transparentplatform.h"
+#include "solidplatform.h"
 
 //! Constructeur de player
 Player::Player(): Sprite(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00_delay-0.03s.gif")
@@ -34,10 +36,31 @@ bool Player::isAirborne() const
     {
         if(const auto platform = dynamic_cast<Platform*>(sprite))
         {
-            if(platform->top() < bottom() - 3 &&
-            platform->left() < right() + 3 &&
-            platform->right() > left() - 3)
-                return false;
+            // Every side is relative to the platform
+            QPointF side;
+            int overlapLeft = right() - platform->left();
+            int overlapRight = platform->right() - left();
+            int overlapTop = bottom() - platform->top();
+            int overlapBottom = platform->bottom() - top();
+
+            if(overlapLeft < overlapRight && overlapLeft < overlapTop && overlapLeft < overlapBottom)
+                side = QPointF(-1, 0);
+            else if(overlapRight < overlapLeft && overlapRight < overlapTop && overlapRight < overlapBottom)
+                side = QPointF(1, 0);
+            else if(overlapTop < overlapLeft && overlapTop < overlapRight && overlapTop < overlapBottom)
+                side = QPointF(0, -1);
+            else if(overlapBottom < overlapLeft && overlapBottom < overlapRight && overlapBottom < overlapTop)
+                side = QPointF(0, 1);
+
+            if(dynamic_cast<SolidPlatform*>(platform))
+            {
+                if(side == QPointF(0, -1))
+                    return false;
+            } else if(dynamic_cast<TransparentPlatform*>(platform))
+            {
+                if(side == QPointF(0, -1) && overlapTop <= 4)
+                    return false;
+            }
         }
     }
     return true;
@@ -47,50 +70,48 @@ bool Player::isAirborne() const
 //! \param deltaMs temps écoulé depuis le dernier appel de cette fonction
 void Player::tick(const qreal deltaMs)
 {
-    setPos(pos() + m_velocity * deltaMs / 1000);
+    qreal limit = GameFramework::meterToPx(PLAYER_SPEED) * m_playerInput.x();
+    if(limit > 0)
+    {
+        m_velocity.setX(qMin(m_velocity.x() + GameFramework::meterToPx(PLAYER_ACCELERATION) * deltaMs / 1000, limit));
+    } else
+    {
+        m_velocity.setX(qMax(m_velocity.x() - GameFramework::meterToPx(PLAYER_ACCELERATION) * deltaMs / 1000, limit));
+    }
+
+    auto colliding = collidingSprites(sceneBoundingRect());
+    for (const auto sprite : colliding)
+    {
+        if(const auto platform = dynamic_cast<Platform*>(sprite))
+        {
+            collideWithPlatform(platform);
+            break;
+        }
+    }
 
     if(isAirborne())
     {
         m_velocity.setY(m_velocity.y() + GameFramework::GRAVITY * GameFramework::METER_PX_RATIO * deltaMs / 1000);
-        if(0 < m_longJumpCooldown)
-        {
-            if(m_longJumpCooldown <= 1 && m_keysPressed.contains(Qt::Key_Space))
-            {
-                jump(true);
-                m_longJumpCooldown = 0;
-            }
-
-            m_longJumpCooldown--;
-        }
+        if(m_jumpCharges > 0 && m_keysPressed.contains(Qt::Key_Space) && m_hasReleasedJump)
+            jump();
     } else
     {
-        m_velocity.setY(0);
-        auto colliding = collidingSprites(sceneBoundingRect());
-        for (const auto sprite : colliding)
-        {
-            if(const auto platform = dynamic_cast<Platform*>(sprite))
-            {
-                setY(platform->top() - height() + 4);
-                break;
-            }
-        }
+        m_jumpCharges = m_maxJumpCharges;
 
-        for(const auto key: m_keysPressed)
-        {
-            if(key == Qt::Key_Space)
-            {
-                m_longJumpCooldown = 10;
-                jump();
-                break;
-            }
-        }
+        if(m_keysPressed.contains(Qt::Key_Space) && m_hasReleasedJump)
+            jump();
     }
+
+    setPos(pos() + m_velocity * deltaMs / 1000);
 }
 
 //! Permet de faire sauter le joueur
-void Player::jump(const bool longJump)
+void Player::jump()
 {
-    m_velocity.setY(GameFramework::METER_PX_RATIO * (longJump ? -6 : -4));
+    if(isAirborne())
+       m_jumpCharges--;
+    m_velocity.setY(GameFramework::METER_PX_RATIO * -6);
+    m_hasReleasedJump = false;
 }
 
 //! Permet de s'occuper des touches pressées
@@ -100,11 +121,11 @@ void Player::keyPressed(const int key)
     switch (key)
     {
     case Qt::Key_A:
-        m_velocity.setX(m_velocity.x() - GameFramework::meterToPx(PLAYER_SPEED));
+        m_playerInput.setX(m_playerInput.x() - 1);
         break;
 
     case Qt::Key_D:
-        m_velocity.setX(m_velocity.x() + GameFramework::meterToPx(PLAYER_SPEED));
+        m_playerInput.setX(m_playerInput.x() + 1);
         break;
 
     default: break;
@@ -118,13 +139,66 @@ void Player::keyReleased(const int key)
     switch (key)
     {
     case Qt::Key_A:
-        m_velocity.setX(m_velocity.x() + GameFramework::meterToPx(PLAYER_SPEED));
+        m_playerInput.setX(m_playerInput.x() + 1);
         break;
 
     case Qt::Key_D:
-        m_velocity.setX(m_velocity.x() - GameFramework::meterToPx(PLAYER_SPEED));
+        m_playerInput.setX(m_playerInput.x() - 1);
+        break;
+
+    case Qt::Key_Space:
+        m_hasReleasedJump = true;
         break;
 
     default: break;
+    }
+}
+
+void Player::collideWithPlatform(Platform* platform)
+{
+    // Relatif à la plateforme
+    QPointF side;
+
+    int overlapLeft = right() - platform->left();
+    int overlapRight = platform->right() - left();
+    int overlapTop = bottom() - platform->top();
+    int overlapBottom = platform->bottom() - top();
+
+    if(overlapLeft < overlapRight && overlapLeft < overlapTop && overlapLeft < overlapBottom)
+        side = QPointF(-1, 0);
+    else if(overlapRight < overlapLeft && overlapRight < overlapTop && overlapRight < overlapBottom)
+        side = QPointF(1, 0);
+    else if(overlapTop < overlapLeft && overlapTop < overlapRight && overlapTop < overlapBottom)
+        side = QPointF(0, -1);
+    else if(overlapBottom < overlapLeft && overlapBottom < overlapRight && overlapBottom < overlapTop)
+        side = QPointF(0, 1);
+
+
+    if(auto transparent = dynamic_cast<TransparentPlatform*>(platform))
+    {
+
+    } else if(auto solid = dynamic_cast<SolidPlatform*>(platform))
+    {
+        if(side == QPointF(0, 1))
+        {
+            m_velocity.setY(qMax(0.0, m_velocity.y()));
+            setY(platform->bottom());
+        }
+        else if(side == QPointF(-1, 0))
+        {
+            m_velocity.setX(qMin(0.0, m_velocity.x()));
+            setX(platform->left() - width());
+        }
+        else if (side == QPointF(1, 0))
+        {
+            m_velocity.setX(qMax(0.0, m_velocity.x()));
+            setX(platform->right());
+        }
+    }
+
+    if(side == QPointF(0, -1) && overlapTop <= 4)
+    {
+        m_velocity.setY(qMin(0.0, m_velocity.y()));
+        setY(platform->top() - height() + 4);
     }
 }

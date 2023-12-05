@@ -17,7 +17,8 @@
 #include "utilities.h"
 
 #include "player.h"
-#include "platform.h"
+#include "solidplatform.h"
+#include "transparentplatform.h"
 
 const int SCENE_WIDTH = 1280;
 
@@ -60,10 +61,17 @@ void GameCore::setupPlayer()
 
 void GameCore::setupPlatforms()
 {
-    auto newPlatform = new Platform(QRect(0, 0, 200, 20));
+    Platform* newPlatform = new SolidPlatform(QRect(0, 200, 200, 20));
     m_pPlatforms.append(newPlatform);
     m_pScene->addSpriteToScene(newPlatform);
-    newPlatform->setPos(0, 200);
+
+    Platform* platform2 = new TransparentPlatform(QRect(200, 200, 100, 20));
+    m_pPlatforms.append(platform2);
+    m_pScene->addSpriteToScene(platform2);
+
+    platform2 = new SolidPlatform(QRect(300, 200, 200, 20));
+    m_pPlatforms.append(platform2);
+    m_pScene->addSpriteToScene(platform2);
 }
 
 //! Destructeur de GameCore : efface les scènes

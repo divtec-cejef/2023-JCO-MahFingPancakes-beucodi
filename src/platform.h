@@ -8,10 +8,10 @@
 
 
 class Platform: public Sprite {
-public:
+protected:
     Platform(QRect rect);
 
-private:
+protected:
     QImage* m_pImage = nullptr;
 };
 

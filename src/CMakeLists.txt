@@ -28,7 +28,11 @@ qt_add_executable(MahFingPancakes main.cpp
         spritetickhandler.cpp
         utilities.cpp
         platform.cpp
-        player.cpp)
+        player.cpp
+        transparentplatform.cpp
+        transparentplatform.h
+        solidplatform.cpp
+        solidplatform.h)
 
 target_link_libraries(MahFingPancakes PRIVATE
         Qt::Core
