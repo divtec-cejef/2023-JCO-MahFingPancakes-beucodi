@@ -33,8 +33,6 @@ void Body::tick(long long elapsedTimeInMilliseconds)
     m_velocity.setY(m_velocity.y() + m_acceleration.y() * elapsedTimeInMilliseconds / 1000);
     m_acceleration = QPointF(0, 0);
 
-    qDebug() << m_velocity;
-
     auto currentPos = pos();
     currentPos.setX(pos().x() + GameFramework::meterToPx(m_velocity.x() * elapsedTimeInMilliseconds / 1000));
     currentPos.setY(pos().y() + GameFramework::meterToPx(m_velocity.y() * elapsedTimeInMilliseconds / 1000));

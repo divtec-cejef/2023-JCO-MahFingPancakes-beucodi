@@ -54,7 +54,6 @@ void Player::tick(const long long elapsedTimeInMilliseconds)
     }
 
     computeGravity(elapsedTimeInMilliseconds);
-    qDebug() << m_acceleration;
     Body::tick(elapsedTimeInMilliseconds);
 }
 
