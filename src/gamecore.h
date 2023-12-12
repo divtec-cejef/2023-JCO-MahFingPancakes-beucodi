@@ -15,6 +15,7 @@ class GameCanvas;
 class GameScene;
 class Player;
 class Platform;
+class Sprite;
 
 //! \brief Classe qui gère la logique du jeu.
 //!
@@ -54,7 +55,7 @@ private:
     void setupPlatforms();
 
 private slots:
-
+    void spriteQueuedForDeletion(Sprite* pSprite);
 };
 
 

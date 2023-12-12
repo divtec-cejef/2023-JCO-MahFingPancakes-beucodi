@@ -17,6 +17,9 @@ void FallingPlatform::tick(long long elapsedTimeInMilliseconds)
         m_fallSpeed += GameFramework::meterToPx(GameFramework::GRAVITY) * elapsedTimeInMilliseconds / 1000;
         setY(y() + m_fallSpeed * elapsedTimeInMilliseconds / 1000);
     }
+
+    if(y() > GameFramework::screenSize().height())
+        emit queuedForDeletion(this);
 }
 
 GameFramework::Direction FallingPlatform::collisionSide(Body* body)

@@ -12,6 +12,7 @@
 #include <QSettings>
 
 #include "fallingplatform.h"
+#include "fragileplatform.h"
 #include "gamescene.h"
 #include "gamecanvas.h"
 #include "resources.h"
@@ -60,6 +61,7 @@ void GameCore::setupPlayer()
     connect(this, &GameCore::notifyKeyReleased, m_pPlayer, &Player::keyReleased);
 }
 
+//! Instancie, lie et initialise les plateformes.
 void GameCore::setupPlatforms()
 {
     m_pPlatforms.append(new SolidPlatform(QRect(0, 200, 200, 20)));
@@ -67,11 +69,14 @@ void GameCore::setupPlatforms()
     m_pPlatforms.append(new SolidPlatform(QRect(300, 200, 200, 20)));
     m_pPlatforms.append(new SolidPlatform(QRect(0, 400, 500, 20)));
     m_pPlatforms.append(new FallingPlatform(QRect(500, 400, 200, 20)));
+    m_pPlatforms.append(new FragilePlatform(QRect(500, 200, 200, 20)));
 
     for(auto pPlatform : m_pPlatforms)
     {
         m_pScene->addSpriteToScene(pPlatform);
         m_pScene->registerSpriteForTick(pPlatform);
+        connect(pPlatform, &Platform::queuedForDeletion,
+                this, &GameCore::spriteQueuedForDeletion);
     }
 
 }
@@ -118,4 +123,17 @@ void GameCore::mouseButtonPressed(QPointF mousePosition, Qt::MouseButtons button
 //! Traite le relâchement d'un bouton de la souris.
 void GameCore::mouseButtonReleased(QPointF mousePosition, Qt::MouseButtons buttons) {
     emit notifyMouseButtonReleased(mousePosition, buttons);
+}
+
+//! Traite la destruction d'un sprite.
+//! \param pSprite Sprite qui doit être détruit.
+void GameCore::spriteQueuedForDeletion(Sprite* pSprite)
+{
+    m_pScene->removeSpriteFromScene(pSprite);
+    m_pScene->unregisterSpriteFromTick(pSprite);
+
+    if(auto pPlatform = dynamic_cast<Platform*>(pSprite))
+        m_pPlatforms.removeAll(pPlatform);
+
+    delete pSprite;
 }
