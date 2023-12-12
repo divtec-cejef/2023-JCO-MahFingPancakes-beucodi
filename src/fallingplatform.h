@@ -5,10 +5,18 @@
 #ifndef FALLINGPLATFORM_H
 #define FALLINGPLATFORM_H
 
+#include "platform.h"
+#include "utilities.h"
 
+class FallingPlatform: public Platform {
+public:
+    FallingPlatform(QRect rect);
+    void tick(long long elapsedTimeInMilliseconds) override;
+    GameFramework::Direction collisionSide(Body* body) override;
 
-class FallingPlatform {
-
+private:
+    bool m_isFalling = false;
+    qreal m_fallSpeed = 0;
 };
 
 

@@ -12,7 +12,7 @@ TransparentPlatform::TransparentPlatform(QRect rect): Platform(rect)
     setPixmap(QPixmap::fromImage(*m_pImage));
 }
 
-GameFramework::Direction TransparentPlatform::collisionSide(Body* body) const
+GameFramework::Direction TransparentPlatform::collisionSide(Body* body)
 {
     auto detected = Platform::collisionSide(body);
     if(detected != GameFramework::UP)

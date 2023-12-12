@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QSettings>
 
+#include "fallingplatform.h"
 #include "gamescene.h"
 #include "gamecanvas.h"
 #include "resources.h"
@@ -61,21 +62,18 @@ void GameCore::setupPlayer()
 
 void GameCore::setupPlatforms()
 {
-    Platform* newPlatform = new SolidPlatform(QRect(0, 200, 200, 20));
-    m_pPlatforms.append(newPlatform);
-    m_pScene->addSpriteToScene(newPlatform);
+    m_pPlatforms.append(new SolidPlatform(QRect(0, 200, 200, 20)));
+    m_pPlatforms.append(new TransparentPlatform(QRect(200, 200, 100, 20)));
+    m_pPlatforms.append(new SolidPlatform(QRect(300, 200, 200, 20)));
+    m_pPlatforms.append(new SolidPlatform(QRect(0, 400, 500, 20)));
+    m_pPlatforms.append(new FallingPlatform(QRect(500, 400, 200, 20)));
 
-    newPlatform = new TransparentPlatform(QRect(200, 200, 100, 20));
-    m_pPlatforms.append(newPlatform);
-    m_pScene->addSpriteToScene(newPlatform);
+    for(auto pPlatform : m_pPlatforms)
+    {
+        m_pScene->addSpriteToScene(pPlatform);
+        m_pScene->registerSpriteForTick(pPlatform);
+    }
 
-    newPlatform = new SolidPlatform(QRect(300, 200, 200, 20));
-    m_pPlatforms.append(newPlatform);
-    m_pScene->addSpriteToScene(newPlatform);
-
-    newPlatform = new SolidPlatform(QRect(0, 400, 500, 20));
-    m_pPlatforms.append(newPlatform);
-    m_pScene->addSpriteToScene(newPlatform);
 }
 
 //! Destructeur de GameCore : efface les scènes

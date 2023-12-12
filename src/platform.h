@@ -11,7 +11,7 @@ class Body;
 
 class Platform: public Sprite {
 public:
-    virtual GameFramework::Direction collisionSide(Body* body) const;
+    virtual GameFramework::Direction collisionSide(Body* body);
 protected:
     Platform(QRect rect);
     QImage* m_pImage = nullptr;

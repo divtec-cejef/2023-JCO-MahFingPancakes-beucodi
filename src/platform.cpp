@@ -18,7 +18,7 @@ Platform::Platform(QRect rect) {
 * Retourne la direction dans la quelle le joueur touche la plate-forme, du point de vue de celle-ci
 * @returns la direction
 */
-GameFramework::Direction Platform::collisionSide(Body* body) const
+GameFramework::Direction Platform::collisionSide(Body* body)
 {
     // Relatif à la plateforme
     int overlapLeft = body->right() - left();

@@ -11,7 +11,7 @@
 class TransparentPlatform: public Platform {
 public:
     TransparentPlatform(QRect rect);
-    GameFramework::Direction collisionSide(Body* body) const override;
+    GameFramework::Direction collisionSide(Body* body) override;
 };
 
 
