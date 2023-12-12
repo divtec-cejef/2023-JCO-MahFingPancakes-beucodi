@@ -7,7 +7,7 @@
 #include <resources.h>
 
 #include "sprite.h"
-#include "player.h"
+#include "body.h"
 
 Platform::Platform(QRect rect) {
     m_pImage = new QImage(rect.width(), rect.height(), QImage::Format_ARGB32);
@@ -18,13 +18,13 @@ Platform::Platform(QRect rect) {
 * Retourne la direction dans la quelle le joueur touche la plate-forme, du point de vue de celle-ci
 * @returns la direction
 */
-GameFramework::Direction Platform::collisionSide(Player* player) const
+GameFramework::Direction Platform::collisionSide(Body* body) const
 {
     // Relatif à la plateforme
-    int overlapLeft = player->right() - left();
-    int overlapRight = right() - player->left();
-    int overlapTop = player->bottom() - top();
-    int overlapBottom = bottom() - player->top();
+    int overlapLeft = body->right() - left();
+    int overlapRight = right() - body->left();
+    int overlapTop = body->bottom() - top();
+    int overlapBottom = bottom() - body->top();
 
     return overlapLeft < overlapRight && overlapLeft < overlapTop && overlapLeft < overlapBottom ?
         GameFramework::LEFT:

@@ -7,11 +7,11 @@
 #include "sprite.h"
 #include "utilities.h"
 
-class Player;
+class Body;
 
 class Platform: public Sprite {
 public:
-    GameFramework::Direction collisionSide(Player* player) const;
+    virtual GameFramework::Direction collisionSide(Body* body) const;
 protected:
     Platform(QRect rect);
     QImage* m_pImage = nullptr;
