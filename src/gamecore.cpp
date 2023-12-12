@@ -1,6 +1,6 @@
 /**
   Fichier qui contient toute la logique du jeu.
-  
+
   @author   JCO
   @date     Février 2014
  */
@@ -26,17 +26,17 @@ const int SCENE_WIDTH = 1280;
 //! \param pGameCanvas  GameCanvas pour lequel cet objet travaille.
 //! \param pParent      Pointeur sur le parent (afin d'obtenir une destruction automatique de cet objet).
 GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent) {
-    
+
     // Mémorise l'accès au canvas (qui gère le tick et l'affichage d'une scène)
     m_pGameCanvas = pGameCanvas;
-    
+
     // Créé la scène de base et indique au canvas qu'il faut l'afficher.
     m_pScene = pGameCanvas->createScene(0, 0, SCENE_WIDTH, SCENE_WIDTH / GameFramework::screenRatio());
     pGameCanvas->setCurrentScene(m_pScene);
-    
+
     // Trace un rectangle blanc tout autour des limites de la scène.
     m_pScene->addRect(m_pScene->sceneRect(), QPen(Qt::white));
-    
+
     // Instancier et initialiser les sprite ici :
     setupPlayer();
     setupPlatforms();
@@ -65,13 +65,17 @@ void GameCore::setupPlatforms()
     m_pPlatforms.append(newPlatform);
     m_pScene->addSpriteToScene(newPlatform);
 
-    Platform* platform2 = new TransparentPlatform(QRect(200, 200, 100, 20));
-    m_pPlatforms.append(platform2);
-    m_pScene->addSpriteToScene(platform2);
+    newPlatform = new TransparentPlatform(QRect(200, 200, 100, 20));
+    m_pPlatforms.append(newPlatform);
+    m_pScene->addSpriteToScene(newPlatform);
 
-    platform2 = new SolidPlatform(QRect(300, 200, 200, 20));
-    m_pPlatforms.append(platform2);
-    m_pScene->addSpriteToScene(platform2);
+    newPlatform = new SolidPlatform(QRect(300, 200, 200, 20));
+    m_pPlatforms.append(newPlatform);
+    m_pScene->addSpriteToScene(newPlatform);
+
+    newPlatform = new SolidPlatform(QRect(0, 400, 500, 20));
+    m_pPlatforms.append(newPlatform);
+    m_pScene->addSpriteToScene(newPlatform);
 }
 
 //! Destructeur de GameCore : efface les scènes
