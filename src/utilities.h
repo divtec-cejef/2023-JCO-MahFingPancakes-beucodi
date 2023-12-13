@@ -13,7 +13,8 @@
 //!
 //! Espace de noms contenant les fonctions utilitaires.
 //!
-namespace GameFramework {
+namespace GameFramework
+{
     enum Direction
     {
         LEFT,
@@ -37,6 +38,5 @@ namespace GameFramework {
 
     qreal meterToPx(qreal meter);
     qreal pxToMeter(qreal px);
-
 }
 #endif // UTILITIES_H

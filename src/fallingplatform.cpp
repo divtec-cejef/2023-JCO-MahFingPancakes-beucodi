@@ -4,6 +4,8 @@
 
 #include "fallingplatform.h"
 
+//! Constructeur de la classe FallingPlatform.
+//! \param rect Rectangle de la plateforme.
 FallingPlatform::FallingPlatform(QRect rect): Platform(rect)
 {
     m_pImage = new QImage(rect.width(), rect.height(), QImage::Format_ARGB32);
@@ -11,21 +13,29 @@ FallingPlatform::FallingPlatform(QRect rect): Platform(rect)
     setPixmap(QPixmap::fromImage(*m_pImage));
 }
 
-void FallingPlatform::tick(long long elapsedTimeInMilliseconds)
+//! Méthode de mise à jour de la plateforme.
+//! \param elapsedTimeInMilliseconds Temps écoulé depuis la dernière mise à jour, en millisecondes.
+void FallingPlatform::tick(const long long elapsedTimeInMilliseconds)
 {
-    if (m_isFalling) {
-        m_fallSpeed += GameFramework::meterToPx(GameFramework::GRAVITY) * elapsedTimeInMilliseconds / 1000;
-        setY(y() + m_fallSpeed * elapsedTimeInMilliseconds / 1000);
+    const auto deltaMs = static_cast<qreal>(elapsedTimeInMilliseconds);
+    if (m_isFalling)
+    {
+        m_fallSpeed += GameFramework::meterToPx(GameFramework::GRAVITY) * deltaMs / 1000;
+        setY(y() + m_fallSpeed * deltaMs / 1000);
     }
 
-    if(y() > GameFramework::screenSize().height())
+    if (y() > GameFramework::screenSize().height())
         emit queuedForDeletion(this);
 }
 
+//! Méthode de collision avec un autre corps.
+//! \param body Corps avec lequel la plateforme est en collision.
+//! \return Direction de la collision.
 GameFramework::Direction FallingPlatform::collisionSide(Body* body)
 {
-    auto collisionSide = Platform::collisionSide(body);
-    if (collisionSide == GameFramework::Direction::UP) {
+    const auto collisionSide = Platform::collisionSide(body);
+    if (collisionSide == GameFramework::Direction::UP)
+    {
         m_isFalling = true;
     }
     return collisionSide;

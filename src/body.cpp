@@ -8,34 +8,36 @@
 #include "QGraphicsScene"
 
 //! Constructeur de la classe Body
-//! \param imgPath : chemin vers l'image de l'ennemi
+//! \param rImagePath : chemin vers l'image de l'ennemi
+//! \param pParent : pointeur vers l'objet parent
 Body::Body(const QString& rImagePath, QGraphicsItem* pParent): Sprite(rImagePath, pParent)
 {
-    setOffset(-boundingRect().width() / 2, -boundingRect().height() / 2);
+    setOffset(-Sprite::boundingRect().width() / 2, -Sprite::boundingRect().height() / 2);
 }
 
 //! Permet de mettre à jour la position du corps
-void Body::tick(long long elapsedTimeInMilliseconds)
+//! \param elapsedTimeInMilliseconds : temps écoulé depuis le dernier appel de cette fonction
+void Body::tick(const long long elapsedTimeInMilliseconds)
 {
-    auto currentlyColliding = collidingSprites(sceneBoundingRect());
-    for (auto collidingSprite: currentlyColliding)
+    const auto deltaMs = static_cast<qreal>(elapsedTimeInMilliseconds);
+    for (const auto collidingSprite : collidingSprites(sceneBoundingRect()))
     {
-        if(auto collidingPlatform = dynamic_cast<Platform*>(collidingSprite))
+        if (const auto collidingPlatform = dynamic_cast<Platform*>(collidingSprite))
             collideWithPlatform(collidingPlatform);
     }
 
-    if(m_velocity.x() > MAX_SPEED_X)
+    if (m_velocity.x() > MAX_SPEED_X)
         m_acceleration.setX(m_acceleration.x() + MAX_SPEED_X - m_velocity.x());
-    else if(m_velocity.x() < -MAX_SPEED_X)
+    else if (m_velocity.x() < -MAX_SPEED_X)
         m_acceleration.setX(m_acceleration.x() - MAX_SPEED_X - m_velocity.x());
 
-    m_velocity.setX(m_velocity.x() + m_acceleration.x() * elapsedTimeInMilliseconds / 1000);
-    m_velocity.setY(m_velocity.y() + m_acceleration.y() * elapsedTimeInMilliseconds / 1000);
+    m_velocity.setX(m_velocity.x() + m_acceleration.x() * deltaMs / 1000);
+    m_velocity.setY(m_velocity.y() + m_acceleration.y() * deltaMs / 1000);
     m_acceleration = QPointF(0, 0);
 
     auto currentPos = pos();
-    currentPos.setX(pos().x() + GameFramework::meterToPx(m_velocity.x() * elapsedTimeInMilliseconds / 1000));
-    currentPos.setY(pos().y() + GameFramework::meterToPx(m_velocity.y() * elapsedTimeInMilliseconds / 1000));
+    currentPos.setX(pos().x() + GameFramework::meterToPx(m_velocity.x() * deltaMs / 1000));
+    currentPos.setY(pos().y() + GameFramework::meterToPx(m_velocity.y() * deltaMs / 1000));
     setPos(currentPos);
 }
 
@@ -43,35 +45,30 @@ void Body::tick(long long elapsedTimeInMilliseconds)
 //! \param platform : pointeur vers la plateforme avec laquelle le corps est en collision
 void Body::collideWithPlatform(Platform* platform)
 {
-    auto collidingSide = platform->collisionSide(this);
-    const auto COLLISION_MARGIN = 0;
-    switch(collidingSide)
+    switch (platform->collisionSide(this))
     {
-        case GameFramework::LEFT:
-            setX(qMin(x(), platform->left() - sceneBoundingRect().width() / 2 + COLLISION_MARGIN));
-            m_velocity.setX(qMin(0.0f, m_velocity.x()));
-            m_acceleration.setX(qMin(0.0f, m_acceleration.x()));
-            break;
-        case GameFramework::RIGHT:
-            setX(qMax(x(), platform->right() + sceneBoundingRect().width() / 2 - COLLISION_MARGIN));
-            m_velocity.setX(qMax(0.0f, m_velocity.x()));
-            m_acceleration.setX(qMax(0.0f, m_acceleration.x()));
-            break;
-        case GameFramework::UP:
-            if(m_velocity.y() >= 0)
-            {
-                setY(qMin(y(), platform->top() - sceneBoundingRect().height() / 2 + COLLISION_MARGIN));
-                m_velocity.setY(0.0f);
-            }
-            m_acceleration.setY(qMin(0.0f, m_acceleration.y()));
-            break;
-        case GameFramework::DOWN:
-            setY(qMax(y(), platform->bottom() + sceneBoundingRect().height() / 2 - COLLISION_MARGIN));
-            m_velocity.setY(qMax(0.0f, m_velocity.y()));
-            m_acceleration.setY(qMax(0.0f, m_acceleration.y()));
-            break;
-        default:
-            break;
+    case GameFramework::LEFT:
+        setX(qMin(x(), platform->left() - sceneBoundingRect().width() / 2));
+        m_velocity.setX(qMin(0.0f, m_velocity.x()));
+        m_acceleration.setX(qMin(0.0f, m_acceleration.x()));
+        break;
+    case GameFramework::RIGHT:
+        setX(qMax(x(), platform->right() + sceneBoundingRect().width() / 2));
+        m_velocity.setX(qMax(0.0f, m_velocity.x()));
+        m_acceleration.setX(qMax(0.0f, m_acceleration.x()));
+        break;
+    case GameFramework::UP:
+        setY(qMin(y(), platform->top() - sceneBoundingRect().height() / 2));
+        m_velocity.setY(qMin(0.0f, m_velocity.y()));
+        m_acceleration.setY(qMin(0.0f, m_acceleration.y()));
+        break;
+    case GameFramework::DOWN:
+        setY(qMax(y(), platform->bottom() + sceneBoundingRect().height() / 2));
+        m_velocity.setY(qMax(0.0f, m_velocity.y()));
+        m_acceleration.setY(qMax(0.0f, m_acceleration.y()));
+        break;
+    default:
+        break;
     }
 }
 
@@ -82,7 +79,7 @@ bool Body::isAirborne() const
 {
     for (const auto sprite : collidingSprites(sceneBoundingRect()))
     {
-        if(const auto platform = dynamic_cast<Platform*>(sprite))
+        if (const auto platform = dynamic_cast<Platform*>(sprite))
         {
             // Every side is relative to the platform
             QPointF side;
@@ -91,22 +88,23 @@ bool Body::isAirborne() const
             const int overlapTop = bottom() - platform->top();
             const int overlapBottom = platform->bottom() - top();
 
-            if(overlapLeft < overlapRight && overlapLeft < overlapTop && overlapLeft < overlapBottom)
+            if (overlapLeft < overlapRight && overlapLeft < overlapTop && overlapLeft < overlapBottom)
                 side = QPointF(-1, 0);
-            else if(overlapRight < overlapLeft && overlapRight < overlapTop && overlapRight < overlapBottom)
+            else if (overlapRight < overlapLeft && overlapRight < overlapTop && overlapRight < overlapBottom)
                 side = QPointF(1, 0);
-            else if(overlapTop < overlapLeft && overlapTop < overlapRight && overlapTop < overlapBottom)
+            else if (overlapTop < overlapLeft && overlapTop < overlapRight && overlapTop < overlapBottom)
                 side = QPointF(0, -1);
-            else if(overlapBottom < overlapLeft && overlapBottom < overlapRight && overlapBottom < overlapTop)
+            else if (overlapBottom < overlapLeft && overlapBottom < overlapRight && overlapBottom < overlapTop)
                 side = QPointF(0, 1);
 
-            if(dynamic_cast<SolidPlatform*>(platform))
+            if (dynamic_cast<SolidPlatform*>(platform))
             {
-                if(side == QPointF(0, -1))
+                if (side == QPointF(0, -1))
                     return false;
-            } else if(dynamic_cast<TransparentPlatform*>(platform))
+            }
+            else if (dynamic_cast<TransparentPlatform*>(platform))
             {
-                if(side == QPointF(0, -1) && overlapTop <= 4)
+                if (side == QPointF(0, -1) && overlapTop <= 4)
                     return false;
             }
         }
@@ -115,10 +113,9 @@ bool Body::isAirborne() const
 }
 
 //! Permet de calculer et d'appliquer la gravité sur le corps
-//! \param deltaMs : temps écoulé depuis le dernier appel de cette fonction
 void Body::computeGravity()
 {
-    if(isAirborne())
+    if (isAirborne())
         m_acceleration.setY(m_acceleration.y() + GameFramework::GRAVITY);
     else
         m_acceleration.setY(qMin(0.0f, m_acceleration.y()));

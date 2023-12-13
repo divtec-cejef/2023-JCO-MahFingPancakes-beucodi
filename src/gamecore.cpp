@@ -27,8 +27,8 @@ const int SCENE_WIDTH = 1280;
 //! Initialise le contrôleur de jeu.
 //! \param pGameCanvas  GameCanvas pour lequel cet objet travaille.
 //! \param pParent      Pointeur sur le parent (afin d'obtenir une destruction automatique de cet objet).
-GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent) {
-
+GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
+{
     // Mémorise l'accès au canvas (qui gère le tick et l'affichage d'une scène)
     m_pGameCanvas = pGameCanvas;
 
@@ -71,18 +71,18 @@ void GameCore::setupPlatforms()
     m_pPlatforms.append(new FallingPlatform(QRect(500, 400, 200, 20)));
     m_pPlatforms.append(new FragilePlatform(QRect(500, 200, 200, 20)));
 
-    for(auto pPlatform : m_pPlatforms)
+    for (auto pPlatform : m_pPlatforms)
     {
         m_pScene->addSpriteToScene(pPlatform);
         m_pScene->registerSpriteForTick(pPlatform);
         connect(pPlatform, &Platform::queuedForDeletion,
                 this, &GameCore::spriteQueuedForDeletion);
     }
-
 }
 
 //! Destructeur de GameCore : efface les scènes
-GameCore::~GameCore() {
+GameCore::~GameCore()
+{
     delete m_pScene;
     m_pScene = nullptr;
 }
@@ -90,38 +90,42 @@ GameCore::~GameCore() {
 //! Traite la pression d'une touche.
 //! \param key Numéro de la touche (voir les constantes Qt)
 //!
-void GameCore::keyPressed(int key) {
+void GameCore::keyPressed(int key)
+{
     emit notifyKeyPressed(key);
-
 }
 
 //! Traite le relâchement d'une touche.
 //! \param key Numéro de la touche (voir les constantes Qt)
-void GameCore::keyReleased(int key) {
+void GameCore::keyReleased(int key)
+{
     emit notifyKeyReleased(key);
-
 }
 
 //! Cadence.
 //! \param elapsedTimeInMilliseconds  Temps écoulé depuis le dernier appel.
-void GameCore::tick(long long elapsedTimeInMilliseconds) {
+void GameCore::tick(long long elapsedTimeInMilliseconds)
+{
     m_pPlayer->tick(static_cast<qreal>(elapsedTimeInMilliseconds));
 }
 
 //! La souris a été déplacée.
 //! Pour que cet événement soit pris en compte, la propriété MouseTracking de GameView
 //! doit être enclenchée avec GameCanvas::startMouseTracking().
-void GameCore::mouseMoved(QPointF newMousePosition) {
+void GameCore::mouseMoved(QPointF newMousePosition)
+{
     emit notifyMouseMoved(newMousePosition);
 }
 
 //! Traite l'appui sur un bouton de la souris.
-void GameCore::mouseButtonPressed(QPointF mousePosition, Qt::MouseButtons buttons) {
+void GameCore::mouseButtonPressed(QPointF mousePosition, Qt::MouseButtons buttons)
+{
     emit notifyMouseButtonPressed(mousePosition, buttons);
 }
 
 //! Traite le relâchement d'un bouton de la souris.
-void GameCore::mouseButtonReleased(QPointF mousePosition, Qt::MouseButtons buttons) {
+void GameCore::mouseButtonReleased(QPointF mousePosition, Qt::MouseButtons buttons)
+{
     emit notifyMouseButtonReleased(mousePosition, buttons);
 }
 
@@ -132,7 +136,7 @@ void GameCore::spriteQueuedForDeletion(Sprite* pSprite)
     m_pScene->removeSpriteFromScene(pSprite);
     m_pScene->unregisterSpriteFromTick(pSprite);
 
-    if(auto pPlatform = dynamic_cast<Platform*>(pSprite))
+    if (auto pPlatform = dynamic_cast<Platform*>(pSprite))
         m_pPlatforms.removeAll(pPlatform);
 
     delete pSprite;

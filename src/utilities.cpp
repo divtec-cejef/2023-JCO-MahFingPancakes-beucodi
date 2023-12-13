@@ -3,15 +3,17 @@
 #include <QApplication>
 #include <QScreen>
 
-namespace GameFramework {
-
+namespace GameFramework
+{
     //! \return le rapport entre la largeur de l'écran et sa hauteur.
-    double screenRatio() {
+    double screenRatio()
+    {
         return static_cast<double>(screenSize().width()) / screenSize().height();
     }
 
     //! \return la taille en pixels de l'écran.
-    QSize screenSize() {
+    QSize screenSize()
+    {
         //QDesktopWidget* pDefaultScreen = QApplication::desktop();
         QScreen* pDefaultScreen = QGuiApplication::screens().first();
         QRect ScreenRect = pDefaultScreen->geometry(); // pDefaultScreen->screenGeometry();
@@ -20,13 +22,15 @@ namespace GameFramework {
 
     //! Cache le curseur de la souris.
     //! \see showMouseCursor()
-    void hideMouseCursor() {
+    void hideMouseCursor()
+    {
         qApp->setOverrideCursor(QCursor(Qt::BlankCursor));
     }
 
     //! Rend apparent le curseur de la souris.
     //! \see hideMouseCursor()
-    void showMouseCursor() {
+    void showMouseCursor()
+    {
         qApp->restoreOverrideCursor();
     }
 

@@ -7,9 +7,10 @@
 
 #include "platform.h"
 
-class FragilePlatform: public Platform{
+class FragilePlatform final : public Platform
+{
 public:
-    FragilePlatform(QRect rect);
+    explicit FragilePlatform(QRect rect);
     GameFramework::Direction collisionSide(Body* body) override;
     void tick(long long elapsedTimeInMilliseconds) override;
 
@@ -17,7 +18,6 @@ private:
     bool m_isBreaking = false;
     int m_breakingState = 255;
 };
-
 
 
 #endif //FRAGILEPLATFORM_H
