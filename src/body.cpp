@@ -58,8 +58,11 @@ void Body::collideWithPlatform(Platform* platform)
             m_acceleration.setX(qMax(0.0f, m_acceleration.x()));
             break;
         case GameFramework::UP:
-            setY(qMin(y(), platform->top() - sceneBoundingRect().height() / 2 + COLLISION_MARGIN));
-            m_velocity.setY(qMin(0.0f, m_velocity.y()));
+            if(m_velocity.y() >= 0)
+            {
+                setY(qMin(y(), platform->top() - sceneBoundingRect().height() / 2 + COLLISION_MARGIN));
+                m_velocity.setY(0.0f);
+            }
             m_acceleration.setY(qMin(0.0f, m_acceleration.y()));
             break;
         case GameFramework::DOWN:
@@ -112,10 +115,18 @@ bool Body::isAirborne() const
 }
 
 //! Permet de calculer et d'appliquer la gravité sur le corps
-void Body::computeGravity(long long deltaMs)
+//! \param deltaMs : temps écoulé depuis le dernier appel de cette fonction
+void Body::computeGravity()
 {
     if(isAirborne())
         m_acceleration.setY(m_acceleration.y() + GameFramework::GRAVITY);
     else
         m_acceleration.setY(qMin(0.0f, m_acceleration.y()));
+}
+
+//! Permet de récupérer la vitesse du corps
+//! \returns la vitesse du corps
+QPointF Body::velocity() const
+{
+    return m_velocity;
 }

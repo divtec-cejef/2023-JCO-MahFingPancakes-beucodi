@@ -20,7 +20,7 @@ GameFramework::Direction TransparentPlatform::collisionSide(Body* body)
 
     // Relatif à la plateforme
     int overlapTop = body->bottom() - top();
-    return overlapTop > 5 ?
+    return overlapTop > body->velocity().x() ?
         GameFramework::NEUTRAL :
         GameFramework::UP;
 

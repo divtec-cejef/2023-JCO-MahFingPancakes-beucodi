@@ -14,6 +14,7 @@ public:
     virtual void tick(long long elapsedTimeInMilliseconds);
     bool isAirborne() const;
     Body(const QString& rImagePath, QGraphicsItem* pParent = nullptr);
+    QPointF velocity() const;
 
 protected:
     //! Vitesse du corps, en mètre par seconde.
@@ -22,7 +23,7 @@ protected:
     QPointF m_acceleration = QPointF(0, 0);
     const qreal MAX_SPEED_X = 5;
     const qreal TERMINAL_VELOCITY = 100;
-    void computeGravity(long long deltaMs);
+    void computeGravity();
 
 private:
     void collideWithPlatform(Platform* platform);
