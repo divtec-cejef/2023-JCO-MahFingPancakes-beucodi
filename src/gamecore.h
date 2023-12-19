@@ -10,12 +10,12 @@
 #include <QObject>
 #include <QPointF>
 
-
 class GameCanvas;
 class GameScene;
 class Player;
 class Platform;
 class Sprite;
+class Level;
 
 //! \brief Classe qui gère la logique du jeu.
 //!
@@ -50,11 +50,11 @@ private:
     GameScene* m_pScene = nullptr;
     Player* m_pPlayer = nullptr;
     QList<Platform*> m_pPlatforms = {};
+    Level* m_pLevel = nullptr;
 
     void setupPlayer();
-    void setupPlatforms();
 
-private slots:
+public slots:
     void spriteQueuedForDeletion(Sprite* pSprite);
 };
 

@@ -42,7 +42,9 @@ qt_add_executable(MahFingPancakes main.cpp
         hudicon.cpp
         hudicon.h
         jumpcharge.cpp
-        jumpcharge.h)
+        jumpcharge.h
+        level.cpp
+        level.h)
 
 target_link_libraries(MahFingPancakes PRIVATE
         Qt::Core

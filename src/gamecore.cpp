@@ -15,6 +15,7 @@
 #include "fragileplatform.h"
 #include "gamescene.h"
 #include "gamecanvas.h"
+#include "level.h"
 #include "resources.h"
 #include "utilities.h"
 
@@ -32,16 +33,22 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
     // Mémorise l'accès au canvas (qui gère le tick et l'affichage d'une scène)
     m_pGameCanvas = pGameCanvas;
 
-    // Créé la scène de base et indique au canvas qu'il faut l'afficher.
-    m_pScene = pGameCanvas->createScene(0, 0, SCENE_WIDTH, SCENE_WIDTH / GameFramework::screenRatio());
-    pGameCanvas->setCurrentScene(m_pScene);
+    m_pLevel = new Level(QPoint(0, 0), m_pGameCanvas);
+    m_pPlayer = new Player();
+    m_pScene = m_pLevel->loadLevel(m_pPlayer, this, GameFramework::NEUTRAL);
+
+    m_pPlayer->setScale(40.0 / m_pPlayer->width());
+    m_pScene->addSpriteToScene(m_pPlayer);
+    m_pPlayer->updateJumpCharges();
+
+    connect(this, &GameCore::notifyKeyPressed, m_pPlayer, &Player::keyPressed);
+    connect(this, &GameCore::notifyKeyReleased, m_pPlayer, &Player::keyReleased);
 
     // Trace un rectangle blanc tout autour des limites de la scène.
     m_pScene->addRect(m_pScene->sceneRect(), QPen(Qt::white));
 
     // Instancier et initialiser les sprite ici :
     setupPlayer();
-    setupPlatforms();
 
     // Démarre le tick pour que les animations qui en dépendent fonctionnent correctement.
     // Attention : il est important que l'enclenchement du tick soit fait vers la fin de cette fonction,
@@ -53,32 +60,7 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
 //! Instancie et initialise le joueur.
 void GameCore::setupPlayer()
 {
-    m_pPlayer = new Player();
-    m_pScene->addSpriteToScene(m_pPlayer);
-    m_pPlayer->setScale(40.0 / m_pPlayer->width());
-    m_pPlayer->updateJumpCharges();
 
-    connect(this, &GameCore::notifyKeyPressed, m_pPlayer, &Player::keyPressed);
-    connect(this, &GameCore::notifyKeyReleased, m_pPlayer, &Player::keyReleased);
-}
-
-//! Instancie, lie et initialise les plateformes.
-void GameCore::setupPlatforms()
-{
-    m_pPlatforms.append(new SolidPlatform(QRect(0, 200, 200, 20)));
-    m_pPlatforms.append(new TransparentPlatform(QRect(200, 200, 100, 20)));
-    m_pPlatforms.append(new SolidPlatform(QRect(300, 200, 200, 20)));
-    m_pPlatforms.append(new SolidPlatform(QRect(0, 400, 500, 20)));
-    m_pPlatforms.append(new FallingPlatform(QRect(500, 400, 200, 20)));
-    m_pPlatforms.append(new FragilePlatform(QRect(500, 200, 200, 20)));
-
-    for (auto pPlatform : m_pPlatforms)
-    {
-        m_pScene->addSpriteToScene(pPlatform);
-        m_pScene->registerSpriteForTick(pPlatform);
-        connect(pPlatform, &Platform::queuedForDeletion,
-                this, &GameCore::spriteQueuedForDeletion);
-    }
 }
 
 //! Destructeur de GameCore : efface les scènes
