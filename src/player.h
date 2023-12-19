@@ -6,9 +6,9 @@
 #define PLAYER_H
 
 #include "body.h"
-#include "jumpcharge.h"
 
 class Platform;
+class JumpCharge;
 
 class Player final : public Body
 {

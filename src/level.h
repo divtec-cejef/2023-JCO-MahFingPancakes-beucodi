@@ -13,12 +13,17 @@
 class QString;
 class Player;
 
-class Level final
+class Level final : public QObject
 {
 public:
     explicit Level(QPoint levelId, GameCanvas* pCanvas);
-    GameScene* loadLevel(Player* pPlayer, const GameCore* pCore, GameFramework::Direction enteredFrom);
+    ~Level() override;
+    void loadLevel(Player* pPlayer, GameCore* pCore, GameFramework::Direction enteredFrom);
     [[nodiscard]] QPoint levelId() const;
+    void changeLevel(QPoint targetLevel, GameFramework::Direction dir);
+    QList<Level*> neighbouringLevels() const;
+    bool isLoaded() const;
+    GameScene* scene() const;
 
 private:
     QPoint m_levelId = QPoint(0, 0);
@@ -26,6 +31,12 @@ private:
     GameCanvas* m_pCanvas = nullptr;
     GameScene* m_pScene = nullptr;
     QList<Sprite*> m_pSprites = QList<Sprite*>();
+    QList<Level*> m_pConnectedLevels = QList<Level*>();
+    GameCore* m_pCore = nullptr;
+    Player* m_pPlayer = nullptr;
+    bool m_loaded = false;
+
+    void loadNeighbouringLevels();
 };
 
 

@@ -3,9 +3,11 @@
 //
 
 #include "player.h"
+
+#include "door.h"
 #include "resources.h"
-#include "platform.h"
 #include "gamescene.h"
+#include "jumpcharge.h"
 
 //! Constructeur de player
 Player::Player(): Body(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00_delay-0.03s.gif")
@@ -27,6 +29,16 @@ void Player::tick(const long long elapsedTimeInMilliseconds)
 {
     if(pos().y() > m_pParentScene->height())
         die();
+
+    for(const auto sprite: m_pParentScene->collidingSprites(sceneBoundingRect()))
+    {
+        if(const auto door = dynamic_cast<Door*>(sprite))
+        {
+            qDebug()<<"Travelling";
+            door->travel();
+        }
+    }
+
     // Inputs horizontaux du joueur (A&D)
     if (m_playerInput.x() > 0)
     {
@@ -110,19 +122,16 @@ void Player::keyReleased(const int key)
 //! Permet de mettre à jour les sprites de charges de saut
 void Player::updateJumpCharges()
 {
-    if (m_pJumpChargesSprites.length() == m_jumpCharges)
+    if(m_pJumpChargesSprites.length() == m_jumpCharges)
         return;
 
-    if (m_pJumpChargesSprites.length() > m_jumpCharges)
+    for(const auto sprite: m_pJumpChargesSprites)
     {
-        while (m_pJumpChargesSprites.length() != m_jumpCharges)
-        {
-            m_pParentScene->removeSpriteFromScene(m_pJumpChargesSprites.last());
-            delete m_pJumpChargesSprites.last();
-            m_pJumpChargesSprites.removeLast();
-        }
-        return;
+        m_pParentScene->removeSpriteFromScene(sprite);
+        delete sprite;
     }
+
+    m_pJumpChargesSprites.clear();
 
     while (m_pJumpChargesSprites.length() != m_jumpCharges)
     {

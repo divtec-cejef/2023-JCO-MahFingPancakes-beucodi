@@ -6,21 +6,14 @@
  */
 #include "gamecore.h"
 
-#include <cmath>
-
-#include <QDebug>
 #include <QSettings>
 
-#include "fallingplatform.h"
-#include "fragileplatform.h"
 #include "gamescene.h"
 #include "gamecanvas.h"
 #include "level.h"
-#include "resources.h"
 #include "utilities.h"
 
 #include "player.h"
-#include "solidplatform.h"
 #include "transparentplatform.h"
 
 const int SCENE_WIDTH = 1280;
@@ -35,20 +28,12 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
 
     m_pLevel = new Level(QPoint(0, 0), m_pGameCanvas);
     m_pPlayer = new Player();
-    m_pScene = m_pLevel->loadLevel(m_pPlayer, this, GameFramework::NEUTRAL);
+    m_pLevel->loadLevel(m_pPlayer, this, GameFramework::NEUTRAL);
 
     m_pPlayer->setScale(40.0 / m_pPlayer->width());
-    m_pScene->addSpriteToScene(m_pPlayer);
-    m_pPlayer->updateJumpCharges();
 
     connect(this, &GameCore::notifyKeyPressed, m_pPlayer, &Player::keyPressed);
     connect(this, &GameCore::notifyKeyReleased, m_pPlayer, &Player::keyReleased);
-
-    // Trace un rectangle blanc tout autour des limites de la scène.
-    m_pScene->addRect(m_pScene->sceneRect(), QPen(Qt::white));
-
-    // Instancier et initialiser les sprite ici :
-    setupPlayer();
 
     // Démarre le tick pour que les animations qui en dépendent fonctionnent correctement.
     // Attention : il est important que l'enclenchement du tick soit fait vers la fin de cette fonction,
@@ -57,17 +42,35 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
     m_pGameCanvas->startTick();
 }
 
-//! Instancie et initialise le joueur.
-void GameCore::setupPlayer()
+//! Change le niveau actuel.
+//! \param targetLevel  Position du niveau cible.
+//! \param dir          Direction dans laquelle le joueur entre.
+void GameCore::changeLevel(QPoint targetLevel, GameFramework::Direction dir)
 {
+    for (const auto level : m_pLevel->neighbouringLevels())
+    {
+        if (level->levelId() == targetLevel)
+        {
+            level->loadLevel(m_pPlayer, this, dir);
+            delete m_pLevel;
+            m_pLevel = level;
+            return;
+        }
+    }
+}
 
+//! Retourne le niveau actuel.
+//! \return Niveau actuel.
+Level* GameCore::currentLevel() const
+{
+    return m_pLevel;
 }
 
 //! Destructeur de GameCore : efface les scènes
 GameCore::~GameCore()
 {
-    delete m_pScene;
-    m_pScene = nullptr;
+    delete m_pLevel;
+    m_pLevel = nullptr;
 }
 
 //! Traite la pression d'une touche.
@@ -89,7 +92,6 @@ void GameCore::keyReleased(int key)
 //! \param elapsedTimeInMilliseconds  Temps écoulé depuis le dernier appel.
 void GameCore::tick(long long elapsedTimeInMilliseconds)
 {
-    m_pPlayer->tick(static_cast<qreal>(elapsedTimeInMilliseconds));
 }
 
 //! La souris a été déplacée.
@@ -116,10 +118,10 @@ void GameCore::mouseButtonReleased(QPointF mousePosition, Qt::MouseButtons butto
 //! \param pSprite Sprite qui doit être détruit.
 void GameCore::spriteQueuedForDeletion(Sprite* pSprite)
 {
-    m_pScene->removeSpriteFromScene(pSprite);
-    m_pScene->unregisterSpriteFromTick(pSprite);
+    m_pLevel->scene()->removeSpriteFromScene(pSprite);
+    m_pLevel->scene()->unregisterSpriteFromTick(pSprite);
 
-    if (auto pPlatform = dynamic_cast<Platform*>(pSprite))
+    if (const auto pPlatform = dynamic_cast<Platform*>(pSprite))
         m_pPlatforms.removeAll(pPlatform);
 
     delete pSprite;

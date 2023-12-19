@@ -9,6 +9,7 @@
 
 #include <QObject>
 #include <QPointF>
+#include "utilities.h"
 
 class GameCanvas;
 class GameScene;
@@ -24,8 +25,9 @@ class Level;
 class GameCore : public QObject
 {
     Q_OBJECT
+
 public:
-    explicit GameCore(GameCanvas* pGameCanvas, QObject *parent = nullptr);
+    explicit GameCore(GameCanvas* pGameCanvas, QObject* parent = nullptr);
     ~GameCore() override;
 
     void keyPressed(int key);
@@ -37,6 +39,9 @@ public:
 
     void tick(long long elapsedTimeInMilliseconds);
 
+    void changeLevel(QPoint targetLevel, GameFramework::Direction dir);
+    Level* currentLevel() const;
+
 signals:
     void notifyMouseMoved(QPointF newMousePosition);
     void notifyMouseButtonPressed(QPointF mousePosition, Qt::MouseButtons buttons);
@@ -45,14 +50,10 @@ signals:
     void notifyKeyReleased(int key);
 
 private:
-
     GameCanvas* m_pGameCanvas = nullptr;
-    GameScene* m_pScene = nullptr;
     Player* m_pPlayer = nullptr;
     QList<Platform*> m_pPlatforms = {};
     Level* m_pLevel = nullptr;
-
-    void setupPlayer();
 
 public slots:
     void spriteQueuedForDeletion(Sprite* pSprite);
