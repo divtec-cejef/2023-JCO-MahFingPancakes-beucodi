@@ -24,7 +24,7 @@ private:
     //! Liste des touches pressées
     QList<int> m_keysPressed = {};
     //! Nombre de charges de saut maximum
-    //! \note inclus le saut de base
+    //! \note n'inclus pas le saut quand on touche le sol
     int m_maxJumpCharges = 2;
     //! Nombre de charges de saut restantes
     int m_jumpCharges = m_maxJumpCharges;
