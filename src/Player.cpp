@@ -25,6 +25,8 @@ Player::Player(): Body(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00
 //! \param elapsedTimeInMilliseconds temps écoulé depuis le dernier appel de cette fonction
 void Player::tick(const long long elapsedTimeInMilliseconds)
 {
+    if(pos().y() > m_pParentScene->height())
+        die();
     // Inputs horizontaux du joueur (A&D)
     if (m_playerInput.x() > 0)
     {
@@ -125,8 +127,20 @@ void Player::updateJumpCharges()
     while (m_pJumpChargesSprites.length() != m_jumpCharges)
     {
         const auto newSprite = new JumpCharge();
-        newSprite->setPos(m_pJumpChargesSprites.length() * newSprite->sceneBoundingRect().width(), 0);
+        const auto finalJumpBarWidth = newSprite->sceneBoundingRect().width() * m_maxJumpCharges;
+        const auto jumpBarOffset = (m_pParentScene->width() - finalJumpBarWidth) / 2;
+        newSprite->setPos(
+            jumpBarOffset + m_pJumpChargesSprites.length() * newSprite->sceneBoundingRect().width(),
+            m_pParentScene->height()-newSprite->sceneBoundingRect().height()
+            );
         m_pParentScene->addSpriteToScene(newSprite);
         m_pJumpChargesSprites.append(newSprite);
     }
+}
+
+//! Permet de tuer le joueur
+//! \note Fais planter le jeu pour l'instant
+void Player::die() const
+{
+    delete m_pParentScene;
 }

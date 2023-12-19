@@ -42,6 +42,8 @@ private:
     //! Sprites de saut du joueur
     QList<JumpCharge*> m_pJumpChargesSprites = QList<JumpCharge*>();
 
+    void die() const;
+
 public slots:
     void keyPressed(int key);
     void keyReleased(int key);
