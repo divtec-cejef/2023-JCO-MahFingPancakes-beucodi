@@ -39,8 +39,11 @@ public:
 
     void tick(long long elapsedTimeInMilliseconds);
 
+    [[nodiscard]] Level* currentLevel() const;
+    [[nodiscard]] GameCanvas* canvas() const;
+
+public slots:
     void changeLevel(QPoint targetLevel, GameFramework::Direction dir);
-    Level* currentLevel() const;
 
 signals:
     void notifyMouseMoved(QPointF newMousePosition);

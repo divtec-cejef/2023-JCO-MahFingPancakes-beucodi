@@ -27,14 +27,14 @@ Player::Player(): Body(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00
 //! \param elapsedTimeInMilliseconds temps écoulé depuis le dernier appel de cette fonction
 void Player::tick(const long long elapsedTimeInMilliseconds)
 {
-    if(pos().y() > m_pParentScene->height())
+    if (pos().y() > m_pParentScene->height())
         die();
 
-    for(const auto sprite: m_pParentScene->collidingSprites(sceneBoundingRect()))
+    for (const auto sprite : m_pParentScene->collidingSprites(sceneBoundingRect()))
     {
-        if(const auto door = dynamic_cast<Door*>(sprite))
+        if (const auto door = dynamic_cast<Door*>(sprite))
         {
-            qDebug()<<"Travelling";
+            qDebug() << "Travelling";
             door->travel();
         }
     }
@@ -122,13 +122,15 @@ void Player::keyReleased(const int key)
 //! Permet de mettre à jour les sprites de charges de saut
 void Player::updateJumpCharges()
 {
-    if(m_pJumpChargesSprites.length() == m_jumpCharges)
+    if (m_pJumpChargesSprites.length() == m_jumpCharges)
         return;
 
-    for(const auto sprite: m_pJumpChargesSprites)
+    for (const auto sprite : m_pJumpChargesSprites)
     {
+        if (!sprite)
+            continue;
         m_pParentScene->removeSpriteFromScene(sprite);
-        delete sprite;
+        sprite->deleteLater();
     }
 
     m_pJumpChargesSprites.clear();
@@ -140,8 +142,8 @@ void Player::updateJumpCharges()
         const auto jumpBarOffset = (m_pParentScene->width() - finalJumpBarWidth) / 2;
         newSprite->setPos(
             jumpBarOffset + m_pJumpChargesSprites.length() * newSprite->sceneBoundingRect().width(),
-            m_pParentScene->height()-newSprite->sceneBoundingRect().height()
-            );
+            m_pParentScene->height() - newSprite->sceneBoundingRect().height()
+        );
         m_pParentScene->addSpriteToScene(newSprite);
         m_pJumpChargesSprites.append(newSprite);
     }
@@ -152,4 +154,18 @@ void Player::updateJumpCharges()
 void Player::die() const
 {
     delete m_pParentScene;
+}
+
+//! "Emplaqute" Le joueur; Permet de retirer tous les sprites de la scène générés par le joueur
+void Player::pack()
+{
+    for (const auto sprite : m_pJumpChargesSprites)
+    {
+        m_pParentScene->removeSpriteFromScene(sprite);
+        m_pParentScene->unregisterSpriteFromTick(sprite);
+        sprite->deleteLater();
+    }
+    m_pJumpChargesSprites.clear();
+    m_pParentScene->removeSpriteFromScene(this);
+    m_pParentScene->unregisterSpriteFromTick(this);
 }

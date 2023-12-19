@@ -10,13 +10,14 @@
 
 #include "gamescene.h"
 #include "gamecanvas.h"
+#include "levelbuilder.h"
 #include "level.h"
 #include "utilities.h"
 
 #include "player.h"
 #include "transparentplatform.h"
 
-const int SCENE_WIDTH = 1280;
+constexpr int SCENE_WIDTH = 1280;
 
 //! Initialise le contrôleur de jeu.
 //! \param pGameCanvas  GameCanvas pour lequel cet objet travaille.
@@ -26,14 +27,13 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
     // Mémorise l'accès au canvas (qui gère le tick et l'affichage d'une scène)
     m_pGameCanvas = pGameCanvas;
 
-    m_pLevel = new Level(QPoint(0, 0), m_pGameCanvas);
     m_pPlayer = new Player();
-    m_pLevel->loadLevel(m_pPlayer, this, GameFramework::NEUTRAL);
-
     m_pPlayer->setScale(40.0 / m_pPlayer->width());
 
     connect(this, &GameCore::notifyKeyPressed, m_pPlayer, &Player::keyPressed);
     connect(this, &GameCore::notifyKeyReleased, m_pPlayer, &Player::keyReleased);
+
+    m_pLevel = LevelBuilder(QPoint(0, 0)).build(this, m_pPlayer, GameFramework::NEUTRAL);
 
     // Démarre le tick pour que les animations qui en dépendent fonctionnent correctement.
     // Attention : il est important que l'enclenchement du tick soit fait vers la fin de cette fonction,
@@ -45,18 +45,21 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
 //! Change le niveau actuel.
 //! \param targetLevel  Position du niveau cible.
 //! \param dir          Direction dans laquelle le joueur entre.
-void GameCore::changeLevel(QPoint targetLevel, GameFramework::Direction dir)
+void GameCore::changeLevel(const QPoint targetLevel, const GameFramework::Direction dir)
 {
-    for (const auto level : m_pLevel->neighbouringLevels())
+    m_pGameCanvas->stopTick();
+    for (auto& level : m_pLevel->neighbouringLevels())
     {
-        if (level->levelId() == targetLevel)
+        if (level.levelId() == targetLevel)
         {
-            level->loadLevel(m_pPlayer, this, dir);
-            delete m_pLevel;
-            m_pLevel = level;
-            return;
+            const auto oldLvl = m_pLevel;
+            m_pPlayer->pack();
+            m_pLevel = level.build(this, m_pPlayer, dir);
+            delete oldLvl;
+            break;
         }
     }
+    m_pGameCanvas->startTick();
 }
 
 //! Retourne le niveau actuel.
@@ -75,15 +78,14 @@ GameCore::~GameCore()
 
 //! Traite la pression d'une touche.
 //! \param key Numéro de la touche (voir les constantes Qt)
-//!
-void GameCore::keyPressed(int key)
+void GameCore::keyPressed(const int key)
 {
     emit notifyKeyPressed(key);
 }
 
 //! Traite le relâchement d'une touche.
 //! \param key Numéro de la touche (voir les constantes Qt)
-void GameCore::keyReleased(int key)
+void GameCore::keyReleased(const int key)
 {
     emit notifyKeyReleased(key);
 }
@@ -125,4 +127,10 @@ void GameCore::spriteQueuedForDeletion(Sprite* pSprite)
         m_pPlatforms.removeAll(pPlatform);
 
     delete pSprite;
+}
+
+//! Retourne le canvas de l'application
+GameCanvas* GameCore::canvas() const
+{
+    return m_pGameCanvas;
 }

@@ -17,6 +17,7 @@ public:
     void jump();
     void tick(long long elapsedTimeInMilliseconds) override;
     void updateJumpCharges();
+    void pack();
 
 private:
     //! Vecteurs d'entrée du joueur

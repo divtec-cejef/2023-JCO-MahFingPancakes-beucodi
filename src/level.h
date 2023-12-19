@@ -8,7 +8,7 @@
 #include "gamecanvas.h"
 #include "gamescene.h"
 #include <QPoint>
-#include <utilities.h>
+#include "levelbuilder.h"
 
 class QString;
 class Player;
@@ -16,27 +16,18 @@ class Player;
 class Level final : public QObject
 {
 public:
-    explicit Level(QPoint levelId, GameCanvas* pCanvas);
+    explicit Level(GameCanvas* pCanvas, Player* pPlayer);
     ~Level() override;
-    void loadLevel(Player* pPlayer, GameCore* pCore, GameFramework::Direction enteredFrom);
-    [[nodiscard]] QPoint levelId() const;
-    void changeLevel(QPoint targetLevel, GameFramework::Direction dir);
-    QList<Level*> neighbouringLevels() const;
-    bool isLoaded() const;
-    GameScene* scene() const;
+    [[nodiscard]] QList<LevelBuilder> neighbouringLevels() const;
+    [[nodiscard]] GameScene* scene() const;
+    void appendLevel(const LevelBuilder& level);
 
 private:
     QPoint m_levelId = QPoint(0, 0);
-    QPoint m_spawnPoint = QPoint(0, 0);
     GameCanvas* m_pCanvas = nullptr;
     GameScene* m_pScene = nullptr;
-    QList<Sprite*> m_pSprites = QList<Sprite*>();
-    QList<Level*> m_pConnectedLevels = QList<Level*>();
-    GameCore* m_pCore = nullptr;
+    QList<LevelBuilder> m_pConnectedLevels = QList<LevelBuilder>();
     Player* m_pPlayer = nullptr;
-    bool m_loaded = false;
-
-    void loadNeighbouringLevels();
 };
 
 

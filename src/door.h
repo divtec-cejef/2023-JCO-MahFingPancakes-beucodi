@@ -10,11 +10,16 @@
 
 class Level;
 
-class Door final: public Sprite {
+class Door final : public Sprite
+{
+    Q_OBJECT
 public:
-    Door(QPoint pos, QPoint target, GameFramework::Direction dir, Level* pLevel);
-    void travel() const;
+    Door(QPoint pos, QPoint target, GameFramework::Direction dir);
+    void travel();
     [[nodiscard]] QPoint targetLevel() const;
+
+signals:
+    void doorEntered(QPoint targetLevel, GameFramework::Direction dir);
 
 private:
     Level* m_pParentLevel = nullptr;
@@ -22,7 +27,6 @@ private:
     QImage* m_pImage = nullptr;
     GameFramework::Direction m_dir = GameFramework::NEUTRAL;
 };
-
 
 
 #endif //DOOR_H
