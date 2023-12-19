@@ -39,29 +39,27 @@ void Player::tick(const long long elapsedTimeInMilliseconds)
         m_acceleration.setX(-m_velocity.x() / PLAYER_FRICTION);
     }
 
-    // Saut du joueur; réinitialise les charges quand sur le sol
-    if (isAirborne())
-    {
-        if (m_jumpCharges > 0 && m_keysPressed.contains(Qt::Key_Space) && m_hasReleasedJump)
-            jump();
-    }
-    else
+    // Réinitialise les charges quand sur le sol
+    if (!isAirborne())
     {
         m_jumpCharges = m_maxJumpCharges;
         updateJumpCharges();
-
-        if (m_keysPressed.contains(Qt::Key_Space) && m_hasReleasedJump)
-            jump();
     }
 
-    computeGravity();
+    if (m_jumpCharges > 0 && m_keysPressed.contains(Qt::Key_Space) && m_hasReleasedJump)
+        jump();
+
+    if (isAirborne())
+        computeGravity();
+
     Body::tick(elapsedTimeInMilliseconds);
 }
 
 //! Permet de faire sauter le joueur
 void Player::jump()
 {
-    m_jumpCharges--;
+    if (isAirborne())
+        m_jumpCharges--;
     m_velocity.setY(PLAYER_JUMP_FORCE);
     m_hasReleasedJump = false;
     updateJumpCharges();
@@ -110,13 +108,12 @@ void Player::keyReleased(const int key)
 //! Permet de mettre à jour les sprites de charges de saut
 void Player::updateJumpCharges()
 {
-    const auto displayedIcons = m_jumpCharges == m_maxJumpCharges ? m_maxJumpCharges - 1 : m_jumpCharges;
-    if (m_pJumpChargesSprites.length() == displayedIcons)
+    if (m_pJumpChargesSprites.length() == m_jumpCharges)
         return;
 
-    if (m_pJumpChargesSprites.length() > displayedIcons)
+    if (m_pJumpChargesSprites.length() > m_jumpCharges)
     {
-        while (m_pJumpChargesSprites.length() != displayedIcons)
+        while (m_pJumpChargesSprites.length() != m_jumpCharges)
         {
             m_pParentScene->removeSpriteFromScene(m_pJumpChargesSprites.last());
             delete m_pJumpChargesSprites.last();
@@ -125,7 +122,7 @@ void Player::updateJumpCharges()
         return;
     }
 
-    while (m_pJumpChargesSprites.length() != displayedIcons)
+    while (m_pJumpChargesSprites.length() != m_jumpCharges)
     {
         const auto newSprite = new JumpCharge();
         newSprite->setPos(m_pJumpChargesSprites.length() * newSprite->sceneBoundingRect().width(), 0);
