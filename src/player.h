@@ -6,6 +6,7 @@
 #define PLAYER_H
 
 #include "body.h"
+#include "jumpcharge.h"
 
 class Platform;
 
@@ -15,6 +16,7 @@ public:
     Player();
     void jump();
     void tick(long long elapsedTimeInMilliseconds) override;
+    void updateJumpCharges();
 
 private:
     //! Vecteurs d'entrée du joueur
@@ -37,6 +39,8 @@ private:
     const qreal PLAYER_JUMP_FORCE = -7;
     //! Frottement du joueur, en mètre par seconde au carré.
     const qreal PLAYER_FRICTION = 0.5;
+    //! Sprites de saut du joueur
+    QList<JumpCharge*> m_pJumpChargesSprites = QList<JumpCharge*>();
 
 public slots:
     void keyPressed(int key);

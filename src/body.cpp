@@ -3,6 +3,8 @@
 //
 
 #include "body.h"
+
+#include "fragileplatform.h"
 #include "solidplatform.h"
 #include "transparentplatform.h"
 #include "QGraphicsScene"
@@ -97,16 +99,19 @@ bool Body::isAirborne() const
             else if (overlapBottom < overlapLeft && overlapBottom < overlapRight && overlapBottom < overlapTop)
                 side = QPointF(0, 1);
 
-            if (dynamic_cast<SolidPlatform*>(platform))
+            if (dynamic_cast<TransparentPlatform*>(platform))
             {
-                if (side == QPointF(0, -1))
+                if (side == QPointF(0, -1) &&
+                    overlapTop < 4 &&
+                    m_velocity.y() >= 0)
                     return false;
+                continue;
             }
-            else if (dynamic_cast<TransparentPlatform*>(platform))
-            {
-                if (side == QPointF(0, -1) && overlapTop <= 4)
-                    return false;
-            }
+             if(dynamic_cast<FragilePlatform*>(platform))
+                continue;
+
+            if (side == QPointF(0, -1))
+                return false;
         }
     }
     return true;

@@ -5,6 +5,7 @@
 #include "player.h"
 #include "resources.h"
 #include "platform.h"
+#include "gamescene.h"
 
 //! Constructeur de player
 Player::Player(): Body(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00_delay-0.03s.gif")
@@ -47,6 +48,7 @@ void Player::tick(const long long elapsedTimeInMilliseconds)
     else
     {
         m_jumpCharges = m_maxJumpCharges;
+        updateJumpCharges();
 
         if (m_keysPressed.contains(Qt::Key_Space) && m_hasReleasedJump)
             jump();
@@ -59,10 +61,10 @@ void Player::tick(const long long elapsedTimeInMilliseconds)
 //! Permet de faire sauter le joueur
 void Player::jump()
 {
-    if (isAirborne())
-        m_jumpCharges--;
+    m_jumpCharges--;
     m_velocity.setY(PLAYER_JUMP_FORCE);
     m_hasReleasedJump = false;
+    updateJumpCharges();
 }
 
 //! Permet de s'occuper et d'enregistrer les touches pressées
@@ -102,5 +104,32 @@ void Player::keyReleased(const int key)
         break;
 
     default: break;
+    }
+}
+
+//! Permet de mettre à jour les sprites de charges de saut
+void Player::updateJumpCharges()
+{
+    const auto displayedIcons = m_jumpCharges == m_maxJumpCharges ? m_maxJumpCharges - 1 : m_jumpCharges;
+    if (m_pJumpChargesSprites.length() == displayedIcons)
+        return;
+
+    if (m_pJumpChargesSprites.length() > displayedIcons)
+    {
+        while (m_pJumpChargesSprites.length() != displayedIcons)
+        {
+            m_pParentScene->removeSpriteFromScene(m_pJumpChargesSprites.last());
+            delete m_pJumpChargesSprites.last();
+            m_pJumpChargesSprites.removeLast();
+        }
+        return;
+    }
+
+    while (m_pJumpChargesSprites.length() != displayedIcons)
+    {
+        const auto newSprite = new JumpCharge();
+        newSprite->setPos(m_pJumpChargesSprites.length() * newSprite->sceneBoundingRect().width(), 0);
+        m_pParentScene->addSpriteToScene(newSprite);
+        m_pJumpChargesSprites.append(newSprite);
     }
 }

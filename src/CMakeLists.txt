@@ -38,7 +38,11 @@ qt_add_executable(MahFingPancakes main.cpp
         body.cpp
         body.h
         fragileplatform.cpp
-        fragileplatform.h)
+        fragileplatform.h
+        hudicon.cpp
+        hudicon.h
+        jumpcharge.cpp
+        jumpcharge.h)
 
 target_link_libraries(MahFingPancakes PRIVATE
         Qt::Core
