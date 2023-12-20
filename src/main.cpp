@@ -1,6 +1,6 @@
 /*! \mainpage 2023-JCO-MahFingPancakes-beucodi
  *
- * \author 
+ * \author
  * \section intro_sec Introduction
  *
  * Ce projet est pour l'instant une architecture de base en vue de la création d'un jeu simple en 2D.
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
     }
 
     MainFrm w;
-    w.show();
+    w.showMaximized();
 
     // Pour un mode d'affichage fenêtré, plein écran
     // w.showMaximized();
@@ -215,4 +215,3 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
-
