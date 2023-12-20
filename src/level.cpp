@@ -10,6 +10,7 @@
 #include "door.h"
 
 constexpr int SCENE_WIDTH = 1280;
+constexpr int SCENE_HEIGHT = SCENE_WIDTH * 9 / 16;
 
 
 //! Charge le niveau
@@ -19,7 +20,7 @@ Level::Level(GameCanvas* pCanvas, Player* pPlayer)
 {
     m_pCanvas = pCanvas;
     m_pPlayer = pPlayer;
-    m_pScene = m_pCanvas->createScene(0, 0, SCENE_WIDTH, SCENE_WIDTH / GameFramework::screenRatio());
+    m_pScene = m_pCanvas->createScene(0, 0, SCENE_WIDTH, SCENE_HEIGHT);
     m_pScene->addRect(m_pScene->sceneRect(), QPen(Qt::white));
     m_pCanvas->setCurrentScene(m_pScene);
     m_pScene->addSpriteToScene(m_pPlayer);
