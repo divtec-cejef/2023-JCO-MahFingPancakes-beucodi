@@ -27,13 +27,13 @@ GameFramework::Direction Platform::collisionSide(Body* body)
     const int overlapTop = body->bottom() - top();
     const int overlapBottom = bottom() - body->top();
 
-    return overlapLeft < overlapRight && overlapLeft < overlapTop && overlapLeft < overlapBottom
-               ? GameFramework::LEFT
-               : overlapRight < overlapLeft && overlapRight < overlapTop && overlapRight < overlapBottom
-               ? GameFramework::RIGHT
-               : overlapTop < overlapLeft && overlapTop < overlapRight && overlapTop < overlapBottom
-               ? GameFramework::UP
-               : overlapBottom < overlapLeft && overlapBottom < overlapRight && overlapBottom < overlapTop
-               ? GameFramework::DOWN
-               : GameFramework::NEUTRAL;
+    if (overlapLeft < overlapRight && overlapLeft < overlapTop && overlapLeft < overlapBottom && overlapTop > 1)
+        return GameFramework::LEFT;
+    if (overlapRight < overlapLeft && overlapRight < overlapTop && overlapRight < overlapBottom && overlapTop > 1)
+        return GameFramework::RIGHT;
+    if (overlapTop < overlapLeft && overlapTop < overlapRight && overlapTop < overlapBottom)
+        return GameFramework::UP;
+    if (overlapBottom < overlapLeft && overlapBottom < overlapRight && overlapBottom < overlapTop)
+        return GameFramework::DOWN;
+    return GameFramework::NEUTRAL;
 }

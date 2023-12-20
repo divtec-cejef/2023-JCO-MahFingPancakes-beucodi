@@ -20,6 +20,7 @@ Level::Level(GameCanvas* pCanvas, Player* pPlayer)
     m_pCanvas = pCanvas;
     m_pPlayer = pPlayer;
     m_pScene = m_pCanvas->createScene(0, 0, SCENE_WIDTH, SCENE_WIDTH / GameFramework::screenRatio());
+    m_pScene->addRect(m_pScene->sceneRect(), QPen(Qt::white));
     m_pCanvas->setCurrentScene(m_pScene);
     m_pScene->addSpriteToScene(m_pPlayer);
     m_pScene->registerSpriteForTick(m_pPlayer);
