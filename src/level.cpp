@@ -68,3 +68,10 @@ QPoint Level::levelId() const
 {
     return m_levelId;
 }
+
+//! Permet de définir le point d'apparition par défaut du joueur
+//! \param spawnPoint : le point d'apparition
+void Level::setSpawnPoint(const QPointF spawnPoint)
+{
+    m_spawnPoint = spawnPoint;
+}

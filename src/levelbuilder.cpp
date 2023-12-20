@@ -43,9 +43,9 @@ LevelBuilder::LevelBuilder(QPoint levelId)
         std::string line;
         while (std::getline(levelFile, line))
         {
-            auto spriteType = line.substr(0, line.find('('));
+            auto entryType = line.substr(0, line.find('('));
 
-            if (std::regex_search(spriteType, std::regex("platform.*")))
+            if (std::regex_search(entryType, std::regex("platform.*")))
             {
                 auto spriteRect = line.substr(line.find('(') + 1, line.find(')') - line.find('(') - 1);
                 QRect rect;
@@ -57,13 +57,13 @@ LevelBuilder::LevelBuilder(QPoint levelId)
                 spriteRect = spriteRect.substr(spriteRect.find(',') + 1, spriteRect.size() - spriteRect.find(',') - 1);
                 rect.setHeight(std::stoi(spriteRect.substr(0, spriteRect.find(','))));
 
-                if (spriteType == "platformSolid")
+                if (entryType == "platformSolid")
                     m_pSprites.append(new SolidPlatform(rect));
-                else if (spriteType == "platformFragile")
+                else if (entryType == "platformFragile")
                     m_pSprites.append(new FragilePlatform(rect));
-                else if (spriteType == "platformTransparent")
+                else if (entryType == "platformTransparent")
                     m_pSprites.append(new TransparentPlatform(rect));
-                else if (spriteType == "platformFalling")
+                else if (entryType == "platformFalling")
                     m_pSprites.append(new FallingPlatform(rect));
                 else
                     throw std::runtime_error("Unknown platform type");
@@ -79,7 +79,7 @@ LevelBuilder::LevelBuilder(QPoint levelId)
                 ylimitPos = spritePoint.find(')');
             spritePos.setY(std::stoi(spritePoint.substr(0, ylimitPos)));
 
-            if (spriteType == "door")
+            if (entryType == "door")
             {
                 QPoint targetLevel(0, 0);
                 GameFramework::Direction enterDirection = GameFramework::NEUTRAL;
@@ -103,6 +103,11 @@ LevelBuilder::LevelBuilder(QPoint levelId)
 
                 m_pSprites.append(new Door(spritePos, targetLevel, enterDirection));
 
+                continue;
+            }
+            if (entryType == "spawnPoint")
+            {
+                m_spawnPoint = spritePos;
                 continue;
             }
             throw std::runtime_error("Unknown sprite type");
@@ -142,10 +147,12 @@ Level* LevelBuilder::build(const GameCore* pCore, Player* pPlayer, const GameFra
                 connectedDoor = pDoor;
         }
     }
+    m_pLevel->setSpawnPoint(m_spawnPoint);
 
+    auto spawnPos = m_spawnPoint;
     if (connectedDoor != nullptr)
     {
-        auto spawnPos = connectedDoor->pos();
+        spawnPos = connectedDoor->pos();
         const int DOOR_WIDTH = connectedDoor->width();
         const int DOOR_HEIGHT = connectedDoor->height();
         constexpr int DOOR_SAFE_MARGIN = 5;
@@ -169,12 +176,8 @@ Level* LevelBuilder::build(const GameCore* pCore, Player* pPlayer, const GameFra
         case GameFramework::NEUTRAL:
             break;
         }
-        pPlayer->setPos(spawnPos);
     }
-    else
-    {
-        pPlayer->setPos(QPoint(0, 0));
-    }
+    pPlayer->setPos(spawnPos);
     pPlayer->setVelocity(QPointF(0, 0));
     m_discoveryThread = new std::thread(&LevelBuilder::loadNeighbouringLevels, this);
     return m_pLevel;

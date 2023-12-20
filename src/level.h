@@ -22,6 +22,7 @@ public:
     [[nodiscard]] GameScene* scene() const;
     [[nodiscard]] QPoint levelId() const;
     void appendLevel(const LevelBuilder& level);
+    void setSpawnPoint(QPointF spawnPoint);
 
 private:
     QPoint m_levelId = QPoint(0, 0);
@@ -29,6 +30,7 @@ private:
     GameScene* m_pScene = nullptr;
     QList<LevelBuilder> m_pConnectedLevels = QList<LevelBuilder>();
     Player* m_pPlayer = nullptr;
+    QPointF m_spawnPoint = QPointF(0, 0);
 };
 
 
