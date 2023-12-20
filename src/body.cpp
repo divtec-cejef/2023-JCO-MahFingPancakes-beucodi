@@ -50,22 +50,22 @@ void Body::collideWithPlatform(Platform* platform)
     switch (platform->collisionSide(this))
     {
     case GameFramework::LEFT:
-        setX(qMin(x(), platform->left() - sceneBoundingRect().width() / 2) + 1);
+        setX(qMin(x(), platform->left() - sceneBoundingRect().width() / 2));
         m_velocity.setX(qMin(0.0f, m_velocity.x()));
         m_acceleration.setX(qMin(0.0f, m_acceleration.x()));
         break;
     case GameFramework::RIGHT:
-        setX(qMax(x(), platform->right() + sceneBoundingRect().width() / 2) - 1);
+        setX(qMax(x(), platform->right() + sceneBoundingRect().width() / 2));
         m_velocity.setX(qMax(0.0f, m_velocity.x()));
         m_acceleration.setX(qMax(0.0f, m_acceleration.x()));
         break;
     case GameFramework::UP:
-        setY(qMin(y(), platform->top() - sceneBoundingRect().height() / 2) + 1);
+        setY(qMin(y(), platform->top() - sceneBoundingRect().height() / 2));
         m_velocity.setY(qMin(0.0f, m_velocity.y()));
         m_acceleration.setY(qMin(0.0f, m_acceleration.y()));
         break;
     case GameFramework::DOWN:
-        setY(qMax(y(), platform->bottom() + sceneBoundingRect().height() / 2) - 1);
+        setY(qMax(y(), platform->bottom() + sceneBoundingRect().height() / 2));
         m_velocity.setY(qMax(0.0f, m_velocity.y()));
         m_acceleration.setY(qMax(0.0f, m_acceleration.y()));
         break;
@@ -107,7 +107,7 @@ bool Body::isAirborne() const
                     return false;
                 continue;
             }
-             if(dynamic_cast<FragilePlatform*>(platform))
+            if (dynamic_cast<FragilePlatform*>(platform))
                 continue;
 
             if (side == QPointF(0, -1))
