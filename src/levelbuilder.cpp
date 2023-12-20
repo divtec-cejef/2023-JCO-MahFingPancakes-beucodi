@@ -123,13 +123,9 @@ LevelBuilder::LevelBuilder(QPoint levelId)
 Level* LevelBuilder::build(const GameCore* pCore, Player* pPlayer, const GameFramework::Direction enteredFrom)
 {
     if (m_pLevel != nullptr)
-    {
-        qDebug() << "NotNull";
         return m_pLevel;
-    }
-    qDebug() << "Null";
+
     m_pLevel = new Level(pCore->canvas(), pPlayer);
-    qDebug() << m_pLevel;
     for (const auto sprite : m_pSprites)
     {
         m_pLevel->scene()->addSpriteToScene(sprite);
@@ -162,7 +158,6 @@ Level* LevelBuilder::build(const GameCore* pCore, Player* pPlayer, const GameFra
 //! Précharge les niveaux voisins
 void LevelBuilder::loadNeighbouringLevels() const
 {
-    qDebug() << m_pLevel;
     for (const auto sprite : m_pLevel->scene()->sprites())
     {
         if (const auto door = dynamic_cast<Door*>(sprite))
