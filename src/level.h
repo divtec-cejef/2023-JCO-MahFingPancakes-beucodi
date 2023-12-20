@@ -16,10 +16,11 @@ class Player;
 class Level final : public QObject
 {
 public:
-    explicit Level(GameCanvas* pCanvas, Player* pPlayer);
+    explicit Level(GameCanvas* pCanvas, Player* pPlayer, QPoint levelId);
     ~Level() override;
     [[nodiscard]] QList<LevelBuilder> neighbouringLevels() const;
     [[nodiscard]] GameScene* scene() const;
+    [[nodiscard]] QPoint levelId() const;
     void appendLevel(const LevelBuilder& level);
 
 private:

@@ -16,8 +16,9 @@ constexpr int SCENE_HEIGHT = SCENE_WIDTH * 9 / 16;
 //! Charge le niveau
 //! \param pCanvas : pointeur vers le canvas
 //! \param pPlayer : pointeur vers le joueur
-Level::Level(GameCanvas* pCanvas, Player* pPlayer)
+Level::Level(GameCanvas* pCanvas, Player* pPlayer, QPoint levelId)
 {
+    m_levelId = levelId;
     m_pCanvas = pCanvas;
     m_pPlayer = pPlayer;
     m_pScene = m_pCanvas->createScene(0, 0, SCENE_WIDTH, SCENE_HEIGHT);
@@ -59,4 +60,11 @@ GameScene* Level::scene() const
 void Level::appendLevel(const LevelBuilder& level)
 {
     m_pConnectedLevels.append(level);
+}
+
+//! Accesseur pour l'id du niveau
+//! \returns l'id du niveau
+QPoint Level::levelId() const
+{
+    return m_levelId;
 }

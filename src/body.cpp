@@ -10,11 +10,10 @@
 #include "QGraphicsScene"
 
 //! Constructeur de la classe Body
-//! \param rImagePath : chemin vers l'image de l'ennemi
+//! \param rImagePath : chemin vers l'image du corps
 //! \param pParent : pointeur vers l'objet parent
 Body::Body(const QString& rImagePath, QGraphicsItem* pParent): Sprite(rImagePath, pParent)
 {
-    setOffset(-Sprite::boundingRect().width() / 2, -Sprite::boundingRect().height() / 2);
 }
 
 //! Permet de mettre à jour la position du corps
@@ -50,22 +49,22 @@ void Body::collideWithPlatform(Platform* platform)
     switch (platform->collisionSide(this))
     {
     case GameFramework::LEFT:
-        setX(qMin(x(), platform->left() - sceneBoundingRect().width() / 2) + 1);
+        setX(qMin(x(), platform->left() - sceneBoundingRect().width()) + 1);
         m_velocity.setX(qMin(0.0f, m_velocity.x()));
         m_acceleration.setX(qMin(0.0f, m_acceleration.x()));
         break;
     case GameFramework::RIGHT:
-        setX(qMax(x(), platform->right() + sceneBoundingRect().width() / 2) - 1);
+        setX(qMax(x(), platform->right() + sceneBoundingRect().width()) - 1);
         m_velocity.setX(qMax(0.0f, m_velocity.x()));
         m_acceleration.setX(qMax(0.0f, m_acceleration.x()));
         break;
     case GameFramework::UP:
-        setY(qMin(y(), platform->top() - sceneBoundingRect().height() / 2) + 1);
+        setY(qMin(y(), platform->top() - sceneBoundingRect().height()) + 1);
         m_velocity.setY(qMin(0.0f, m_velocity.y()));
         m_acceleration.setY(qMin(0.0f, m_acceleration.y()));
         break;
     case GameFramework::DOWN:
-        setY(qMax(y(), platform->bottom() + sceneBoundingRect().height() / 2) - 1);
+        setY(qMax(y(), platform->bottom() + sceneBoundingRect().height()) - 1);
         m_velocity.setY(qMax(0.0f, m_velocity.y()));
         m_acceleration.setY(qMax(0.0f, m_acceleration.y()));
         break;
@@ -131,4 +130,18 @@ void Body::computeGravity()
 QPointF Body::velocity() const
 {
     return m_velocity;
+}
+
+//! Permet de modifier la vitesse du corps
+//! \param velocity : nouvelle vitesse du corps
+void Body::setVelocity(const QPointF& velocity)
+{
+    m_velocity = velocity;
+}
+
+//! Permet de modifier l'accélération du corps
+//! \param acceleration : nouvelle accélération du corps
+void Body::setAcceleration(const QPointF& acceleration)
+{
+    m_acceleration = acceleration;
 }

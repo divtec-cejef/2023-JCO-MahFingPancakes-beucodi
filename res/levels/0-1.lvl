@@ -1,2 +1,2 @@
 platformSolid(0,600,1280,20)
-door(1200,536,0,1,left)
+door(0,536,0,0,right)

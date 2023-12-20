@@ -125,7 +125,8 @@ Level* LevelBuilder::build(const GameCore* pCore, Player* pPlayer, const GameFra
     if (m_pLevel != nullptr)
         return m_pLevel;
 
-    m_pLevel = new Level(pCore->canvas(), pPlayer);
+    m_pLevel = new Level(pCore->canvas(), pPlayer, m_levelId);
+    const Door* connectedDoor = nullptr;
     for (const auto sprite : m_pSprites)
     {
         m_pLevel->scene()->addSpriteToScene(sprite);
@@ -134,23 +135,47 @@ Level* LevelBuilder::build(const GameCore* pCore, Player* pPlayer, const GameFra
             QObject::connect(pPlatform, &Platform::queuedForDeletion,
                              pCore, &GameCore::spriteQueuedForDeletion);
         if (const auto pDoor = dynamic_cast<Door*>(sprite))
+        {
             QObject::connect(pDoor, &Door::doorEntered,
                              pCore, &GameCore::changeLevel);
+            if (pCore->currentLevel() != nullptr && pDoor->targetLevel() == pCore->currentLevel()->levelId())
+                connectedDoor = pDoor;
+        }
     }
-    switch (enteredFrom)
+
+    if (connectedDoor != nullptr)
     {
-    case GameFramework::LEFT:
-        break;
-    case GameFramework::RIGHT:
-        break;
-    case GameFramework::UP:
-        break;
-    case GameFramework::DOWN:
-        break;
-    case GameFramework::NEUTRAL:
-        break;
+        auto spawnPos = connectedDoor->pos();
+        const int DOOR_WIDTH = connectedDoor->width();
+        const int DOOR_HEIGHT = connectedDoor->height();
+        constexpr int DOOR_SAFE_MARGIN = 5;
+
+        switch (enteredFrom)
+        {
+        case GameFramework::LEFT:
+            spawnPos.setX(spawnPos.x() + DOOR_WIDTH + DOOR_SAFE_MARGIN);
+            spawnPos.setY(spawnPos.y() + DOOR_HEIGHT - pPlayer->sceneBoundingRect().height());
+            break;
+        case GameFramework::RIGHT:
+            spawnPos.setX(spawnPos.x() - pPlayer->sceneBoundingRect().width() - DOOR_SAFE_MARGIN);
+            spawnPos.setY(spawnPos.y() + DOOR_HEIGHT - pPlayer->sceneBoundingRect().height());
+            break;
+        case GameFramework::UP:
+            spawnPos.setY(spawnPos.y() + DOOR_WIDTH + DOOR_SAFE_MARGIN);
+            break;
+        case GameFramework::DOWN:
+            spawnPos.setY(spawnPos.y() - pPlayer->sceneBoundingRect().height() - DOOR_SAFE_MARGIN);
+            break;
+        case GameFramework::NEUTRAL:
+            break;
+        }
+        pPlayer->setPos(spawnPos);
     }
-    pPlayer->setPos(0, 0);
+    else
+    {
+        pPlayer->setPos(QPoint(0, 0));
+    }
+    pPlayer->setVelocity(QPointF(0, 0));
     m_discoveryThread = new std::thread(&LevelBuilder::loadNeighbouringLevels, this);
     return m_pLevel;
 }
