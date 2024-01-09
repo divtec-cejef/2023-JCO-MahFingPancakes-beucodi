@@ -60,6 +60,7 @@ void Entity::takeDamage(const int damage)
     m_health -= damage;
     if (m_health <= 0)
         die();
+    updateHealthBar();
 }
 
 //! Permet de faire mourir l'entité

@@ -74,4 +74,5 @@ QPoint Level::levelId() const
 void Level::setSpawnPoint(const QPointF spawnPoint)
 {
     m_spawnPoint = spawnPoint;
+    m_pPlayer->setSpawnPoint(m_spawnPoint);
 }

@@ -36,7 +36,10 @@ void Player::init()
 void Player::tick(const long long elapsedTimeInMilliseconds)
 {
     if (pos().y() > m_pParentScene->height())
-        die();
+    {
+        takeDamage(1);
+        resetPos();
+    }
 
     for (const auto sprite : m_pParentScene->collidingSprites(sceneBoundingRect()))
     {
@@ -160,6 +163,7 @@ void Player::updateJumpCharges()
 //! Permet de tuer le joueur
 void Player::die()
 {
+    Entity::die();
     emit playerDied();
 }
 
@@ -176,4 +180,20 @@ void Player::pack()
     m_pJumpChargesSprites.clear();
     m_pParentScene->removeSpriteFromScene(this);
     m_pParentScene->unregisterSpriteFromTick(this);
+}
+
+//! Permet de réinitialiser la position du joueur au point d'apparition
+void Player::resetPos()
+{
+    qDebug() << m_spawnPoint;
+    setPos(m_spawnPoint);
+    m_velocity = QPointF(0, 0);
+    m_acceleration = QPointF(0, 0);
+}
+
+//! Permet de définir le point d'apparition du joueur
+void Player::setSpawnPoint(const QPointF& spawnPoint)
+{
+    m_spawnPoint = spawnPoint;
+    qDebug() << "Set spawn point to" << m_spawnPoint;
 }

@@ -21,6 +21,7 @@ public:
     void tick(long long elapsedTimeInMilliseconds) override;
     void pack() override;
     void init() override;
+    void setSpawnPoint(const QPointF& spawnPoint);
 
 private:
     //! Vecteurs d'entrée du joueur
@@ -34,6 +35,8 @@ private:
     int m_jumpCharges = m_maxJumpCharges;
     //! Indique si le joueur a relâché la touche de saut
     bool m_hasReleasedJump = true;
+    //! Référence le point d'apparition du niveau
+    QPointF m_spawnPoint = QPointF(0, 0);
 
     //! Vitesse horizontale maximale du joueur, en mètre par seconde.
     const qreal MAX_SPEED_X = 5;
@@ -48,6 +51,7 @@ private:
 
     void die() override;
     void updateJumpCharges();
+    void resetPos();
 
 public slots:
     void keyPressed(int key);
