@@ -20,6 +20,7 @@ public:
     void jump();
     void tick(long long elapsedTimeInMilliseconds) override;
     void pack() override;
+    void unpack() override;
     void init() override;
     void setSpawnPoint(const QPointF& spawnPoint);
 

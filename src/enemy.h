@@ -15,14 +15,19 @@ class Enemy : public Entity
 {
 public:
     void tick(long long elapsedTimeInMilliseconds) override;
+    void init() override;
 
 protected:
     explicit Enemy(const QString& rImagePath, Player* pPlayer, QGraphicsItem* pParent = nullptr);
     //! Pointeur vers le joueur.
     Player* m_pPlayer = nullptr;
-    void moveTowardPlayer();
     //! Dégâts infligés par l'ennemi.
-    const int m_damage = 0;
+    int m_damage = 0;
+
+    virtual void moveTowardPlayer() = 0;
+
+private slots:
+    void planMovement();
 };
 
 

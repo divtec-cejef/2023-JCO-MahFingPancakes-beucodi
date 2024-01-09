@@ -79,3 +79,9 @@ void Entity::pack()
     }
     m_pHealthBar.clear();
 }
+
+//! Permet de "dépaqueter" l'entité, c'est-à-dire de réinstancier tous les sprites qui lui appartiennent
+void Entity::unpack()
+{
+    updateHealthBar();
+}

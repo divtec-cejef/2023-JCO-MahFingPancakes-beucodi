@@ -4,10 +4,10 @@
 
 #include "level.h"
 #include "gamecanvas.h"
-#include "utilities.h"
 #include "player.h"
 #include "levelbuilder.h"
 #include "door.h"
+#include "jumpingpancake.h"
 
 constexpr int SCENE_WIDTH = 1280;
 constexpr int SCENE_HEIGHT = SCENE_WIDTH * 9 / 16;
@@ -24,9 +24,12 @@ Level::Level(GameCanvas* pCanvas, Player* pPlayer, QPoint levelId)
     m_pScene = m_pCanvas->createScene(0, 0, SCENE_WIDTH, SCENE_HEIGHT);
     m_pScene->addRect(m_pScene->sceneRect(), QPen(Qt::white));
     m_pCanvas->setCurrentScene(m_pScene);
-    m_pScene->addSpriteToScene(m_pPlayer);
-    m_pScene->registerSpriteForTick(m_pPlayer);
-    m_pPlayer->init();
+    m_pPlayer->setParentScene(m_pScene);
+    m_pPlayer->unpack();
+    auto temp = new JumpingPancake(m_pPlayer);
+    m_pScene->addSpriteToScene(temp);
+    m_pScene->registerSpriteForTick(temp);
+    temp->init();
 }
 
 //! Destructeur de la classe Level

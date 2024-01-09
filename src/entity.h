@@ -16,6 +16,7 @@ class Entity : public Body
 public:
     void takeDamage(int damage);
     virtual void pack();
+    virtual void unpack();
     virtual void init();
 
 protected:
@@ -29,6 +30,7 @@ protected:
     const qreal ACCELERATION = 0;
     //! Force de saut de l'entité, en mètre par seconde.
     //! \note la force est appliquée en une seule fois, et non pas en continu.
+    //! La force est déja en négatif, ce qui evite d'inverser dans le setX
     const qreal JUMP_FORCE = 0;
     //! Sprite de la barre de vie de l'entité
     QList<HeartIcon*> m_pHealthBar = QList<HeartIcon*>();

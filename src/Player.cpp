@@ -182,6 +182,15 @@ void Player::pack()
     m_pParentScene->unregisterSpriteFromTick(this);
 }
 
+//! Permet de "déballer" le joueur; Permet de réinsérer tous les sprites de la scène qui appartiennent au joueur
+void Player::unpack()
+{
+    m_pParentScene->addSpriteToScene(this);
+    Entity::unpack();
+    m_pParentScene->registerSpriteForTick(this);
+    updateJumpCharges();
+}
+
 //! Permet de réinitialiser la position du joueur au point d'apparition
 void Player::resetPos()
 {

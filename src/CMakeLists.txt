@@ -30,33 +30,44 @@ qt_add_executable(MahFingPancakes main.cpp
         platform.cpp
         player.cpp
         transparentplatform.cpp
-        transparentplatform.h
         solidplatform.cpp
-        solidplatform.h
         fallingplatform.cpp
-        fallingplatform.h
         body.cpp
-        body.h
         fragileplatform.cpp
-        fragileplatform.h
         hudicon.cpp
-        hudicon.h
         jumpcharge.cpp
-        jumpcharge.h
         level.cpp
-        level.h
         door.cpp
-        door.h
         levelbuilder.cpp
-        levelbuilder.h
         enemy.cpp
-        enemy.h
         entity.cpp
-        entity.h
-        pancake.cpp
-        pancake.h
         hearticon.cpp
-        hearticon.h)
+        jumpingpancake.cpp
+        jumpingpancake.h
+        door.h
+        body.h
+        enemy.h
+        entity.h
+        fallingplatform.h
+        fragileplatform.h
+        gamecanvas.h
+        gamecore.h
+        gamescene.h
+        gameview.h
+        hearticon.h
+        hudicon.h
+        jumpcharge.h
+        level.h
+        levelbuilder.h
+        mainfrm.h
+        platform.h
+        player.h
+        resources.h
+        solidplatform.h
+        sprite.h
+        spritetickhandler.h
+        transparentplatform.h
+        utilities.h)
 
 target_link_libraries(MahFingPancakes PRIVATE
         Qt::Core

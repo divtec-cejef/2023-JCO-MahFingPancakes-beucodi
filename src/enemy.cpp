@@ -15,21 +15,23 @@ Enemy::Enemy(const QString& rImagePath, Player* pPlayer, QGraphicsItem* pParent)
     m_pPlayer = pPlayer;
 }
 
-//! Permet de faire bouger l'ennemi vers le joueur
-void Enemy::moveTowardPlayer()
+//! Initialisation de l'ennemi
+void Enemy::init()
 {
-    if (m_pPlayer->x() < x())
-        m_velocity.setX(-MAX_SPEED_X);
-    else if (m_pPlayer->x() > x())
-        m_velocity.setX(MAX_SPEED_X);
-    else
-        m_velocity.setX(0);
-    m_velocity.setY(JUMP_FORCE);
+    Entity::init();
+    planMovement();
 }
 
 //! Cadance de l'ennemi
 //! \param elapsedTimeInMilliseconds : temps écoulé depuis le dernier appel de cette fonction
 void Enemy::tick(const long long elapsedTimeInMilliseconds)
 {
-    Body::tick(elapsedTimeInMilliseconds);
+    Entity::tick(elapsedTimeInMilliseconds);
+}
+
+//! Permet de planifier le prochain mouvement
+void Enemy::planMovement()
+{
+    QTimer::singleShot(1000, this, &Enemy::planMovement);
+    moveTowardPlayer();
 }
