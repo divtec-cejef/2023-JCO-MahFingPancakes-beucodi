@@ -22,6 +22,12 @@ void Enemy::init()
     planMovement();
 }
 
+//! Permet d'obtenir les dégâts infligés par l'ennemi
+int Enemy::getDamage() const
+{
+    return m_damage;
+}
+
 //! Cadance de l'ennemi
 //! \param elapsedTimeInMilliseconds : temps écoulé depuis le dernier appel de cette fonction
 void Enemy::tick(const long long elapsedTimeInMilliseconds)

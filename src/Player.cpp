@@ -5,6 +5,7 @@
 #include "player.h"
 
 #include "door.h"
+#include "enemy.h"
 #include "resources.h"
 #include "gamescene.h"
 #include "jumpcharge.h"
@@ -35,6 +36,17 @@ void Player::init()
 //! \param elapsedTimeInMilliseconds temps écoulé depuis le dernier appel de cette fonction
 void Player::tick(const long long elapsedTimeInMilliseconds)
 {
+    if (m_invincibilityTimeLeft > 0)
+    {
+        setOpacity((m_invincibilityTimeLeft % 250) / 100.0 + .25);
+        m_invincibilityTimeLeft -= static_cast<int>(elapsedTimeInMilliseconds);
+    }
+    else
+    {
+        setOpacity(1);
+        manageEnemyCollisions();
+    }
+
     if (pos().y() > m_pParentScene->height())
     {
         takeDamage(1);
@@ -167,6 +179,14 @@ void Player::die()
     emit playerDied();
 }
 
+//! Permet de faire subir des dégâts au joueur
+void Player::takeDamage(int damage)
+{
+    Entity::takeDamage(damage);
+    m_invincibilityTimeLeft = INVINCIBILITY_TIME;
+    qDebug() << "Player took" << damage << "damage";
+}
+
 //! "Emplaqute" Le joueur; Permet de retirer tous les sprites de la scène générés par le joueur
 void Player::pack()
 {
@@ -198,6 +218,16 @@ void Player::resetPos()
     setPos(m_spawnPoint);
     m_velocity = QPointF(0, 0);
     m_acceleration = QPointF(0, 0);
+}
+
+//! Permet de gérer les collisions avec les ennemis
+void Player::manageEnemyCollisions()
+{
+    for (const auto sprite : collidingSprites())
+    {
+        if (const auto enemy = dynamic_cast<Enemy*>(sprite))
+            takeDamage(enemy->getDamage());
+    }
 }
 
 //! Permet de définir le point d'apparition du joueur

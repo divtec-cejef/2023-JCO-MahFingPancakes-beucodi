@@ -14,7 +14,7 @@ class HeartIcon;
 class Entity : public Body
 {
 public:
-    void takeDamage(int damage);
+    virtual void takeDamage(int damage);
     virtual void pack();
     virtual void unpack();
     virtual void init();

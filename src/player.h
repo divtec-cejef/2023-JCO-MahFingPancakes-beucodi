@@ -38,6 +38,8 @@ private:
     bool m_hasReleasedJump = true;
     //! Référence le point d'apparition du niveau
     QPointF m_spawnPoint = QPointF(0, 0);
+    //! Temps restant d'invincibilité du joueur après avoir pris des dégâts, en millisecondes
+    int m_invincibilityTimeLeft = 0;
 
     //! Vitesse horizontale maximale du joueur, en mètre par seconde.
     const qreal MAX_SPEED_X = 5;
@@ -49,10 +51,14 @@ private:
     const qreal PLAYER_FRICTION = 0.5;
     //! Sprites de saut du joueur
     QList<JumpCharge*> m_pJumpChargesSprites = QList<JumpCharge*>();
+    //! Temps d'invincibilité du joueur après avoir pris des dégâts, en millisecondes
+    const int INVINCIBILITY_TIME = 1000;
 
     void die() override;
+    void takeDamage(int damage) override;
     void updateJumpCharges();
     void resetPos();
+    void manageEnemyCollisions();
 
 public slots:
     void keyPressed(int key);

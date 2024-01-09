@@ -16,6 +16,7 @@ class Enemy : public Entity
 public:
     void tick(long long elapsedTimeInMilliseconds) override;
     void init() override;
+    [[nodiscard]] int getDamage() const;
 
 protected:
     explicit Enemy(const QString& rImagePath, Player* pPlayer, QGraphicsItem* pParent = nullptr);
