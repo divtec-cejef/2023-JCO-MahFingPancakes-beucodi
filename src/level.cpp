@@ -26,7 +26,7 @@ Level::Level(GameCanvas* pCanvas, Player* pPlayer, QPoint levelId)
     m_pCanvas->setCurrentScene(m_pScene);
     m_pScene->addSpriteToScene(m_pPlayer);
     m_pScene->registerSpriteForTick(m_pPlayer);
-    m_pPlayer->updateJumpCharges();
+    m_pPlayer->init();
 }
 
 //! Destructeur de la classe Level

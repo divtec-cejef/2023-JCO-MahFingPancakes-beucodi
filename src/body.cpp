@@ -138,10 +138,3 @@ void Body::setVelocity(const QPointF& velocity)
 {
     m_velocity = velocity;
 }
-
-//! Permet de modifier l'accélération du corps
-//! \param acceleration : nouvelle accélération du corps
-void Body::setAcceleration(const QPointF& acceleration)
-{
-    m_acceleration = acceleration;
-}

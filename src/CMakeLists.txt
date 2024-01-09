@@ -48,7 +48,15 @@ qt_add_executable(MahFingPancakes main.cpp
         door.cpp
         door.h
         levelbuilder.cpp
-        levelbuilder.h)
+        levelbuilder.h
+        enemy.cpp
+        enemy.h
+        entity.cpp
+        entity.h
+        pancake.cpp
+        pancake.h
+        hearticon.cpp
+        hearticon.h)
 
 target_link_libraries(MahFingPancakes PRIVATE
         Qt::Core

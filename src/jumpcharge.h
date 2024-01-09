@@ -7,11 +7,11 @@
 
 #include "hudicon.h"
 
-class JumpCharge: public HudIcon {
+class JumpCharge final : public HudIcon
+{
 public:
-    JumpCharge(QGraphicsItem* pParent = nullptr);
+    explicit JumpCharge(QGraphicsItem* pParent = nullptr);
 };
-
 
 
 #endif //JUMPCHARGE_H

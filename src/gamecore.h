@@ -60,6 +60,7 @@ private:
 
 public slots:
     void spriteQueuedForDeletion(Sprite* pSprite);
+    void onPlayerDied();
 };
 
 

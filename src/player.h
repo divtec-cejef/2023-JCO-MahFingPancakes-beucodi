@@ -5,19 +5,22 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "body.h"
+#include "entity.h"
 
 class Platform;
 class JumpCharge;
 
-class Player final : public Body
+//! La classe Player représente le joueur.
+class Player final : public Entity
 {
+    Q_OBJECT
+
 public:
     Player();
     void jump();
     void tick(long long elapsedTimeInMilliseconds) override;
-    void updateJumpCharges();
-    void pack();
+    void pack() override;
+    void init() override;
 
 private:
     //! Vecteurs d'entrée du joueur
@@ -34,20 +37,24 @@ private:
 
     //! Vitesse horizontale maximale du joueur, en mètre par seconde.
     const qreal MAX_SPEED_X = 5;
-    //! Accélération du joueur, en mètre par seconde au carré.
-    const qreal PLAYER_ACCELERATION = 12;
     //! Vitesse de saut du joueur, en mètre par seconde.
     const qreal PLAYER_JUMP_FORCE = -7;
+    //! Accélération du joueur, en mètre par seconde au carré.
+    const qreal ACCELERATION = 12;
     //! Frottement du joueur, en mètre par seconde au carré.
     const qreal PLAYER_FRICTION = 0.5;
     //! Sprites de saut du joueur
     QList<JumpCharge*> m_pJumpChargesSprites = QList<JumpCharge*>();
 
-    void die() const;
+    void die() override;
+    void updateJumpCharges();
 
 public slots:
     void keyPressed(int key);
     void keyReleased(int key);
+
+signals:
+    void playerDied();
 };
 
 

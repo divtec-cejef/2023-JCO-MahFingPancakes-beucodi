@@ -10,8 +10,9 @@
 #include "jumpcharge.h"
 
 //! Constructeur de player
-Player::Player(): Body(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00_delay-0.03s.gif")
+Player::Player(): Entity(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00_delay-0.03s.gif")
 {
+    m_maxHealth = 3;
     for (int i = 1; i < 39; i++)
     {
         QString currentI = "0" + QString::number(i);
@@ -21,6 +22,13 @@ Player::Player(): Body(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00
     setAnimationSpeed(100);
     setDebugModeEnabled(true);
     startAnimation();
+}
+
+//! Permet d'initialiser le joueur, p.ex ajouter la barre de vie
+void Player::init()
+{
+    Entity::init();
+    updateJumpCharges();
 }
 
 //! Permet de mettre a jour le joueur et d'appliquer ses physiques
@@ -42,11 +50,11 @@ void Player::tick(const long long elapsedTimeInMilliseconds)
     // Inputs horizontaux du joueur (A&D)
     if (m_playerInput.x() > 0)
     {
-        m_acceleration.setX(PLAYER_ACCELERATION);
+        m_acceleration.setX(ACCELERATION);
     }
     else if (m_playerInput.x() < 0)
     {
-        m_acceleration.setX(-PLAYER_ACCELERATION);
+        m_acceleration.setX(-ACCELERATION);
     }
     else
     {
@@ -141,7 +149,7 @@ void Player::updateJumpCharges()
         const auto finalJumpBarWidth = newSprite->sceneBoundingRect().width() * m_maxJumpCharges;
         const auto jumpBarOffset = (m_pParentScene->width() - finalJumpBarWidth) / 2;
         newSprite->setPos(
-            jumpBarOffset + m_pJumpChargesSprites.length() * newSprite->sceneBoundingRect().width(),
+            jumpBarOffset + static_cast<qreal>(m_pJumpChargesSprites.length()) * newSprite->sceneBoundingRect().width(),
             m_pParentScene->height() - newSprite->sceneBoundingRect().height()
         );
         m_pParentScene->addSpriteToScene(newSprite);
@@ -150,15 +158,15 @@ void Player::updateJumpCharges()
 }
 
 //! Permet de tuer le joueur
-//! \note Fais planter le jeu pour l'instant
-void Player::die() const
+void Player::die()
 {
-    delete m_pParentScene;
+    emit playerDied();
 }
 
 //! "Emplaqute" Le joueur; Permet de retirer tous les sprites de la scène générés par le joueur
 void Player::pack()
 {
+    Entity::pack();
     for (const auto sprite : m_pJumpChargesSprites)
     {
         m_pParentScene->removeSpriteFromScene(sprite);

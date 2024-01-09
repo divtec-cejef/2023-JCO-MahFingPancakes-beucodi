@@ -17,7 +17,6 @@ public:
     explicit Body(const QString& rImagePath, QGraphicsItem* pParent = nullptr);
     [[nodiscard]] QPointF velocity() const;
     void setVelocity(const QPointF& velocity);
-    void setAcceleration(const QPointF& acceleration);
 
 protected:
     //! Vitesse du corps, en mètre par seconde.

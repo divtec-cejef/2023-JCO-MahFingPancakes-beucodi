@@ -1,13 +1,14 @@
 /*! \mainpage 2023-JCO-MahFingPancakes-beucodi
  *
- * \author
+ * \author Odin Beuchat
  * \section intro_sec Introduction
  *
- * Ce projet est pour l'instant une architecture de base en vue de la création d'un jeu simple en 2D.
- * Il est plutôt orienté jeu d'action.
+ * Ce projet est un jeu vidéo de type "MetroidVania", c'est-à-dire un jeu d'action/plateforme
+ * dans lequel le joueur doit explorer un monde ouvert, découvrir des zones cachées et
+ * acquérir de nouvelles capacités qui lui permettront d'explorer de nouvelles zones.
  *
- * Il prend en charge l'organisation des classes nécessaires à l'affichage
- * d'une surface de jeu en deux dimensions.
+ * Le but de ce projet est de développer un jeu vidéo en utilisant le framework Qt, ainsi
+ * qu'explorer le langage C++ et les concepts de la programmation orientée objet.
  *
  * \section architecture_sec Architecture
  * La classe MainFrm se charge d'afficher la fenêtre de l'application. Elle utilise le
@@ -187,7 +188,7 @@
  * @param argv
  * @return
  */
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
     QCoreApplication::setOrganizationName("cejef-divtec");
@@ -199,7 +200,8 @@ int main(int argc, char *argv[])
     qDebug() << "App library paths : " << qApp->libraryPaths();
     qDebug() << "Image path : " << GameFramework::imagesPath();
 
-    if (GameFramework::resourcesPath().isEmpty()) {
+    if (GameFramework::resourcesPath().isEmpty())
+    {
         qCritical() << "Dossier des ressources introuvable : Fin d'exécution du programme.";
         return -1;
     }

@@ -32,6 +32,7 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
 
     connect(this, &GameCore::notifyKeyPressed, m_pPlayer, &Player::keyPressed);
     connect(this, &GameCore::notifyKeyReleased, m_pPlayer, &Player::keyReleased);
+    connect(m_pPlayer, &Player::playerDied, this, &GameCore::onPlayerDied);
 
     m_pLevel = LevelBuilder(QPoint(0, 0)).build(this, m_pPlayer, GameFramework::NEUTRAL);
 
@@ -52,10 +53,9 @@ void GameCore::changeLevel(const QPoint targetLevel, const GameFramework::Direct
     {
         if (level.levelId() == targetLevel)
         {
-            const auto oldLvl = m_pLevel;
             m_pPlayer->pack();
+            m_pLevel->deleteLater();
             m_pLevel = level.build(this, m_pPlayer, dir);
-            delete oldLvl;
             break;
         }
     }
@@ -133,4 +133,14 @@ void GameCore::spriteQueuedForDeletion(Sprite* pSprite)
 GameCanvas* GameCore::canvas() const
 {
     return m_pGameCanvas;
+}
+
+//! Fonction à appeler quand le joueur meurt
+void GameCore::onPlayerDied()
+{
+    m_pGameCanvas->stopTick();
+    m_pPlayer->pack();
+    m_pLevel->deleteLater();
+    m_pLevel = LevelBuilder(QPoint(0, 0)).build(this, m_pPlayer, GameFramework::NEUTRAL);
+    m_pGameCanvas->startTick();
 }
