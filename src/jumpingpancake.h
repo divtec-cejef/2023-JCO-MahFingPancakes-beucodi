@@ -25,6 +25,12 @@ protected:
     const qreal MAX_SPEED_X = 7;
     //! Rapport de réduction de la vitesse de l'ennemi par rapport a la distance du joueur
     const qreal DISTANCE_TO_PLAYER_RATIO = 50;
+
+private:
+    //! Compteur d'images pour l'animation de saut.
+    //! \note Le joueur saute quand le compteur atteint 7
+    int m_jumpAnimationFrame = 0;
+    void jumpWithAnimation();
 };
 
 

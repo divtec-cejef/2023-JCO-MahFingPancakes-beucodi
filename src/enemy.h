@@ -26,9 +26,7 @@ protected:
     int m_damage = 0;
 
     virtual void moveTowardPlayer() = 0;
-
-private slots:
-    void planMovement();
+    void planMovement() const;
 };
 
 

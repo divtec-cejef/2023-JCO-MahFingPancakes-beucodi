@@ -36,8 +36,7 @@ void Enemy::tick(const long long elapsedTimeInMilliseconds)
 }
 
 //! Permet de planifier le prochain mouvement
-void Enemy::planMovement()
+void Enemy::planMovement() const
 {
-    QTimer::singleShot(1000, this, &Enemy::planMovement);
-    moveTowardPlayer();
+    QTimer::singleShot(1000, this, &Enemy::moveTowardPlayer);
 }
