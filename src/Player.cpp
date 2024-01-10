@@ -56,10 +56,7 @@ void Player::tick(const long long elapsedTimeInMilliseconds)
     for (const auto sprite : m_pParentScene->collidingSprites(sceneBoundingRect()))
     {
         if (const auto door = dynamic_cast<Door*>(sprite))
-        {
-            qDebug() << "Travelling";
             door->travel();
-        }
     }
 
     // Inputs horizontaux du joueur (A&D)
@@ -214,7 +211,6 @@ void Player::unpack()
 //! Permet de réinitialiser la position du joueur au point d'apparition
 void Player::resetPos()
 {
-    qDebug() << m_spawnPoint;
     setPos(m_spawnPoint);
     m_velocity = QPointF(0, 0);
     m_acceleration = QPointF(0, 0);
@@ -234,5 +230,4 @@ void Player::manageEnemyCollisions()
 void Player::setSpawnPoint(const QPointF& spawnPoint)
 {
     m_spawnPoint = spawnPoint;
-    qDebug() << "Set spawn point to" << m_spawnPoint;
 }

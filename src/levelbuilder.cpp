@@ -180,6 +180,7 @@ Level* LevelBuilder::build(const GameCore* pCore, Player* pPlayer, const GameFra
     pPlayer->setPos(spawnPos);
     pPlayer->setVelocity(QPointF(0, 0));
     m_discoveryThread = new std::thread(&LevelBuilder::loadNeighbouringLevels, this);
+    m_pSprites.clear();
     return m_pLevel;
 }
 
@@ -189,7 +190,7 @@ void LevelBuilder::loadNeighbouringLevels() const
     for (const auto sprite : m_pLevel->scene()->sprites())
     {
         if (const auto door = dynamic_cast<Door*>(sprite))
-            m_pLevel->appendLevel(LevelBuilder(door->targetLevel()));
+            m_pLevel->appendLevel(new LevelBuilder(door->targetLevel()));
     }
 }
 
@@ -205,5 +206,11 @@ LevelBuilder::~LevelBuilder()
 {
     if (m_discoveryThread != nullptr)
         m_discoveryThread->join();
+
+    for (const auto sprite : m_pSprites)
+    {
+        delete sprite;
+    }
+
     m_pSprites.clear();
 }

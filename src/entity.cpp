@@ -41,7 +41,6 @@ void Entity::updateHealthBar()
     for (int i = 0; i < m_health; ++i)
     {
         const auto pHeart = new HeartIcon(this);
-        m_pParentScene->addSpriteToScene(pHeart);
         QRectF sceneRect = pHeart->sceneBoundingRect();
         sceneRect.setWidth(sceneRect.width() * HeartIcon::SCALE);
         sceneRect.setHeight(sceneRect.height() * HeartIcon::SCALE);
@@ -59,7 +58,10 @@ void Entity::takeDamage(const int damage)
 {
     m_health -= damage;
     if (m_health <= 0)
+    {
+        m_health = 0;
         die();
+    }
     updateHealthBar();
 }
 
@@ -77,6 +79,7 @@ void Entity::pack()
         m_pParentScene->removeSpriteFromScene(pHeart);
         pHeart->deleteLater();
     }
+
     m_pHealthBar.clear();
 }
 

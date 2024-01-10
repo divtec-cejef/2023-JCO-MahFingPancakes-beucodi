@@ -50,15 +50,15 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
 void GameCore::changeLevel(const QPoint targetLevel, const GameFramework::Direction dir)
 {
     m_pGameCanvas->stopTick();
-    for (auto& level : m_pLevel->neighbouringLevels())
+    for (const auto level : m_pLevel->neighbouringLevels())
     {
-        if (level.levelId() == targetLevel)
-        {
-            m_pPlayer->pack();
-            m_pLevel->deleteLater();
-            m_pLevel = level.build(this, m_pPlayer, dir);
-            break;
-        }
+        if (level->levelId() != targetLevel)
+            continue;
+
+        m_pPlayer->pack();
+        m_pLevel->deleteLater();
+        m_pLevel = level->build(this, m_pPlayer, dir);
+        break;
     }
     m_pGameCanvas->startTick();
 }
@@ -142,6 +142,8 @@ void GameCore::onPlayerDied()
     m_pGameCanvas->stopTick();
     m_pPlayer->pack();
     m_pLevel->deleteLater();
+    qDebug() << m_pLevel->scene()->sprites().length();
     m_pLevel = LevelBuilder(QPoint(0, 0)).build(this, m_pPlayer, GameFramework::NEUTRAL);
+    qDebug() << m_pLevel->scene()->sprites().length();
     m_pGameCanvas->startTick();
 }
