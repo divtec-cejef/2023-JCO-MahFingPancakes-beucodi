@@ -18,12 +18,14 @@
 #include <thread>
 
 #include "door.h"
+#include "enemy.h"
 #include "fallingplatform.h"
 #include "fragileplatform.h"
 #include "solidplatform.h"
 #include "transparentplatform.h"
 #include "level.h"
 #include "gamecore.h"
+#include "jumpingpancake.h"
 
 
 //! Constructeur de la classe LevelBuilder
@@ -43,55 +45,47 @@ LevelBuilder::LevelBuilder(QPoint levelId)
         std::string line;
         while (std::getline(levelFile, line))
         {
-            auto entryType = line.substr(0, line.find('('));
+            std::smatch spriteData;
 
-            if (std::regex_search(entryType, std::regex("platform.*")))
+            if (std::regex_search(line, spriteData,
+                                  std::regex("platform([A-Za-z]*)\\(([0-9]*),([0-9]*),([0-9]*),([0-9]*)\\)")))
             {
-                auto spriteRect = line.substr(line.find('(') + 1, line.find(')') - line.find('(') - 1);
-                QRect rect;
-                rect.setX(std::stoi(spriteRect.substr(0, spriteRect.find(','))));
-                spriteRect = spriteRect.substr(spriteRect.find(',') + 1, spriteRect.size() - spriteRect.find(',') - 1);
-                rect.setY(std::stoi(spriteRect.substr(0, spriteRect.find(','))));
-                spriteRect = spriteRect.substr(spriteRect.find(',') + 1, spriteRect.size() - spriteRect.find(',') - 1);
-                rect.setWidth(std::stoi(spriteRect.substr(0, spriteRect.find(','))));
-                spriteRect = spriteRect.substr(spriteRect.find(',') + 1, spriteRect.size() - spriteRect.find(',') - 1);
-                rect.setHeight(std::stoi(spriteRect.substr(0, spriteRect.find(','))));
+                std::string platformType = spriteData[1].str();
+                QRect rect = {
+                    stoi(spriteData[2].str()),
+                    stoi(spriteData[3].str()),
+                    stoi(spriteData[4].str()),
+                    stoi(spriteData[5].str())
+                };
 
-                if (entryType == "platformSolid")
+                if (platformType == "Solid")
                     m_pSprites.append(new SolidPlatform(rect));
-                else if (entryType == "platformFragile")
+                else if (platformType == "Fragile")
                     m_pSprites.append(new FragilePlatform(rect));
-                else if (entryType == "platformTransparent")
+                else if (platformType == "Transparent")
                     m_pSprites.append(new TransparentPlatform(rect));
-                else if (entryType == "platformFalling")
+                else if (platformType == "Falling")
                     m_pSprites.append(new FallingPlatform(rect));
                 else
                     throw std::runtime_error("Unknown platform type");
                 continue;
             }
 
-            auto spritePoint = line.substr(line.find('(') + 1, line.find(')') - line.find('(') - 1);
-            QPoint spritePos;
-            spritePos.setX(std::stoi(spritePoint.substr(0, spritePoint.find(','))));
-            spritePoint = spritePoint.substr(spritePoint.find(',') + 1, spritePoint.size() - spritePoint.find(',') - 1);
-            auto ylimitPos = spritePoint.find(',');
-            if (ylimitPos == std::string::npos)
-                ylimitPos = spritePoint.find(')');
-            spritePos.setY(std::stoi(spritePoint.substr(0, ylimitPos)));
-
-            if (entryType == "door")
+            if (std::regex_search(line, spriteData,
+                                  std::regex("door\\(([0-9]*),([0-9]*),([0-9]*),([0-9]*),(right|left|up|down)\\)")))
             {
-                QPoint targetLevel(0, 0);
-                GameFramework::Direction enterDirection = GameFramework::NEUTRAL;
-                spritePoint = spritePoint.substr(spritePoint.find(',') + 1,
-                                                 spritePoint.size() - spritePoint.find(',') - 1);
-                targetLevel.setX(std::stoi(spritePoint.substr(0, spritePoint.find(','))));
-                spritePoint = spritePoint.substr(spritePoint.find(',') + 1,
-                                                 spritePoint.size() - spritePoint.find(',') - 1);
-                targetLevel.setY(std::stoi(spritePoint.substr(0, spritePoint.find(','))));
-                spritePoint = spritePoint.substr(spritePoint.find(',') + 1,
-                                                 spritePoint.size() - spritePoint.find(',') - 1);
-                auto enterDirStr = spritePoint.substr(0, spritePoint.find(')'));
+                QPoint pos(
+                    stoi(spriteData[1].str()),
+                    stoi(spriteData[2].str())
+                );
+                QPoint targetLevel(
+                    stoi(spriteData[3].str()),
+                    stoi(spriteData[4].str())
+                );
+
+                auto enterDirStr = spriteData[5].str();
+                GameFramework::Direction enterDirection;
+
                 if (enterDirStr == "left")
                     enterDirection = GameFramework::LEFT;
                 else if (enterDirStr == "right")
@@ -101,13 +95,32 @@ LevelBuilder::LevelBuilder(QPoint levelId)
                 else if (enterDirStr == "down")
                     enterDirection = GameFramework::DOWN;
 
-                m_pSprites.append(new Door(spritePos, targetLevel, enterDirection));
+                m_pSprites.append(new Door(pos, targetLevel, enterDirection));
 
                 continue;
             }
-            if (entryType == "spawnPoint")
+
+            if (std::regex_search(line, spriteData,
+                                  std::regex("spawnPoint\\(([0-9]*),([0-9]*)\\)")))
             {
-                m_spawnPoint = spritePos;
+                m_spawnPoint = {
+                    stod(spriteData[1].str()),
+                    stod(spriteData[2].str())
+                };
+                continue;
+            }
+
+            if (std::regex_search(line, spriteData, std::regex("enemy([A-Za-z]*)\\(([0-9]*),([0-9]*)\\)")))
+            {
+                QPoint pos(
+                    stoi(spriteData[2].str()),
+                    stoi(spriteData[3].str())
+                );
+                std::string enemyType = spriteData[1].str();
+                if (enemyType == "Jmp")
+                    m_pSprites.append(new JumpingPancake(pos));
+                else
+                    throw std::runtime_error("unknown enemy type");
                 continue;
             }
             throw std::runtime_error("Unknown sprite type");
@@ -181,6 +194,7 @@ Level* LevelBuilder::build(const GameCore* pCore, Player* pPlayer, const GameFra
     pPlayer->setVelocity(QPointF(0, 0));
     m_discoveryThread = new std::thread(&LevelBuilder::loadNeighbouringLevels, this);
     m_pSprites.clear();
+    m_pLevel->init();
     return m_pLevel;
 }
 

@@ -1,3 +1,4 @@
 spawnPoint(20,550)
 platformSolid(0,600,1280,20)
 door(0,536,0,0,right)
+enemyJmp(0,0)

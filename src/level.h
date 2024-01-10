@@ -23,6 +23,7 @@ public:
     [[nodiscard]] QPoint levelId() const;
     void appendLevel(LevelBuilder* level);
     void setSpawnPoint(QPointF spawnPoint);
+    void init() const;
 
 private:
     QPoint m_levelId = QPoint(0, 0);

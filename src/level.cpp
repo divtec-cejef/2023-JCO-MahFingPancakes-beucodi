@@ -30,10 +30,6 @@ Level::Level(GameCanvas* pCanvas, Player* pPlayer, QPoint levelId)
     m_pCanvas->setCurrentScene(m_pScene);
     m_pPlayer->setParentScene(m_pScene);
     m_pPlayer->unpack();
-    auto temp = new JumpingPancake(m_pPlayer);
-    m_pScene->addSpriteToScene(temp);
-    m_pScene->registerSpriteForTick(temp);
-    temp->init();
 }
 
 //! Destructeur de la classe Level
@@ -89,4 +85,14 @@ void Level::setSpawnPoint(const QPointF spawnPoint)
 {
     m_spawnPoint = spawnPoint;
     m_pPlayer->setSpawnPoint(m_spawnPoint);
+}
+
+//! Initialise le niveau
+void Level::init() const
+{
+    for (const auto sprite : m_pScene->sprites())
+    {
+        if (const auto entity = dynamic_cast<Entity*>(sprite))
+            entity->init();
+    }
 }

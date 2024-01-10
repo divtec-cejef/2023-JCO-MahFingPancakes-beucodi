@@ -12,8 +12,8 @@
 //! Constructeur de la classe JumpingPancake
 //! \param pPlayer : pointeur vers le joueur
 //! \param pParent : pointeur vers l'objet parent
-JumpingPancake::JumpingPancake(Player* pPlayer, QGraphicsItem* pParent)
-    : Enemy(QString("%1/pancake/idle.png").arg(GameFramework::imagesPath()), pPlayer, pParent)
+JumpingPancake::JumpingPancake(QPoint pos, QGraphicsItem* pParent)
+    : Enemy(QString("%1/pancake/idle.png").arg(GameFramework::imagesPath()), pos, pParent)
 {
     m_maxHealth = 1;
     m_damage = 1;

@@ -10,7 +10,7 @@
 class JumpingPancake final : public Enemy
 {
 public:
-    explicit JumpingPancake(Player* pPlayer, QGraphicsItem* pParent = nullptr);
+    explicit JumpingPancake(QPoint pos = {0, 0}, QGraphicsItem* pParent = nullptr);
     void tick(long long elapsedTimeInMilliseconds) override;
 
 protected:
