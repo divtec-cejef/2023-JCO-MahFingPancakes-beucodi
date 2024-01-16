@@ -33,9 +33,17 @@ public slots:
 protected:
     void die() override;
 
+    [[nodiscard]] virtual int getMinCooldown()
+    {
+        return 1000;
+    }
+
+    [[nodiscard]] virtual int getMaxCooldown()
+    {
+        return 3000;
+    }
+
 private:
-    static constexpr int MIN_MOVE_COOLDOWN = 1000;
-    static constexpr int MAX_MOVE_COOLDOWN = 3000;
     int m_moveCooldown = 0;
     bool m_hasAttacked = false;
 

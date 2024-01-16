@@ -26,10 +26,22 @@ protected:
     //! Rapport de réduction de la vitesse de l'ennemi par rapport a la distance du joueur
     const qreal DISTANCE_TO_PLAYER_RATIO = 50;
 
+    [[nodiscard]] int getMinCooldown() override
+    {
+        return 100;
+    }
+
+    [[nodiscard]] int getMaxCooldown() override
+    {
+        return 500;
+    }
+
 private:
     //! Compteur d'images pour l'animation de saut.
     //! \note Le joueur saute quand le compteur atteint 7
     int m_jumpAnimationFrame = 0;
+    //! Cooldown entre les images de l'animation de saut
+    int m_jumpAnimationCooldown = 0;
     void jumpWithAnimation();
 
 public:

@@ -57,7 +57,7 @@ void Enemy::tick(const long long elapsedTimeInMilliseconds)
     }
     else
     {
-        m_moveCooldown = QRandomGenerator64::global()->bounded(MIN_MOVE_COOLDOWN, MAX_MOVE_COOLDOWN);
+        m_moveCooldown = QRandomGenerator64::global()->bounded(getMinCooldown(), getMaxCooldown());
         m_hasAttacked = false;
     }
 }
