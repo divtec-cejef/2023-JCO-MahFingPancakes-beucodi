@@ -33,6 +33,7 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
 
     connect(this, &GameCore::notifyKeyPressed, m_pPlayer, &Player::keyPressed);
     connect(this, &GameCore::notifyKeyReleased, m_pPlayer, &Player::keyReleased);
+    connect(this, &GameCore::notifyMouseButtonPressed, m_pPlayer, &Player::mouseButtonPressed);
     connect(m_pPlayer, &Player::playerDied, this, &GameCore::onPlayerDied);
 
     m_pLevel = LevelBuilder(QPoint(0, 0)).build(this, m_pPlayer, GameFramework::NEUTRAL);
@@ -44,7 +45,6 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
     // sinon le temps passé jusqu'au premier tick (ElapsedTime) peut être élevé et provoquer de gros
     // déplacements, surtout si le déboggueur est démarré.
     m_pGameCanvas->startTick();
-    qDebug() << "GameCore Thread:" << QThread::currentThreadId();
 }
 
 //! Change le niveau actuel.

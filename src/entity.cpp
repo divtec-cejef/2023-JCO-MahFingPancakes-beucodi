@@ -65,12 +65,6 @@ void Entity::takeDamage(const int damage)
     updateHealthBar();
 }
 
-//! Permet de faire mourir l'entité
-void Entity::die()
-{
-    qInfo() << "Entity died";
-}
-
 //! Permet d'"empaqueter" l'entité, c'est-à-dire d'enlever tous les sprites qu'elle a instancié
 void Entity::pack()
 {

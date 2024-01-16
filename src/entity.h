@@ -21,7 +21,7 @@ public:
 
 protected:
     explicit Entity(const QString& rImagePath, QGraphicsItem* pParent = nullptr);
-    virtual void die();
+    virtual void die() = 0;
     //! Santé maximale de l'entité.
     int m_maxHealth = 0;
     //! Santé actuelle de l'entité.

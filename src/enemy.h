@@ -30,6 +30,9 @@ protected:
 public slots:
     virtual void moveTowardPlayer() = 0;
 
+protected:
+    void die() override;
+
 private:
     static constexpr int MIN_MOVE_COOLDOWN = 1000;
     static constexpr int MAX_MOVE_COOLDOWN = 3000;

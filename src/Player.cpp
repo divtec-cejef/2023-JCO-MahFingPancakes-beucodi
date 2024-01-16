@@ -9,6 +9,7 @@
 #include "resources.h"
 #include "gamescene.h"
 #include "jumpcharge.h"
+#include "mindsignal.h"
 
 //! Constructeur de player
 Player::Player(): Entity(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00_delay-0.03s.gif")
@@ -172,7 +173,6 @@ void Player::updateJumpCharges()
 //! Permet de tuer le joueur
 void Player::die()
 {
-    Entity::die();
     emit playerDied();
 }
 
@@ -195,6 +195,14 @@ void Player::pack()
         sprite->deleteLater();
     }
     m_pJumpChargesSprites.clear();
+
+    for (const auto sprite : m_pAttackSprites)
+    {
+        m_pParentScene->removeSpriteFromScene(sprite);
+        m_pParentScene->unregisterSpriteFromTick(sprite);
+        sprite->deleteLater();
+    }
+    m_pAttackSprites.clear();
     m_pParentScene->removeSpriteFromScene(this);
     m_pParentScene->unregisterSpriteFromTick(this);
 }
@@ -230,4 +238,29 @@ void Player::manageEnemyCollisions()
 void Player::setSpawnPoint(const QPointF& spawnPoint)
 {
     m_spawnPoint = spawnPoint;
+}
+
+//! Permet de gérer les clics de souris, en l'occurence pour attaquer
+void Player::mouseButtonPressed(QPointF mousePosition, Qt::MouseButtons buttons)
+{
+    if (buttons & Qt::LeftButton)
+    {
+        const auto newMindSignal = new MindSignal();
+        auto center = sceneBoundingRect().size() / 2.0;
+        newMindSignal->setPos(pos() + QPointF(center.width(), center.height()));
+        newMindSignal->setDirection(mousePosition);
+        m_pParentScene->addSpriteToScene(newMindSignal);
+        m_pParentScene->registerSpriteForTick(newMindSignal);
+        m_pAttackSprites.append(newMindSignal);
+        connect(newMindSignal, &MindSignal::queueForDeletion, this, &Player::mindSignalRemoved);
+    }
+}
+
+//! S'execute a la destruction d'un mind signal
+//! \param obj le mind signal qui doit être détruit
+void Player::mindSignalRemoved(MindSignal* obj)
+{
+    m_pAttackSprites.removeAll(obj);
+    m_pParentScene->removeSpriteFromScene(obj);
+    obj->deleteLater();
 }

@@ -6,6 +6,7 @@
 
 #include <QRandomGenerator64>
 
+#include "gamescene.h"
 #include "player.h"
 
 //! Constructeur de base de la classe Enemy.
@@ -15,6 +16,15 @@ Enemy::Enemy(const QString& rImagePath, QPoint pos, QGraphicsItem* pParent)
     : Entity(rImagePath, pParent)
 {
     setPos(pos);
+}
+
+//! Permet de faire mourrir un ennemi
+void Enemy::die()
+{
+    m_pParentScene->unregisterSpriteFromTick(this);
+    m_pParentScene->removeSpriteFromScene(this);
+    deleteLater();
+    pack();
 }
 
 //! Liaison du joueur

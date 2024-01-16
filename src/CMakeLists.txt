@@ -67,7 +67,9 @@ qt_add_executable(MahFingPancakes main.cpp
         sprite.h
         spritetickhandler.h
         transparentplatform.h
-        utilities.h)
+        utilities.h
+        mindsignal.cpp
+        mindsignal.h)
 
 target_link_libraries(MahFingPancakes PRIVATE
         Qt::Core

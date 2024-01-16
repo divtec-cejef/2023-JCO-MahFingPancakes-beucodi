@@ -9,6 +9,7 @@
 
 class Platform;
 class JumpCharge;
+class MindSignal;
 
 //! La classe Player représente le joueur.
 class Player final : public Entity
@@ -53,6 +54,8 @@ private:
     QList<JumpCharge*> m_pJumpChargesSprites = QList<JumpCharge*>();
     //! Temps d'invincibilité du joueur après avoir pris des dégâts, en millisecondes
     const int INVINCIBILITY_TIME = 1000;
+    //! Liste des sprites de projectiles
+    QList<MindSignal*> m_pAttackSprites = QList<MindSignal*>();
 
     void die() override;
     void takeDamage(int damage) override;
@@ -63,6 +66,8 @@ private:
 public slots:
     void keyPressed(int key);
     void keyReleased(int key);
+    void mouseButtonPressed(QPointF mousePosition, Qt::MouseButtons buttons);
+    void mindSignalRemoved(MindSignal* obj);
 
 signals:
     void playerDied();
