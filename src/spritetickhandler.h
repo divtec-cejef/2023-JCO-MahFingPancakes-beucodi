@@ -25,17 +25,15 @@ class Sprite;
 class SpriteTickHandler
 {
 public:
-    SpriteTickHandler(Sprite* pParentSprite = nullptr);
+    explicit SpriteTickHandler(Sprite* pParentSprite = nullptr);
     virtual ~SpriteTickHandler();
-
-public:
     virtual void setParentSprite(Sprite* pParentSprite);
 
     virtual void init() {}
     virtual void tick(long long elapsedTimeInMilliseconds) = 0;
 
 protected:
-    GameScene* parentScene() const;
+    [[nodiscard]] GameScene* parentScene() const;
 
     Sprite* m_pParentSprite;
 };

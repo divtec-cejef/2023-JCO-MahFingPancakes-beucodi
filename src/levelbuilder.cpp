@@ -6,6 +6,7 @@
 
 #include <QPoint>
 #include <QRect>
+#include <QThread>
 
 #include "utilities.h"
 #include "resources.h"
@@ -159,6 +160,9 @@ Level* LevelBuilder::build(const GameCore* pCore, Player* pPlayer, const GameFra
             if (pCore->currentLevel() != nullptr && pDoor->targetLevel() == pCore->currentLevel()->levelId())
                 connectedDoor = pDoor;
         }
+
+        if (const auto pEnemy = dynamic_cast<Enemy*>(sprite))
+            pEnemy->linkPlayer(pPlayer);
     }
     m_pLevel->setSpawnPoint(m_spawnPoint);
 
@@ -192,9 +196,9 @@ Level* LevelBuilder::build(const GameCore* pCore, Player* pPlayer, const GameFra
     }
     pPlayer->setPos(spawnPos);
     pPlayer->setVelocity(QPointF(0, 0));
-    m_discoveryThread = new std::thread(&LevelBuilder::loadNeighbouringLevels, this);
+    m_discoveryThread = QThread::create([this] { loadNeighbouringLevels(); });
+    m_discoveryThread->start();
     m_pSprites.clear();
-    m_pLevel->init();
     return m_pLevel;
 }
 
@@ -219,7 +223,7 @@ QPoint LevelBuilder::levelId() const
 LevelBuilder::~LevelBuilder()
 {
     if (m_discoveryThread != nullptr)
-        m_discoveryThread->join();
+        m_discoveryThread->wait();
 
     for (const auto sprite : m_pSprites)
     {

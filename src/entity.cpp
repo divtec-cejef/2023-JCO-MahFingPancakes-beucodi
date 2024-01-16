@@ -16,7 +16,7 @@ Entity::Entity(QString const& rImagePath, QGraphicsItem* pParent): Body(rImagePa
 }
 
 //! Permet d'initialiser l'entité, p.ex ajouter la barre de vie
-void Entity::init()
+void Entity::initialize()
 {
     m_health = m_maxHealth;
     updateHealthBar();

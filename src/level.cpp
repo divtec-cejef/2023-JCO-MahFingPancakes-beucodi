@@ -88,11 +88,11 @@ void Level::setSpawnPoint(const QPointF spawnPoint)
 }
 
 //! Initialise le niveau
-void Level::init() const
+void Level::initialize() const
 {
     for (const auto sprite : m_pScene->sprites())
     {
         if (const auto entity = dynamic_cast<Entity*>(sprite))
-            entity->init();
+            entity->initialize();
     }
 }

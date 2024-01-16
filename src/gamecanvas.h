@@ -113,10 +113,10 @@ private:
 #ifdef QT_DEBUG
     void resetStatistics();
 
-    int m_tickCount;
-    int m_totalElapsedTime;
-    int m_maxTickDuration;
-    int m_minTickDuration;
+    int m_tickCount= 0;
+    int m_totalElapsedTime = 0;
+    int m_maxTickDuration = 0;
+    int m_minTickDuration = 1000;
     int m_statsTrigger;
 #endif
 

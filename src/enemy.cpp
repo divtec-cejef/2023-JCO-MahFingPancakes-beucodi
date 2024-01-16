@@ -3,6 +3,9 @@
 //
 
 #include "enemy.h"
+
+#include <QRandomGenerator64>
+
 #include "player.h"
 
 //! Constructeur de base de la classe Enemy.
@@ -21,13 +24,6 @@ void Enemy::linkPlayer(Player* pPlayer)
     m_pPlayer = pPlayer;
 }
 
-//! Initialisation de l'ennemi
-void Enemy::init()
-{
-    Entity::init();
-    planMovement();
-}
-
 //! Permet d'obtenir les dégâts infligés par l'ennemi
 int Enemy::getDamage() const
 {
@@ -39,10 +35,19 @@ int Enemy::getDamage() const
 void Enemy::tick(const long long elapsedTimeInMilliseconds)
 {
     Entity::tick(elapsedTimeInMilliseconds);
-}
-
-//! Permet de planifier le prochain mouvement
-void Enemy::planMovement() const
-{
-    QTimer::singleShot(1000, this, &Enemy::moveTowardPlayer);
+    if (m_moveCooldown > 0)
+        m_moveCooldown -= static_cast<int>(elapsedTimeInMilliseconds);
+    else if (!isAirborne())
+    {
+        if (!m_hasAttacked)
+        {
+            moveTowardPlayer();
+            m_hasAttacked = true;
+        }
+    }
+    else
+    {
+        m_moveCooldown = QRandomGenerator64::global()->bounded(MIN_MOVE_COOLDOWN, MAX_MOVE_COOLDOWN);
+        m_hasAttacked = false;
+    }
 }

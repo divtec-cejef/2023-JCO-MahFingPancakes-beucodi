@@ -14,7 +14,7 @@ public:
     void tick(long long elapsedTimeInMilliseconds) override;
 
 protected:
-    void moveTowardPlayer() override;
+    // void moveTowardPlayer() override;
     //! Force de saut de l'entité, en mètre par seconde.
     //! \note la force est appliquée en une seule fois, et non pas en continu.
     //! La force est déja en négatif, ce qui evite d'inverser dans le setX
@@ -31,6 +31,9 @@ private:
     //! \note Le joueur saute quand le compteur atteint 7
     int m_jumpAnimationFrame = 0;
     void jumpWithAnimation();
+
+public:
+    void moveTowardPlayer() override;
 };
 
 

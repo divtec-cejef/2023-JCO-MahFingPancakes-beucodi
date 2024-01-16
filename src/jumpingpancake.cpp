@@ -10,9 +10,9 @@
 #include "body.h"
 
 //! Constructeur de la classe JumpingPancake
-//! \param pPlayer : pointeur vers le joueur
+//! \param pos : Position initiale de l'ennemi
 //! \param pParent : pointeur vers l'objet parent
-JumpingPancake::JumpingPancake(QPoint pos, QGraphicsItem* pParent)
+JumpingPancake::JumpingPancake(const QPoint pos, QGraphicsItem* pParent)
     : Enemy(QString("%1/pancake/idle.png").arg(GameFramework::imagesPath()), pos, pParent)
 {
     m_maxHealth = 1;
@@ -39,13 +39,8 @@ void JumpingPancake::tick(long long elapsedTimeInMilliseconds)
 //! Fait sauter l'ennemi
 void JumpingPancake::moveTowardPlayer()
 {
-    if (isAirborne())
-    {
-        planMovement();
-        return;
-    }
-
-    jumpWithAnimation();
+    if (!isAirborne())
+        jumpWithAnimation();
 }
 
 //! Permet de mettre à jour l'animation de saut
@@ -60,7 +55,6 @@ void JumpingPancake::jumpWithAnimation()
         m_velocity.setX(lateralForce);
 
         m_velocity.setY(JUMP_FORCE);
-        planMovement();
         return;
     }
 

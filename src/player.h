@@ -21,7 +21,7 @@ public:
     void tick(long long elapsedTimeInMilliseconds) override;
     void pack() override;
     void unpack() override;
-    void init() override;
+    void initialize() override;
     void setSpawnPoint(const QPointF& spawnPoint);
 
 private:

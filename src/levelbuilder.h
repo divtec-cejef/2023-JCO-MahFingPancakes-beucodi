@@ -27,7 +27,7 @@ private:
     QPoint m_levelId = QPoint(0, 0);
     void loadNeighbouringLevels() const;
     Level* m_pLevel = nullptr;
-    std::thread* m_discoveryThread = nullptr;;
+    QThread* m_discoveryThread = nullptr;;
     QPointF m_spawnPoint = QPointF(0, 0);
 };
 

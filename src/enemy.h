@@ -13,9 +13,10 @@ class Player;
 //! Elle doit être héritée pour être utilisée.
 class Enemy : public Entity
 {
+    Q_OBJECT
+
 public:
     void tick(long long elapsedTimeInMilliseconds) override;
-    void init() override;
     [[nodiscard]] int getDamage() const;
     void linkPlayer(Player* pPlayer);
 
@@ -26,8 +27,16 @@ protected:
     //! Dégâts infligés par l'ennemi.
     int m_damage = 0;
 
+public slots:
     virtual void moveTowardPlayer() = 0;
-    void planMovement() const;
+
+private:
+    static constexpr int MIN_MOVE_COOLDOWN = 1000;
+    static constexpr int MAX_MOVE_COOLDOWN = 3000;
+    int m_moveCooldown = 0;
+    bool m_hasAttacked = false;
+
+signals:
 };
 
 

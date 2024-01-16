@@ -7,6 +7,7 @@
 #include "gamecore.h"
 
 #include <QSettings>
+#include <QThread>
 
 #include "gamescene.h"
 #include "gamecanvas.h"
@@ -35,13 +36,15 @@ GameCore::GameCore(GameCanvas* pGameCanvas, QObject* pParent) : QObject(pParent)
     connect(m_pPlayer, &Player::playerDied, this, &GameCore::onPlayerDied);
 
     m_pLevel = LevelBuilder(QPoint(0, 0)).build(this, m_pPlayer, GameFramework::NEUTRAL);
-    m_pPlayer->init();
+    m_pPlayer->initialize();
+    m_pLevel->initialize();
 
     // Démarre le tick pour que les animations qui en dépendent fonctionnent correctement.
     // Attention : il est important que l'enclenchement du tick soit fait vers la fin de cette fonction,
     // sinon le temps passé jusqu'au premier tick (ElapsedTime) peut être élevé et provoquer de gros
     // déplacements, surtout si le déboggueur est démarré.
     m_pGameCanvas->startTick();
+    qDebug() << "GameCore Thread:" << QThread::currentThreadId();
 }
 
 //! Change le niveau actuel.
@@ -58,6 +61,7 @@ void GameCore::changeLevel(const QPoint targetLevel, const GameFramework::Direct
         m_pPlayer->pack();
         m_pLevel->deleteLater();
         m_pLevel = level->build(this, m_pPlayer, dir);
+        m_pLevel->initialize();
         break;
     }
     m_pGameCanvas->startTick();

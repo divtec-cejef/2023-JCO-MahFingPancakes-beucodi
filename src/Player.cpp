@@ -26,9 +26,9 @@ Player::Player(): Entity(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_
 }
 
 //! Permet d'initialiser le joueur, p.ex ajouter la barre de vie
-void Player::init()
+void Player::initialize()
 {
-    Entity::init();
+    Entity::initialize();
     updateJumpCharges();
 }
 

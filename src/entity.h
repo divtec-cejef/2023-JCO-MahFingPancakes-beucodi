@@ -17,7 +17,7 @@ public:
     virtual void takeDamage(int damage);
     virtual void pack();
     virtual void unpack();
-    virtual void init();
+    virtual void initialize();
 
 protected:
     explicit Entity(const QString& rImagePath, QGraphicsItem* pParent = nullptr);
