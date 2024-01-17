@@ -20,7 +20,7 @@ private:
     //! La direction de l'attaque
     QPointF m_deltaPos = QPointF(0, 0);
     //! La vitesse de l'attaque, en mètres par seconde
-    static constexpr qreal ATTACK_SPREAD_SPEED = 10;
+    static constexpr qreal ATTACK_SPREAD_SPEED = 20;
     //! La taille de l'attaque, en mètres
     static constexpr qreal ATTACK_SIZE = 0.5;
     //! La puissance de l'attaque
