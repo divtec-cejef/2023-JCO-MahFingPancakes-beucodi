@@ -69,7 +69,11 @@ qt_add_executable(MahFingPancakes main.cpp
         transparentplatform.h
         utilities.h
         mindsignal.cpp
-        mindsignal.h)
+        mindsignal.h
+        item.cpp
+        item.h
+        jumpcharge.cpp
+        jumpcharge.h)
 
 target_link_libraries(MahFingPancakes PRIVATE
         Qt::Core

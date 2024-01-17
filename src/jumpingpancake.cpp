@@ -30,7 +30,7 @@ JumpingPancake::JumpingPancake(const QPoint pos, QGraphicsItem *pParent)
 //! Permet de mettre à jour le JumpingPancake et d'appliquer ses physiques
 void JumpingPancake::tick(long long elapsedTimeInMilliseconds) {
     Enemy::tick(elapsedTimeInMilliseconds);
-    computeGravity();
+    computeGravity(elapsedTimeInMilliseconds);
     if (!isAirborne())
         m_velocity = {0, 0};
     if (m_jumpAnimationFrame != 0) {

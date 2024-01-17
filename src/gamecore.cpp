@@ -84,6 +84,15 @@ void GameCore::keyPressed(const int key) {
             m_pPlayer->pack();
             m_pLevel->deleteLater();
         }
+
+        if (m_pPlayer != nullptr)
+            delete m_pPlayer;
+
+        m_pPlayer = new Player();
+        connect(this, &GameCore::notifyKeyPressed, m_pPlayer, &Player::keyPressed);
+        connect(this, &GameCore::notifyKeyReleased, m_pPlayer, &Player::keyReleased);
+        connect(this, &GameCore::notifyMouseButtonPressed, m_pPlayer, &Player::mouseButtonPressed);
+        connect(m_pPlayer, &Player::playerDied, this, &GameCore::onPlayerDied);
         m_pLevel = LevelBuilder(QPoint(0, 0)).build(this, m_pPlayer, GameFramework::NEUTRAL);
         m_pPlayer->initialize();
         m_pLevel->initialize();
@@ -144,6 +153,8 @@ void GameCore::onPlayerDied() {
     m_pLevel = nullptr;
     auto newScene = m_pGameCanvas->createScene();
     m_pGameCanvas->setCurrentScene(newScene);
+    m_pPlayer->deleteLater();
+    m_pPlayer = nullptr;
 
     auto deathMessagePixmap = QPixmap(600, 200);
     deathMessagePixmap.fill(QColorConstants::Transparent);

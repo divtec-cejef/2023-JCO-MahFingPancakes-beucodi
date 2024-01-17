@@ -28,6 +28,7 @@
 #include "level.h"
 #include "gamecore.h"
 #include "jumpingpancake.h"
+#include "jumpcharge.h"
 
 
 //! Constructeur de la classe LevelBuilder
@@ -163,6 +164,24 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
                 newSprite->setZValue(-4);
                 newSprite->setPos(pos);
                 m_pSprites.append(newSprite);
+                continue;
+            }
+
+            if (std::regex_search(line, spriteData, std::regex("item([A-Za-z]*)\\(([0-9]*),([0-9]*),\"(.*)\"\\)"))) {
+                QString itemType(spriteData[1].str().c_str());
+                QPoint pos(
+                        stoi(spriteData[2].str()),
+                        stoi(spriteData[3].str())
+                );
+                QString itemId(spriteData[4].str().c_str());
+
+                if (itemType == "Jmp") {
+                    auto newItem = new JumpCharge(itemId);
+                    newItem->setPos(pos);
+                    m_pSprites.append(newItem);
+                } else {
+                    throw std::runtime_error("Unknown item type");
+                }
                 continue;
             }
 

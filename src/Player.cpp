@@ -10,10 +10,12 @@
 #include "gamescene.h"
 #include "jumpicon.h"
 #include "mindsignal.h"
+#include "item.h"
+#include "jumpcharge.h"
 
 //! Constructeur de player
 Player::Player() : Entity(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00_delay-0.03s.gif") {
-    m_maxSpeedX = 5;
+    m_maxSpeedX = 3;
     m_maxHealth = 3;
     for (int i = 1; i < 39; i++) {
         QString currentI = "0" + QString::number(i);
@@ -54,6 +56,16 @@ void Player::tick(const long long elapsedTimeInMilliseconds) {
     for (const auto sprite: m_pParentScene->collidingSprites(sceneBoundingRect())) {
         if (const auto door = dynamic_cast<Door *>(sprite))
             door->travel();
+
+        if (const auto item = dynamic_cast<Item *>(sprite)) {
+            if (const auto jumpCharge = dynamic_cast<JumpCharge *>(item)) {
+                m_maxJumpIcons++;
+                m_jumpIcons++;
+                updateJumpIcons();
+            }
+            m_pParentScene->removeSpriteFromScene(sprite);
+            sprite->deleteLater();
+        }
     }
 
     // Inputs horizontaux du joueur (A&D)
@@ -78,7 +90,7 @@ void Player::tick(const long long elapsedTimeInMilliseconds) {
         jump();
 
     if (isAirborne())
-        computeGravity();
+        computeGravity(elapsedTimeInMilliseconds);
 
     Body::tick(elapsedTimeInMilliseconds);
 }

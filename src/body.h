@@ -9,14 +9,17 @@
 
 class Platform;
 
-class Body : public Sprite
-{
+class Body : public Sprite {
 public:
     void tick(long long elapsedTimeInMilliseconds) override;
+
     [[nodiscard]] bool isAirborne() const;
-    explicit Body(const QString& rImagePath, QGraphicsItem* pParent = nullptr);
+
+    explicit Body(const QString &rImagePath, QGraphicsItem *pParent = nullptr);
+
     [[nodiscard]] QPointF velocity() const;
-    void setVelocity(const QPointF& velocity);
+
+    void setVelocity(const QPointF &velocity);
 
 protected:
     //! Vitesse du corps, en mètre par seconde.
@@ -27,10 +30,11 @@ protected:
     qreal m_maxSpeedX = 5;
     //! Vitesse verticale maximale du corps, en mètre par seconde.
     qreal m_terminalVelocity = 100;
-    void computeGravity();
+
+    void computeGravity(long long elapsedTimeInMilliseconds);
 
 private:
-    void collideWithPlatform(Platform* platform);
+    void collideWithPlatform(Platform *platform);
 };
 
 

@@ -108,9 +108,14 @@ bool Body::isAirborne() const {
 }
 
 //! Permet de calculer et d'appliquer la gravité sur le corps
-void Body::computeGravity() {
+void Body::computeGravity(long long elapsedTimeInMilliseconds) {
     if (isAirborne())
-        m_acceleration.setY(m_acceleration.y() + GameFramework::GRAVITY);
+        m_acceleration.setY(
+                m_acceleration.y()
+                + GameFramework::meterToPx(GameFramework::GRAVITY)
+                  * elapsedTimeInMilliseconds
+                  / 1000.0
+        );
     else
         m_acceleration.setY(qMin(0.0f, m_acceleration.y()));
 }
