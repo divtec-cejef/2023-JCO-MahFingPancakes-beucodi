@@ -54,7 +54,7 @@ void Body::collideWithPlatform(Platform* platform)
         m_acceleration.setX(qMin(0.0f, m_acceleration.x()));
         break;
     case GameFramework::RIGHT:
-        setX(qMax(x(), platform->right() + sceneBoundingRect().width()) - 1);
+        setX(qMax(x(), static_cast<qreal>(platform->right())) - 1);
         m_velocity.setX(qMax(0.0f, m_velocity.x()));
         m_acceleration.setX(qMax(0.0f, m_acceleration.x()));
         break;
@@ -64,7 +64,7 @@ void Body::collideWithPlatform(Platform* platform)
         m_acceleration.setY(qMin(0.0f, m_acceleration.y()));
         break;
     case GameFramework::DOWN:
-        setY(qMax(y(), platform->bottom() + sceneBoundingRect().height()) - 1);
+        setY(qMax(y(), static_cast<qreal>(platform->bottom())) - 1);
         m_velocity.setY(qMax(0.0f, m_velocity.y()));
         m_acceleration.setY(qMax(0.0f, m_acceleration.y()));
         break;
