@@ -50,6 +50,11 @@ LevelBuilder::LevelBuilder(QPoint levelId)
             std::smatch spriteData;
 
             if (std::regex_search(line, spriteData,
+                                  std::regex("\\/\\/.*"))) {
+                continue;
+            }
+
+            if (std::regex_search(line, spriteData,
                                   std::regex("platform([A-Za-z]*)\\(([0-9]*),([0-9]*),([0-9]*),([0-9]*)\\)")))
             {
                 std::string platformType = spriteData[1].str();
