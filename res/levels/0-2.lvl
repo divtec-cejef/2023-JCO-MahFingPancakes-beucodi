@@ -1,0 +1,7 @@
+door(0,536,0,1,right)
+platformSolid(0,600,1280,20)
+enemyJmp(600,520)
+platformSolid(0,0,1280,20)
+platformSolid(0,0,20,536)
+platformSolid(1260,0,20,536)
+sprite(600,400,0.75,"keys/Mouse_Left_Key_Light.png")
