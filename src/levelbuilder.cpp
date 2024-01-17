@@ -130,6 +130,27 @@ LevelBuilder::LevelBuilder(QPoint levelId)
                     throw std::runtime_error("unknown enemy type");
                 continue;
             }
+
+            if (std::regex_search( line, spriteData, std::regex("sprite\\(([0-9]*),([0-9]*),([0-9\\.]*),\"([a-zA-Z0-9\\/\\-\\._]*)\"\\)") ))
+            {
+                QPoint pos(
+                    stoi(spriteData[1].str()),
+                    stoi(spriteData[2].str())
+                );
+                QString spritePath(spriteData[4].str().c_str());
+                float scale = stof(spriteData[3].str());
+                auto newSprite = new Sprite(
+                    QString("%1/%2")
+                    .arg(GameFramework::imagesPath())
+                    .arg(spritePath)
+                );
+                newSprite->setPos(pos);
+                newSprite->setScale(scale);
+                newSprite->setZValue(-3);
+                m_pSprites.append(newSprite);
+                continue;
+            }
+
             if (std::regex_search(line, spriteData, std::regex("text\\(([0-9]*),([0-9]*),([0-9]*),\"(.*)\"\\)") ))
             {
                 QPoint pos(
