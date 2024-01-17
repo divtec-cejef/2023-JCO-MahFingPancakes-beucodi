@@ -92,7 +92,7 @@ void Level::initialize() const
 {
     for (const auto sprite : m_pScene->sprites())
     {
-        if (const auto entity = dynamic_cast<Entity*>(sprite))
+        if (const auto entity = dynamic_cast<Entity*>(sprite); entity && !dynamic_cast<Player*>(sprite))
             entity->initialize();
     }
 }
