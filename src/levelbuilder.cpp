@@ -15,6 +15,7 @@
 #include <sstream>
 #include <iostream>
 #include <player.h>
+#include <QPainter>
 #include <regex>
 #include <thread>
 
@@ -124,6 +125,25 @@ LevelBuilder::LevelBuilder(QPoint levelId)
                     throw std::runtime_error("unknown enemy type");
                 continue;
             }
+            if (std::regex_search(line, spriteData, std::regex("text\\(([0-9]*),([0-9]*),([0-9]*),\"(.*)\"\\)") ))
+            {
+                QPoint pos(
+                    stoi(spriteData[1].str()),
+                    stoi(spriteData[2].str())
+                );
+                int fontSize = stoi(spriteData[3].str());
+                QPixmap pix(500, 200);
+                QPainter painter(&pix);
+                painter.setFont(QFont("Arial", fontSize));
+                painter.setPen(QPen(QColorConstants::White));
+                painter.drawText(QPoint(0, fontSize), spriteData[4].str().c_str());
+                auto newSprite = new Sprite(QPixmap::fromImage(pix.toImage().convertToFormat(QImage::Format_ARGB32)));
+                newSprite->setZValue(-4);
+                newSprite->setPos(pos);
+                m_pSprites.append(newSprite);
+                continue;
+            }
+
             throw std::runtime_error("Unknown sprite type");
         }
         levelFile.close();
