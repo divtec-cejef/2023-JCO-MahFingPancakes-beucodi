@@ -1,7 +1,7 @@
-# 2018-JCO-GameFramework
+# 2023-JCO-MahFingPancakes-beucodi
 
-Ce projet inclut un framework de base pour développer un jeu 2D à base de sprites ainsi que d'une démonstration des différentes fonctionnalités offertes par le framework.
+Ce projet est un jeu vidéo type "MetroidVania". Tous les contrôles sont expliqués à l'intérieur du jeu.
 
 ## Authors
 
-* J. Conus
+* O. Beuchat
