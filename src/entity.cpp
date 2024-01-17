@@ -10,36 +10,31 @@
 #include "hearticon.h"
 
 //! Constructeur de la classe Entity
-Entity::Entity(QString const& rImagePath, QGraphicsItem* pParent): Body(rImagePath, pParent)
-{
+Entity::Entity(QString const &rImagePath, QGraphicsItem *pParent) : Body(rImagePath, pParent) {
     m_health = 0;
 }
 
 //! Permet d'initialiser l'entité, p.ex ajouter la barre de vie
-void Entity::initialize()
-{
+void Entity::initialize() {
     m_health = m_maxHealth;
     updateHealthBar();
 }
 
 //! Permet de mettre à jour la barre de vie de l'entité
-void Entity::updateHealthBar()
-{
+void Entity::updateHealthBar() {
     // Guard pour éviter les calculs inutiles
     if (m_pHealthBar.size() == m_health)
         return;
 
     // Itération de m_pHealthBar pour supprimer tous les sprites
-    for (auto* pHeart : m_pHealthBar)
-    {
+    for (auto *pHeart: m_pHealthBar) {
         m_pParentScene->removeSpriteFromScene(pHeart);
         pHeart->deleteLater();
     }
     m_pHealthBar.clear();
 
     // Réinstantiation et insertion des sprites
-    for (int i = 0; i < m_health; ++i)
-    {
+    for (int i = 0; i < m_health; ++i) {
         const auto pHeart = new HeartIcon(this);
         QRectF sceneRect = pHeart->sceneBoundingRect();
         sceneRect.setWidth(sceneRect.width() * HeartIcon::SCALE);
@@ -54,11 +49,9 @@ void Entity::updateHealthBar()
 
 //! Permet de faire subir des dégâts à l'entité
 //! \param damage : les dégâts à infliger
-void Entity::takeDamage(const int damage)
-{
+void Entity::takeDamage(const int damage) {
     m_health -= damage;
-    if (m_health <= 0)
-    {
+    if (m_health <= 0) {
         m_health = 0;
         die();
     }
@@ -66,10 +59,8 @@ void Entity::takeDamage(const int damage)
 }
 
 //! Permet d'"empaqueter" l'entité, c'est-à-dire d'enlever tous les sprites qu'elle a instancié
-void Entity::pack()
-{
-    for (auto* pHeart : m_pHealthBar)
-    {
+void Entity::pack() {
+    for (auto *pHeart: m_pHealthBar) {
         m_pParentScene->removeSpriteFromScene(pHeart);
         pHeart->deleteLater();
     }
@@ -78,7 +69,6 @@ void Entity::pack()
 }
 
 //! Permet de "dépaqueter" l'entité, c'est-à-dire de réinstancier tous les sprites qui lui appartiennent
-void Entity::unpack()
-{
+void Entity::unpack() {
     updateHealthBar();
 }

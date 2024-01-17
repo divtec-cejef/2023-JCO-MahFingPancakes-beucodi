@@ -6,8 +6,7 @@
 
 #include "resources.h"
 
-HeartIcon::HeartIcon(QGraphicsItem* pParent): HudIcon(GameFramework::imagesPath() + "/heart.png", pParent)
-{
+HeartIcon::HeartIcon(QGraphicsItem *pParent) : HudIcon(GameFramework::imagesPath() + "/heart.png", pParent) {
     qDebug() << "HeartIcon created";
     setScale(SCALE / sceneBoundingRect().width());
 }

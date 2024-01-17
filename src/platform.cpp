@@ -9,8 +9,7 @@
 //! Constructeur d'une plate-forme.
 //! \param rect Rectangle de la plate-forme.
 //! \note Une plate-forme est une classe abstraite, il faut donc utiliser une de ses classes filles.
-Platform::Platform(const QRect rect)
-{
+Platform::Platform(const QRect rect) {
     m_pImage = new QImage(rect.width(), rect.height(), QImage::Format_ARGB32);
     setPos(rect.x(), rect.y());
 }
@@ -19,8 +18,7 @@ Platform::Platform(const QRect rect)
 * Retourne la direction dans la quelle le joueur touche la plate-forme, du point de vue de celle-ci
 * @returns la direction
 */
-GameFramework::Direction Platform::collisionSide(Body* body)
-{
+GameFramework::Direction Platform::collisionSide(Body *body) {
     // Relatif à la plateforme
     const int overlapLeft = body->right() - left();
     const int overlapRight = right() - body->left();

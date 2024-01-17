@@ -4,13 +4,14 @@
 
 #ifndef JUMPINGPANCAKE_H
 #define JUMPINGPANCAKE_H
+
 #include "enemy.h"
 
 
-class JumpingPancake final : public Enemy
-{
+class JumpingPancake final : public Enemy {
 public:
-    explicit JumpingPancake(QPoint pos = {0, 0}, QGraphicsItem* pParent = nullptr);
+    explicit JumpingPancake(QPoint pos = {0, 0}, QGraphicsItem *pParent = nullptr);
+
     void tick(long long elapsedTimeInMilliseconds) override;
 
 protected:
@@ -26,13 +27,11 @@ protected:
     //! Rapport de réduction de la vitesse de l'ennemi par rapport a la distance du joueur
     const qreal DISTANCE_TO_PLAYER_RATIO = 50;
 
-    [[nodiscard]] int getMinCooldown() override
-    {
+    [[nodiscard]] int getMinCooldown() override {
         return 100;
     }
 
-    [[nodiscard]] int getMaxCooldown() override
-    {
+    [[nodiscard]] int getMaxCooldown() override {
         return 500;
     }
 
@@ -42,6 +41,7 @@ private:
     int m_jumpAnimationFrame = 0;
     //! Cooldown entre les images de l'animation de saut
     int m_jumpAnimationCooldown = 0;
+
     void jumpWithAnimation();
 
 public:

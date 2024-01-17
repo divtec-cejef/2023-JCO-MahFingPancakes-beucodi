@@ -10,24 +10,31 @@
 #include <thread>
 
 class QPoint;
+
 class Level;
+
 class GameCore;
+
 class Player;
 
-class LevelBuilder
-{
+class LevelBuilder {
 public:
     explicit LevelBuilder(QPoint levelId);
+
     ~LevelBuilder();
-    Level* build(const GameCore* pCore, Player* pPlayer, GameFramework::Direction enteredFrom);
+
+    Level *build(const GameCore *pCore, Player *pPlayer, GameFramework::Direction enteredFrom);
+
     [[nodiscard]] QPoint levelId() const;
 
 private:
-    QList<Sprite*> m_pSprites = QList<Sprite*>();
+    QList<Sprite *> m_pSprites = QList<Sprite *>();
     QPoint m_levelId = QPoint(0, 0);
+
     void loadNeighbouringLevels() const;
-    Level* m_pLevel = nullptr;
-    QThread* m_discoveryThread = nullptr;;
+
+    Level *m_pLevel = nullptr;
+    QThread *m_discoveryThread = nullptr;;
     QPointF m_spawnPoint = QPointF(0, 0);
 };
 

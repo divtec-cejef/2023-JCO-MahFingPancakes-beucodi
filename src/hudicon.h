@@ -7,11 +7,10 @@
 
 #include "sprite.h"
 
-class HudIcon: public Sprite {
+class HudIcon : public Sprite {
 protected:
-    explicit HudIcon(const QString& rImagePath, QGraphicsItem* pParent = nullptr);
+    explicit HudIcon(const QString &rImagePath, QGraphicsItem *pParent = nullptr);
 };
-
 
 
 #endif //HUDICON_H

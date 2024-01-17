@@ -11,26 +11,33 @@
 #include "levelbuilder.h"
 
 class QString;
+
 class Player;
 
-class Level final : public QObject
-{
+class Level final : public QObject {
 public:
-    explicit Level(GameCanvas* pCanvas, Player* pPlayer, QPoint levelId);
+    explicit Level(GameCanvas *pCanvas, Player *pPlayer, QPoint levelId);
+
     ~Level() override;
-    [[nodiscard]] QList<LevelBuilder*> neighbouringLevels() const;
-    [[nodiscard]] GameScene* scene() const;
+
+    [[nodiscard]] QList<LevelBuilder *> neighbouringLevels() const;
+
+    [[nodiscard]] GameScene *scene() const;
+
     [[nodiscard]] QPoint levelId() const;
-    void appendLevel(LevelBuilder* level);
+
+    void appendLevel(LevelBuilder *level);
+
     void setSpawnPoint(QPointF spawnPoint);
+
     void initialize() const;
 
 private:
     QPoint m_levelId = QPoint(0, 0);
-    GameCanvas* m_pCanvas = nullptr;
-    GameScene* m_pScene = nullptr;
-    QList<LevelBuilder*> m_pConnectedLevels = QList<LevelBuilder*>();
-    Player* m_pPlayer = nullptr;
+    GameCanvas *m_pCanvas = nullptr;
+    GameScene *m_pScene = nullptr;
+    QList<LevelBuilder *> m_pConnectedLevels = QList<LevelBuilder *>();
+    Player *m_pPlayer = nullptr;
     QPointF m_spawnPoint = QPointF(0, 0);
 };
 

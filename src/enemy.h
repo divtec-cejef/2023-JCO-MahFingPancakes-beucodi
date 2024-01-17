@@ -11,35 +11,36 @@ class Player;
 
 //! La clase Enemy est une classe abstraite qui représente n'importe quel ennemi dans le jeu.
 //! Elle doit être héritée pour être utilisée.
-class Enemy : public Entity
-{
-    Q_OBJECT
+class Enemy : public Entity {
+Q_OBJECT
 
 public:
     void tick(long long elapsedTimeInMilliseconds) override;
+
     [[nodiscard]] int getDamage() const;
-    void linkPlayer(Player* pPlayer);
+
+    void linkPlayer(Player *pPlayer);
 
 protected:
-    explicit Enemy(const QString& rImagePath, QPoint pos = {0, 0}, QGraphicsItem* pParent = nullptr);
+    explicit Enemy(const QString &rImagePath, QPoint pos = {0, 0}, QGraphicsItem *pParent = nullptr);
+
     //! Pointeur vers le joueur.
-    Player* m_pPlayer = nullptr;
+    Player *m_pPlayer = nullptr;
     //! Dégâts infligés par l'ennemi.
     int m_damage = 0;
 
 public slots:
+
     virtual void moveTowardPlayer() = 0;
 
 protected:
     void die() override;
 
-    [[nodiscard]] virtual int getMinCooldown()
-    {
+    [[nodiscard]] virtual int getMinCooldown() {
         return 1000;
     }
 
-    [[nodiscard]] virtual int getMaxCooldown()
-    {
+    [[nodiscard]] virtual int getMaxCooldown() {
         return 3000;
     }
 

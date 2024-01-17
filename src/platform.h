@@ -4,24 +4,26 @@
 
 #ifndef PLATFORM_H
 #define PLATFORM_H
+
 #include "sprite.h"
 #include "utilities.h"
 
 class Body;
 
-class Platform : public Sprite
-{
-    Q_OBJECT;
+class Platform : public Sprite {
+Q_OBJECT;
 
 public:
-    virtual GameFramework::Direction collisionSide(Body* body);
+    virtual GameFramework::Direction collisionSide(Body *body);
 
 signals:
-    void queuedForDeletion(Platform* platform);
+
+    void queuedForDeletion(Platform *platform);
 
 protected:
     explicit Platform(QRect rect);
-    QImage* m_pImage = nullptr;
+
+    QImage *m_pImage = nullptr;
 };
 
 

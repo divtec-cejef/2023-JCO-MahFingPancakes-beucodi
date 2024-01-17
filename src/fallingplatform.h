@@ -8,12 +8,13 @@
 #include "platform.h"
 #include "utilities.h"
 
-class FallingPlatform final : public Platform
-{
+class FallingPlatform final : public Platform {
 public:
     explicit FallingPlatform(QRect rect);
+
     void tick(long long elapsedTimeInMilliseconds) override;
-    GameFramework::Direction collisionSide(Body* body) override;
+
+    GameFramework::Direction collisionSide(Body *body) override;
 
 private:
     bool m_isFalling = false;

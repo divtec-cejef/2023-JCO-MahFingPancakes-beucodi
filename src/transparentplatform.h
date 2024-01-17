@@ -8,11 +8,11 @@
 #include "platform.h"
 #include "utilities.h"
 
-class TransparentPlatform final : public Platform
-{
+class TransparentPlatform final : public Platform {
 public:
     explicit TransparentPlatform(QRect rect);
-    GameFramework::Direction collisionSide(Body* body) override;
+
+    GameFramework::Direction collisionSide(Body *body) override;
 };
 
 

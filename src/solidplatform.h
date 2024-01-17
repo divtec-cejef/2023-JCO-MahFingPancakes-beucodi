@@ -7,8 +7,7 @@
 
 #include "platform.h"
 
-class SolidPlatform final : public Platform
-{
+class SolidPlatform final : public Platform {
 public:
     explicit SolidPlatform(QRect rect);
 };

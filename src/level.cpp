@@ -20,8 +20,7 @@ constexpr int SCENE_HEIGHT = SCENE_WIDTH * 9 / 16;
 //! \param pCanvas : pointeur vers le canvas
 //! \param pPlayer : pointeur vers le joueur
 //! \param levelId : position du niveau
-Level::Level(GameCanvas* pCanvas, Player* pPlayer, QPoint levelId)
-{
+Level::Level(GameCanvas *pCanvas, Player *pPlayer, QPoint levelId) {
     m_levelId = levelId;
     m_pCanvas = pCanvas;
     m_pPlayer = pPlayer;
@@ -33,16 +32,13 @@ Level::Level(GameCanvas* pCanvas, Player* pPlayer, QPoint levelId)
 }
 
 //! Destructeur de la classe Level
-Level::~Level()
-{
-    for (const auto connectedLvl : m_pConnectedLevels)
-    {
+Level::~Level() {
+    for (const auto connectedLvl: m_pConnectedLevels) {
         delete connectedLvl;
     }
     m_pConnectedLevels.clear();
 
-    for (const auto sprite : m_pScene->sprites())
-    {
+    for (const auto sprite: m_pScene->sprites()) {
         m_pScene->unregisterSpriteFromTick(sprite);
         sprite->setParentScene(m_pScene);
     }
@@ -53,46 +49,39 @@ Level::~Level()
 
 //! Liste les niveaux voisins
 //! \returns la liste des niveaux voisins
-QList<LevelBuilder*> Level::neighbouringLevels() const
-{
+QList<LevelBuilder *> Level::neighbouringLevels() const {
     return m_pConnectedLevels;
 }
 
 //! Accesseur pour la scène du niveau
 //! \returns la scène du niveau
-GameScene* Level::scene() const
-{
+GameScene *Level::scene() const {
     return m_pScene;
 }
 
 //! Ajoute un niveau à la liste des niveaux voisins
 //! \param level : le niveau à ajouter
-void Level::appendLevel(LevelBuilder* level)
-{
+void Level::appendLevel(LevelBuilder *level) {
     m_pConnectedLevels.append(level);
 }
 
 //! Accesseur pour l'id du niveau
 //! \returns l'id du niveau
-QPoint Level::levelId() const
-{
+QPoint Level::levelId() const {
     return m_levelId;
 }
 
 //! Permet de définir le point d'apparition par défaut du joueur
 //! \param spawnPoint : le point d'apparition
-void Level::setSpawnPoint(const QPointF spawnPoint)
-{
+void Level::setSpawnPoint(const QPointF spawnPoint) {
     m_spawnPoint = spawnPoint;
     m_pPlayer->setSpawnPoint(m_spawnPoint);
 }
 
 //! Initialise le niveau
-void Level::initialize() const
-{
-    for (const auto sprite : m_pScene->sprites())
-    {
-        if (const auto entity = dynamic_cast<Entity*>(sprite); entity && !dynamic_cast<Player*>(sprite))
+void Level::initialize() const {
+    for (const auto sprite: m_pScene->sprites()) {
+        if (const auto entity = dynamic_cast<Entity *>(sprite); entity && !dynamic_cast<Player *>(sprite))
             entity->initialize();
     }
 }

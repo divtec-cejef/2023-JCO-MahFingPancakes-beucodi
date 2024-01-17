@@ -35,7 +35,7 @@ qt_add_executable(MahFingPancakes main.cpp
         body.cpp
         fragileplatform.cpp
         hudicon.cpp
-        jumpcharge.cpp
+        jumpicon.cpp
         level.cpp
         door.cpp
         levelbuilder.cpp
@@ -56,7 +56,7 @@ qt_add_executable(MahFingPancakes main.cpp
         gameview.h
         hearticon.h
         hudicon.h
-        jumpcharge.h
+        jumpicon.h
         level.h
         levelbuilder.h
         mainfrm.h

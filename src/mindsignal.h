@@ -7,13 +7,14 @@
 
 #include "sprite.h"
 
-class MindSignal final : public Sprite
-{
-    Q_OBJECT
+class MindSignal final : public Sprite {
+Q_OBJECT
 
 public:
-    explicit MindSignal(QGraphicsItem* pParent = nullptr);
+    explicit MindSignal(QGraphicsItem *pParent = nullptr);
+
     void setDirection(QPointF goalPos);
+
     void tick(long long elapsedTimeInMilliseconds) override;
 
 private:
@@ -27,7 +28,8 @@ private:
     static constexpr qreal ATTACK_POWER = 1;
 
 signals:
-    void queueForDeletion(MindSignal*);
+
+    void queueForDeletion(MindSignal *);
 };
 
 

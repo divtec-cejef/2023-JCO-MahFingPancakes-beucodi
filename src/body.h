@@ -24,9 +24,9 @@ protected:
     //! Accélération du corps, en mètre par seconde au carré.
     QPointF m_acceleration = QPointF(0, 0);
     //! Vitesse horizontale maximale du corps, en mètre par seconde.
-    const qreal MAX_SPEED_X = 5;
+    qreal m_maxSpeedX = 5;
     //! Vitesse verticale maximale du corps, en mètre par seconde.
-    const qreal TERMINAL_VELOCITY = 100;
+    qreal m_terminalVelocity = 100;
     void computeGravity();
 
 private:

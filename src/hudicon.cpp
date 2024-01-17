@@ -4,6 +4,6 @@
 
 #include "hudicon.h"
 
-HudIcon::HudIcon(const QString& rImagePath, QGraphicsItem* pParent): Sprite(rImagePath, pParent) {
+HudIcon::HudIcon(const QString &rImagePath, QGraphicsItem *pParent) : Sprite(rImagePath, pParent) {
     setScale(0.5);
 }

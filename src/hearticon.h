@@ -7,10 +7,10 @@
 
 #include "hudicon.h"
 
-class HeartIcon : public HudIcon
-{
+class HeartIcon : public HudIcon {
 public:
-    explicit HeartIcon(QGraphicsItem* pParent = nullptr);
+    explicit HeartIcon(QGraphicsItem *pParent = nullptr);
+
     constexpr static qreal SCALE = 7.0;
 };
 
