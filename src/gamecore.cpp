@@ -6,10 +6,9 @@
  */
 #include "gamecore.h"
 
-#include <QSettings>
 #include <QThread>
+#include <QPainter>
 
-#include "gamescene.h"
 #include "gamecanvas.h"
 #include "levelbuilder.h"
 #include "level.h"
@@ -79,6 +78,17 @@ GameCore::~GameCore() {
 //! \param key Numéro de la touche (voir les constantes Qt)
 void GameCore::keyPressed(const int key) {
     emit notifyKeyPressed(key);
+    if (key == Qt::Key_Escape) {
+        m_pGameCanvas->stopTick();
+        if (m_pLevel != nullptr) {
+            m_pPlayer->pack();
+            m_pLevel->deleteLater();
+        }
+        m_pLevel = LevelBuilder(QPoint(0, 0)).build(this, m_pPlayer, GameFramework::NEUTRAL);
+        m_pPlayer->initialize();
+        m_pLevel->initialize();
+        m_pGameCanvas->startTick();
+    }
 }
 
 //! Traite le relâchement d'une touche.
@@ -131,8 +141,29 @@ void GameCore::onPlayerDied() {
     m_pGameCanvas->stopTick();
     m_pPlayer->pack();
     m_pLevel->deleteLater();
-    qDebug() << m_pLevel->scene()->sprites().length();
-    m_pLevel = LevelBuilder(QPoint(0, 0)).build(this, m_pPlayer, GameFramework::NEUTRAL);
-    qDebug() << m_pLevel->scene()->sprites().length();
+    m_pLevel = nullptr;
+    auto newScene = m_pGameCanvas->createScene();
+    m_pGameCanvas->setCurrentScene(newScene);
+
+    auto deathMessagePixmap = QPixmap(600, 200);
+    deathMessagePixmap.fill(QColorConstants::Transparent);
+    QPainter messagePainter(&deathMessagePixmap);
+    messagePainter.setFont(QFont("Arial", 32));
+    messagePainter.setPen(QPen(QColorConstants::Red));
+    messagePainter.drawText(QRectF(0, 0, 600, 200), Qt::AlignCenter, "Vous êtes mort !");
+    auto spriteMsg = new Sprite(deathMessagePixmap);
+    newScene->addSpriteToScene(spriteMsg);
+    spriteMsg->setPos(SCENE_WIDTH / 2.0 - spriteMsg->width(), 200 - spriteMsg->height());
+
+    auto tooltipPixmap = QPixmap(600, 200);
+    tooltipPixmap.fill(QColorConstants::Transparent);
+    QPainter tooltipPainter(&tooltipPixmap);
+    tooltipPainter.setFont(QFont("Arial", 16));
+    tooltipPainter.setPen(QPen(QColorConstants::White));
+    tooltipPainter.drawText(QRectF(0, 0, 600, 200), Qt::AlignCenter, "Appuyez sur Echap pour redémarrer");
+    auto spriteTooltip = new Sprite(tooltipPixmap);
+    newScene->addSpriteToScene(spriteTooltip);
+    spriteTooltip->setPos(SCENE_WIDTH / 2.0 - spriteTooltip->width(), 400 - spriteTooltip->height());
+
     m_pGameCanvas->startTick();
 }
