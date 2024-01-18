@@ -12,6 +12,7 @@
 #include "mindsignal.h"
 #include "item.h"
 #include "jumpcharge.h"
+#include "heartcharge.h"
 
 //! Constructeur de player
 Player::Player() : Entity(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00_delay-0.03s.gif") {
@@ -62,6 +63,10 @@ void Player::tick(const long long elapsedTimeInMilliseconds) {
                 m_maxJumpIcons++;
                 m_jumpIcons++;
                 updateJumpIcons();
+            } else if (const auto healthCharge = dynamic_cast<HeartCharge * >(item)) {
+                m_maxHealth++;
+                m_health++;
+                updateHealthBar();
             }
             m_pParentScene->removeSpriteFromScene(sprite);
             sprite->deleteLater();

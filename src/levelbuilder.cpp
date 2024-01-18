@@ -29,6 +29,7 @@
 #include "gamecore.h"
 #include "jumpingpancake.h"
 #include "jumpcharge.h"
+#include "heartcharge.h"
 
 
 //! Constructeur de la classe LevelBuilder
@@ -97,6 +98,8 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
                     enterDirection = GameFramework::UP;
                 else if (enterDirStr == "down")
                     enterDirection = GameFramework::DOWN;
+                else
+                    enterDirection = GameFramework::NEUTRAL;
 
                 m_pSprites.append(new Door(pos, targetLevel, enterDirection));
 
@@ -177,6 +180,10 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
 
                 if (itemType == "Jmp") {
                     auto newItem = new JumpCharge(itemId);
+                    newItem->setPos(pos);
+                    m_pSprites.append(newItem);
+                } else if (itemType == "Hlth") {
+                    auto newItem = new HeartCharge(itemId);
                     newItem->setPos(pos);
                     m_pSprites.append(newItem);
                 } else {
