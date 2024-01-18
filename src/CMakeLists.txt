@@ -75,7 +75,9 @@ qt_add_executable(MahFingPancakes main.cpp
         jumpcharge.cpp
         jumpcharge.h
         heartcharge.cpp
-        heartcharge.h)
+        heartcharge.h
+        regenpod.cpp
+        regenpod.h)
 
 target_link_libraries(MahFingPancakes PRIVATE
         Qt::Core

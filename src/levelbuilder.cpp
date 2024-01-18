@@ -30,6 +30,7 @@
 #include "jumpingpancake.h"
 #include "jumpcharge.h"
 #include "heartcharge.h"
+#include "regenpod.h"
 
 
 //! Constructeur de la classe LevelBuilder
@@ -189,6 +190,20 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
                 } else {
                     throw std::runtime_error("Unknown item type");
                 }
+                continue;
+            }
+
+            if (std::regex_search(line, spriteData, std::regex("regenPod\\(([0-9]*),([0-9]*)\\)"))) {
+                QPoint pos(
+                        stoi(spriteData[1].str()),
+                        stoi(spriteData[2].str())
+                );
+
+                auto newSprite = new RegenPod();
+                newSprite->setPos(pos);
+                newSprite->setZValue(-4);
+                m_pSprites.append(newSprite);
+
                 continue;
             }
 

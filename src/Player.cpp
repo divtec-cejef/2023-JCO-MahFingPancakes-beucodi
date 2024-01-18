@@ -13,6 +13,7 @@
 #include "item.h"
 #include "jumpcharge.h"
 #include "heartcharge.h"
+#include "regenpod.h"
 
 //! Constructeur de player
 Player::Player() : Entity(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00_delay-0.03s.gif") {
@@ -70,6 +71,11 @@ void Player::tick(const long long elapsedTimeInMilliseconds) {
             }
             m_pParentScene->removeSpriteFromScene(sprite);
             sprite->deleteLater();
+        }
+
+        if (dynamic_cast<RegenPod *>(sprite)) {
+            m_health = m_maxHealth;
+            updateHealthBar();
         }
     }
 
