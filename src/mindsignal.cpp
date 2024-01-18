@@ -42,6 +42,11 @@ void MindSignal::tick(long long elapsedTimeInMilliseconds) {
         emit queueForDeletion(this);
     }
 
+    setOpacity(opacity() - .002 * elapsedTimeInMilliseconds);
+    setScale(scale() + .0005 * elapsedTimeInMilliseconds);
+    if (opacity() <= 0)
+            emit queueForDeletion(this);
+
     for (const auto sprite: collidingSprites(sceneBoundingRect())) {
         if (const auto enemy = dynamic_cast<Enemy *>(sprite)) {
             enemy->takeDamage(ATTACK_POWER);

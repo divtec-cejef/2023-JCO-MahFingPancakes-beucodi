@@ -49,7 +49,7 @@ private:
     //! Temps restant d'invincibilité du joueur après avoir pris des dégâts, en millisecondes
     int m_invincibilityTimeLeft = 0;
     //! Vitesse de saut du joueur, en mètre par seconde.
-    const qreal PLAYER_JUMP_FORCE = -7;
+    const qreal PLAYER_JUMP_FORCE = -6;
     //! Accélération du joueur, en mètre par seconde au carré.
     const qreal ACCELERATION = 12;
     //! Frottement du joueur.
