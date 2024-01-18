@@ -32,6 +32,11 @@ public:
 
     void setSpawnPoint(const QPointF &spawnPoint);
 
+    //! Liste des clés des données internes (Player::data()) du joueur
+    enum PlayerData {
+        PICKED_UP_UPGRADES
+    };
+
 private:
     //! Vecteurs d'entrée du joueur
     QPointF m_playerInput = QPointF(0, 0);

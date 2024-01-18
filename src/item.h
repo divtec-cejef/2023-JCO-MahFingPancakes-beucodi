@@ -13,8 +13,10 @@ class Item : public Body {
 public:
     void tick(long long elapsedTimeInMilliseconds) override;
 
+    [[nodiscard]] QString getId() const;
+
 protected:
-    Item(QString rImagePath, QString id, QGraphicsItem *parent = nullptr);
+    Item(const QString &rImagePath, QString id, QGraphicsItem *parent = nullptr);
 
     //! Identifiant de l'objet ramassable. Devrait être unique pour chaque objet ramassable.
     QString m_id;

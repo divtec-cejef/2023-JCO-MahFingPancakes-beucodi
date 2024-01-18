@@ -227,6 +227,12 @@ Level *LevelBuilder::build(const GameCore *pCore, Player *pPlayer, const GameFra
     m_pLevel = new Level(pCore->canvas(), pPlayer, m_levelId);
     const Door *connectedDoor = nullptr;
     for (const auto sprite: m_pSprites) {
+        if (const auto item = dynamic_cast<Item *>(sprite)) {
+            if (pPlayer->data(Player::PICKED_UP_UPGRADES).toList().contains(item->getId())) {
+                delete item;
+                continue;
+            }
+        }
         m_pLevel->scene()->addSpriteToScene(sprite);
         m_pLevel->scene()->registerSpriteForTick(sprite);
         if (const auto pPlatform = dynamic_cast<Platform *>(sprite))

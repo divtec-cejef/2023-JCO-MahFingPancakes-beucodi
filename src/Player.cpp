@@ -71,6 +71,9 @@ void Player::tick(const long long elapsedTimeInMilliseconds) {
             }
             m_pParentScene->removeSpriteFromScene(sprite);
             sprite->deleteLater();
+            auto pickedUpUpgrades = data(PICKED_UP_UPGRADES).toList();
+            pickedUpUpgrades.append(item->getId());
+            setData(PICKED_UP_UPGRADES, pickedUpUpgrades);
         }
 
         if (dynamic_cast<RegenPod *>(sprite)) {

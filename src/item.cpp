@@ -11,7 +11,7 @@
 //! \param rImagePath : Chemin vers l'image de l'objet ramassable
 //! \param id : Identifiant de l'objet ramassable
 //! \param parent : Objet parent
-Item::Item(QString rImagePath, QString id, QGraphicsItem *parent)
+Item::Item(const QString &rImagePath, QString id, QGraphicsItem *parent)
         : Body(rImagePath, parent) {
     m_id = std::move(id);
     setScale(GameFramework::meterToPx(m_size) / sceneBoundingRect().width());
@@ -22,4 +22,10 @@ Item::Item(QString rImagePath, QString id, QGraphicsItem *parent)
 void Item::tick(long long int elapsedTimeInMilliseconds) {
     computeGravity(elapsedTimeInMilliseconds);
     Body::tick(elapsedTimeInMilliseconds);
+}
+
+//! Permet d'obtenir l'identifiant unique de l'objet ramassable
+//! \return Identifiant unique de l'objet ramassable
+QString Item::getId() const {
+    return m_id;
 }
