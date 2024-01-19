@@ -25,7 +25,6 @@ signals:
     void doorEntered(QPoint targetLevel, GameFramework::Direction dir);
 
 private:
-    Level *m_pParentLevel = nullptr;
     QPoint m_targetLevel = QPoint(0, 0);
     QImage *m_pImage = nullptr;
     GameFramework::Direction m_dir = GameFramework::NEUTRAL;

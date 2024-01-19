@@ -44,7 +44,7 @@ private:
     QList<int> m_keysPressed = {};
     //! Nombre de charges de saut maximum
     //! \note n'inclus pas le saut quand on touche le sol
-    int m_maxJumpIcons = 2;
+    int m_maxJumpIcons = 0;
     //! Nombre de charges de saut restantes
     int m_jumpIcons = m_maxJumpIcons;
     //! Indique si le joueur a relâché la touche de saut
@@ -54,15 +54,15 @@ private:
     //! Temps restant d'invincibilité du joueur après avoir pris des dégâts, en millisecondes
     int m_invincibilityTimeLeft = 0;
     //! Vitesse de saut du joueur, en mètre par seconde.
-    const qreal PLAYER_JUMP_FORCE = -6;
+    constexpr static qreal PLAYER_JUMP_FORCE = -6;
     //! Accélération du joueur, en mètre par seconde au carré.
-    const qreal ACCELERATION = 12;
+    constexpr static qreal ACCELERATION = 12;
     //! Frottement du joueur.
-    const qreal PLAYER_FRICTION = 16;
+    constexpr static qreal PLAYER_FRICTION = 16;
     //! Sprites de saut du joueur
     QList<JumpIcon *> m_pJumpIconsSprites = QList<JumpIcon *>();
     //! Temps d'invincibilité du joueur après avoir pris des dégâts, en millisecondes
-    const int INVINCIBILITY_TIME = 1000;
+    constexpr static int INVINCIBILITY_TIME = 1000;
     //! Liste des sprites de projectiles
     QList<MindSignal *> m_pAttackSprites = QList<MindSignal *>();
 

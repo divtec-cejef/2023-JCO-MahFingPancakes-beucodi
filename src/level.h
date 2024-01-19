@@ -33,11 +33,17 @@ public:
     void initialize() const;
 
 private:
+    //! L'identifiant du niveau, basé sur le nom du fichier
     QPoint m_levelId = QPoint(0, 0);
+    //! Le canvas du jeu
     GameCanvas *m_pCanvas = nullptr;
+    //! La scène du niveau
     GameScene *m_pScene = nullptr;
+    //! Les niveaux voisins
     QList<LevelBuilder *> m_pConnectedLevels = QList<LevelBuilder *>();
+    //! Le joueur
     Player *m_pPlayer = nullptr;
+    //! Le point de spawn du joueur
     QPointF m_spawnPoint = QPointF(0, 0);
 };
 

@@ -21,6 +21,10 @@ public:
 
     void linkPlayer(Player *pPlayer);
 
+public slots:
+
+    virtual void moveTowardPlayer() = 0;
+
 protected:
     explicit Enemy(const QString &rImagePath, QPoint pos = {0, 0}, QGraphicsItem *pParent = nullptr);
 
@@ -28,12 +32,7 @@ protected:
     Player *m_pPlayer = nullptr;
     //! Dégâts infligés par l'ennemi.
     int m_damage = 0;
-
-public slots:
-
-    virtual void moveTowardPlayer() = 0;
-
-protected:
+    
     void die() override;
 
     [[nodiscard]] virtual int getMinCooldown() {

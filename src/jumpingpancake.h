@@ -14,18 +14,19 @@ public:
 
     void tick(long long elapsedTimeInMilliseconds) override;
 
+    void moveTowardPlayer() override;
+
 protected:
-    // void moveTowardPlayer() override;
     //! Force de saut de l'entité, en mètre par seconde.
     //! \note la force est appliquée en une seule fois, et non pas en continu.
     //! La force est déja en négatif, ce qui evite d'inverser dans le setX
-    const qreal JUMP_FORCE = -5;
+    constexpr static qreal JUMP_FORCE = -5;
     //! Largeur de l'ennemi, en px
-    const qreal ENNEMI_WIDTH = 60;
+    constexpr static qreal ENNEMI_WIDTH = 60;
     //! Vitesse horizontale maximale de l'ennemi, en mètres par seconde.
-    const qreal MAX_SPEED_X = 7;
+    constexpr static qreal MAX_SPEED_X = 7;
     //! Rapport de réduction de la vitesse de l'ennemi par rapport a la distance du joueur
-    const qreal DISTANCE_TO_PLAYER_RATIO = 50;
+    constexpr static qreal DISTANCE_TO_PLAYER_RATIO = 50;
 
     [[nodiscard]] int getMinCooldown() override {
         return 100;
@@ -43,9 +44,6 @@ private:
     int m_jumpAnimationCooldown = 0;
 
     void jumpWithAnimation();
-
-public:
-    void moveTowardPlayer() override;
 };
 
 
