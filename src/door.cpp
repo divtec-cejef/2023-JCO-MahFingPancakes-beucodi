@@ -18,7 +18,7 @@ Door::Door(const QPoint pos, const QPoint target, const GameFramework::Direction
     m_pImage = new QImage(rect.width(), rect.height(), QImage::Format_RGBA64);
     m_pImage->fill(Qt::transparent);
     for (auto y = 0; y < rect.height(); y++) {
-        QRgba64 *line = reinterpret_cast<QRgba64 *>(m_pImage->scanLine(y));
+        auto *line = reinterpret_cast<QRgba64 *>(m_pImage->scanLine(y));
         for (auto x = 0; x < rect.width(); x++) {
             QRgba64 &rgb = line[x];
             rgb = QRgba64::fromRgba(
