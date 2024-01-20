@@ -5,7 +5,6 @@
 #include "body.h"
 
 #include "fragileplatform.h"
-#include "solidplatform.h"
 #include "transparentplatform.h"
 #include "QGraphicsScene"
 
@@ -113,7 +112,7 @@ void Body::computeGravity(long long elapsedTimeInMilliseconds) {
         m_acceleration.setY(
                 m_acceleration.y()
                 + GameFramework::meterToPx(GameFramework::GRAVITY)
-                  * elapsedTimeInMilliseconds
+                  * (int)elapsedTimeInMilliseconds
                   / 1000.0
         );
     else
