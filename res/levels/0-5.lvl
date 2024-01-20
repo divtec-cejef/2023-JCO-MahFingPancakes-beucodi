@@ -1,0 +1,12 @@
+door(0,636,0,4,right)
+spawnPoint(640,650)
+// walls and ground
+platformSolid(0,0,1280,20)
+platformSolid(0,0,20,636)
+platformSolid(0,700,1280,20)
+platformSolid(1260,0,20,700)
+enemyJmp(200,600)
+enemyJmp(400,600)
+enemyJmp(600,600)
+enemyJmp(800,600)
+itemJmp(1200,600,"0-4-jmp-reward")

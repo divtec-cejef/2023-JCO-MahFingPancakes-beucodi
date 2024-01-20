@@ -1,0 +1,17 @@
+door(0,636,0,3,right)
+spawnPoint(640,650)
+// walls and ground
+platformSolid(0,0,1280,20)
+platformSolid(0,0,20,636)
+platformSolid(0,700,1280,20)
+platformSolid(1260,0,20,636)
+
+// Enemies
+enemyJmp(400,600)
+
+// attack tutorial sprites
+text(640,350,16,"Défendez-vous, visez avec la souris!")
+sprite(640,430,0.75,"keys/Mouse_Left_Key_Light.png")
+
+// next level door
+door(1270,636,0,5,left)
