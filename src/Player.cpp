@@ -82,29 +82,35 @@ void Player::tick(const long long elapsedTimeInMilliseconds) {
         }
     }
 
+    const auto airborneState = isAirborne();
+
     // Inputs horizontaux du joueur (A&D)
     if (m_playerInput.x() > 0) {
         m_acceleration.setX(ACCELERATION);
     } else if (m_playerInput.x() < 0) {
         m_acceleration.setX(-ACCELERATION);
     } else {
-        if (isAirborne())
+        if (airborneState)
             m_acceleration.setX(-m_velocity.x() * qSqrt(PLAYER_FRICTION));
         else
             m_acceleration.setX(-m_velocity.x() * PLAYER_FRICTION);
     }
 
-    // Réinitialise les charges quand sur le sol
-    if (!isAirborne()) {
-        m_jumpIcons = m_maxJumpIcons;
-        updateJumpIcons();
-    }
-
-    if (m_jumpIcons > 0 && m_keysPressed.contains(Qt::Key_Space) && m_hasReleasedJump)
+    // Inputs verticaux du joueur (Space)
+    if ((m_jumpIcons > 0 || !airborneState)
+        && m_keysPressed.contains(Qt::Key_Space)
+        && m_hasReleasedJump)
         jump();
 
-    if (isAirborne())
+    if (!airborneState) {
+        // Réinitialise les charges quand sur le sol
+        m_jumpIcons = m_maxJumpIcons;
+        updateJumpIcons();
+    } else {
+        // Calcule la gravité quand en l'air
         computeGravity(elapsedTimeInMilliseconds);
+    }
+
 
     Body::tick(elapsedTimeInMilliseconds);
 }
