@@ -208,7 +208,8 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
 
                 continue;
             }
-
+            qDebug() << "Couldn't parse element with content:\n"
+                     << line;
             throw std::runtime_error("Unknown sprite type");
         }
         levelFile.close();
