@@ -80,7 +80,8 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
             }
 
             if (std::regex_search(line, spriteData,
-                                  std::regex("door\\(([0-9]*),([0-9]*),([0-9]*),([0-9]*),(right|left|up|down)\\)"))) {
+                                  std::regex(
+                                          "door\\(([0-9]*),([0-9]*),([0-9\\-]*),([0-9\\-]*),(right|left|up|down)\\)"))) {
                 QPoint pos(
                         stoi(spriteData[1].str()),
                         stoi(spriteData[2].str())

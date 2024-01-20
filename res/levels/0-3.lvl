@@ -1,9 +1,26 @@
 spawnPoint(20,20)
 door(0,20,0,2,right)
+
+// walls and floor
 platformSolid(0,0,1280,20)
 platformSolid(0,76,20,636)
 platformSolid(0,700,1280,20)
-platformSolid(1260,0,20,636)
+platformSolid(1260,84,20,552)
+
 platformSolid(700,580,100,20)
+
 platformSolid(600,480,200,20)
+
+platformSolid(800,340,150,20)
+platformFalling(950,340,100,20)
+platformSolid(1050,340,210,20)
+platformSolid(1050,340,210,20)
+
+platformSolid(800,270,360,20)
+
+platformSolid(1010,200,250,20)
+
+platformSolid(1110,100,150,20)
+door(1270,20,-1,4,left)
+
 door(1270,636,0,4,left)
