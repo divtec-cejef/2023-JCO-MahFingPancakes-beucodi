@@ -16,7 +16,8 @@ platformFalling(950,340,100,20)
 platformSolid(1050,340,210,20)
 platformSolid(1050,340,210,20)
 
-platformSolid(800,270,360,20)
+platformSolid(700,270,460,20)
+platformTransparent(1160,270,100,20)
 
 platformSolid(1010,200,250,20)
 
