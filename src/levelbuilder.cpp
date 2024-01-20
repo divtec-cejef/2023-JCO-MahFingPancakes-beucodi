@@ -47,12 +47,14 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
     if (levelFile.is_open()) {
         std::string line;
         while (std::getline(levelFile, line)) {
+            if (line.empty())
+                continue;
+
             std::smatch spriteData;
 
             if (std::regex_search(line, spriteData,
-                                  std::regex("\\/\\/.*"))) {
+                                  std::regex("\\/\\/.*")))
                 continue;
-            }
 
             if (std::regex_search(line, spriteData,
                                   std::regex("platform([A-Za-z]*)\\(([0-9]*),([0-9]*),([0-9]*),([0-9]*)\\)"))) {
