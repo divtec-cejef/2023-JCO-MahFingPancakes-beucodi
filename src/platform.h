@@ -16,6 +16,8 @@ Q_OBJECT;
 public:
     virtual GameFramework::Direction collisionSide(Body *body);
 
+    ~Platform() override;
+
 signals:
 
     void queuedForDeletion(Platform *platform);

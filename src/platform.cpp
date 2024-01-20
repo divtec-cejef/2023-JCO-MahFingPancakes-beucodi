@@ -35,3 +35,8 @@ GameFramework::Direction Platform::collisionSide(Body *body) {
         return GameFramework::DOWN;
     return GameFramework::NEUTRAL;
 }
+
+//! Destructeur de la plate-forme.
+Platform::~Platform() {
+    delete m_pImage;
+}

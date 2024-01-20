@@ -2,13 +2,27 @@
 // Created by Dråfølin on 05.12.2023.
 //
 
+#include <QPainter>
 #include "fallingplatform.h"
 
 //! Constructeur de la classe FallingPlatform.
 //! \param rect Rectangle de la plateforme.
 FallingPlatform::FallingPlatform(QRect rect) : Platform(rect) {
-    m_pImage = new QImage(rect.width(), rect.height(), QImage::Format_ARGB32);
-    m_pImage->fill(Qt::yellow);
+    m_pImage = new QImage(rect.width(), rect.height(), QImage::Format_RGBA64);
+    m_pImage->fill(QColor::fromRgb(
+            148,
+            148,
+            148
+    ));
+    QPainter painter(m_pImage);
+    auto detailColor = QColor::fromRgb(
+            80,
+            80,
+            80
+    );
+    painter.setPen(detailColor);
+    painter.drawRect(0, 0, rect.width() - 1, rect.height() - 1);
+
     setPixmap(QPixmap::fromImage(*m_pImage));
 }
 
