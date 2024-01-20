@@ -4,6 +4,7 @@
 
 #include "door.h"
 #include "level.h"
+#include <QRgba64>
 
 //! Constructeur de la classe Door
 //! \param pos : position de la porte
@@ -12,12 +13,41 @@
 Door::Door(const QPoint pos, const QPoint target, const GameFramework::Direction dir) {
     m_dir = dir;
     const QRect rect(pos, QSize(10, 64));
-    m_pImage = new QImage(rect.width(), rect.height(), QImage::Format_ARGB32);
     setPos(rect.x(), rect.y());
     m_targetLevel = target;
-    m_pImage = new QImage(rect.width(), rect.height(), QImage::Format_ARGB32);
-    m_pImage->fill(Qt::blue);
+    m_pImage = new QImage(rect.width(), rect.height(), QImage::Format_RGBA64);
+    m_pImage->fill(Qt::transparent);
+    for (auto y = 0; y < rect.height(); y++) {
+        QRgba64 *line = reinterpret_cast<QRgba64 *>(m_pImage->scanLine(y));
+        for (auto x = 0; x < rect.width(); x++) {
+            QRgba64 &rgb = line[x];
+            rgb = QRgba64::fromRgba(
+                    255,
+                    255,
+                    255,
+                    static_cast<quint8>((x / static_cast<qreal>(rect.width())) * 255.0)
+            );
+        }
+    }
     setPixmap(QPixmap::fromImage(*m_pImage));
+    setTransformOriginPoint(QPointF(rect.width() / 2.0, rect.height() / 2.0));
+
+    switch (dir) {
+        case GameFramework::LEFT:
+            setRotation(0);
+            break;
+        case GameFramework::RIGHT:
+            setRotation(180);
+            break;
+        case GameFramework::UP:
+            setRotation(90);
+            break;
+        case GameFramework::DOWN:
+            setRotation(270);
+            break;
+        default:
+            break;
+    }
 }
 
 //! Permet d'accéder à la position du niveau cible
