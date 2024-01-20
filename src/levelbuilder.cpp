@@ -241,7 +241,15 @@ Level *LevelBuilder::build(const GameCore *pCore, Player *pPlayer, const GameFra
         if (const auto pDoor = dynamic_cast<Door *>(sprite)) {
             QObject::connect(pDoor, &Door::doorEntered,
                              pCore, &GameCore::changeLevel);
-            if (pCore->currentLevel() != nullptr && pDoor->targetLevel() == pCore->currentLevel()->levelId())
+            // Dernière condition requise car NEUTRAL ne peut jamais se produire quand
+            // on utilise une porte, uniquement si on est mort ou on recharge le jeu.
+            // or, si on recharge le jeu, on ne veut pas que le joueur se repositionne
+            // à la porte connectée
+            if (
+                    pCore->currentLevel() != nullptr &&
+                    pDoor->targetLevel() == pCore->currentLevel()->levelId() &&
+                    enteredFrom != GameFramework::NEUTRAL
+                    )
                 connectedDoor = pDoor;
         }
 
