@@ -9,8 +9,7 @@
 #include "gamecanvas.h"
 #include "player.h"
 #include "levelbuilder.h"
-#include "door.h"
-#include "jumpingpancake.h"
+#include "resources.h"
 
 constexpr int SCENE_WIDTH = 1280;
 constexpr int SCENE_HEIGHT = SCENE_WIDTH * 9 / 16;
@@ -26,6 +25,11 @@ Level::Level(GameCanvas *pCanvas, Player *pPlayer, QPoint levelId) {
     m_pPlayer = pPlayer;
     m_pScene = m_pCanvas->createScene(0, 0, SCENE_WIDTH, SCENE_HEIGHT);
     m_pScene->addRect(m_pScene->sceneRect(), QPen(Qt::white));
+    auto backgroundImage = QImage(
+            QString("%1/space.jpg")
+                    .arg(GameFramework::imagesPath())
+    );
+    m_pScene->setBackgroundImage(backgroundImage);
     m_pCanvas->setCurrentScene(m_pScene);
     m_pPlayer->setParentScene(m_pScene);
     m_pPlayer->unpack();
