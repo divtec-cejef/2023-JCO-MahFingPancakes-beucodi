@@ -11,6 +11,7 @@
 
 //! Constructeur de base de la classe Enemy.
 //! \param rImagePath : le chemin vers l'image de l'ennemi
+//! \param pos : La position initiale de l'ennemi.
 //! \param pParent : pointeur vers l'objet parent
 Enemy::Enemy(const QString &rImagePath, QPoint pos, QGraphicsItem *pParent)
         : Entity(rImagePath, pParent) {

@@ -19,20 +19,24 @@
  * Au moment de la construction (MainFrm()) d'une instance MainFrm, un cadre
  * de jeu (GameCanvas) est créé.
  * Ce cadre de jeu gère la cadence du jeu (le tick) et délègue toute la logique
- * du jeu à un objet de type GameCore, qu'il crée, et qui doit être codé par l'apprenant.
+ * du jeu à un objet de type GameCore, qu'il crée.
  *
- * Voici un diagramme de séquence qui montre la séquence de démarrage du jeu et
- * la création des instances principales chargées de mettre en place les éléments de
- * ce jeu.
+ * GameCore est en charge de créer un objet de type LevelBuilder, qui va chercher le fichier
+ * de données du premier niveau (0-0.lvl), le lire et créer ses objets. Gamecore va ensuite
+ * appeler LevelBuilder::build(), qui va instancier un objet de type Level, et lui passer
+ * tous les objets créés. Level::Level() s'occupe de créer la GameScene avec GameCanvas::createScene(),
+ * puis l'affecte au GameCanvas, au travers du pointeur de GameCore, qui est passé en paramètre à
+ * LevelBuilder::build().
  *
- * \image html UML_sequence.png "Diagramme de séquence"
+ * Pendant que le niveau est créé, LevelBuilder::build() lance un thread qui s'occupe de parcourir
+ * les portes du niveau, et de créer un LevelBuilder pour chacun des niveaux correspondants.
+ * Ensuite, les LevelBuilder sont affectés à une liste dans le Level. A chaque création de LevelBuilder,
+ * le fichier de niveau est automatiquement lu et traité. Ainsi, les LevelBuilder liés sont prêts à être
+ * utilisés.
  *
- * GameCore est en charge de créer un objet de type GameScene, qui représente la
- * surface du jeu, avec la méthode GameCanvas::createScene() et de
- * l'afficher en appelant la méthode GameCanvas::setCurrentScene() de GameCanvas.
+ * Voici un diagramme de séquence qui montre la séquence de démarrage du jeu.
  *
- * Il est possible de créer plusieurs scènes et de spécifier à GameCanvas d'en
- * afficher une plutôt qu'une autre.
+ * \image html UML_sequence.png "Diagramme de séquence" width=100%
  *
  * La plupart des jeux d'action ont besoin d'un timing régulier, permettant de
  * déplacer les sprites, détecter les collisions et analyser l'état du jeu.
@@ -54,7 +58,7 @@
  *
  * Voici un diagramme de classes simplifié qui offre une vue globale des classes qui
  * compose de projet.
- * \image html UML_classes.png "Diagramme de classe simplifié"
+ * \image html UML_classes.png "Diagramme de classe simplifié" width=100%
  *
  * \section afaire_sec Travail à réaliser
  * Développer le jeu au sein de la classe GameCore, en spécialisant la classe Sprite et en créant toutes les autres classes nécessaires au jeu.
@@ -188,8 +192,7 @@
  * @param argv
  * @return
  */
-int main(int argc, char* argv[])
-{
+int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     QCoreApplication::setOrganizationName("cejef-divtec");
     QCoreApplication::setOrganizationDomain("divtec.ch");
@@ -200,8 +203,7 @@ int main(int argc, char* argv[])
     qDebug() << "App library paths : " << qApp->libraryPaths();
     qDebug() << "Image path : " << GameFramework::imagesPath();
 
-    if (GameFramework::resourcesPath().isEmpty())
-    {
+    if (GameFramework::resourcesPath().isEmpty()) {
         qCritical() << "Dossier des ressources introuvable : Fin d'exécution du programme.";
         return -1;
     }

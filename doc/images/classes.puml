@@ -1,4 +1,4 @@
-@startuml diagramme de classes
+@startuml UML_classes
 hide circle
 skinparam classAttributeIconSize 0
 !theme plain
@@ -16,7 +16,7 @@ class LevelBuilder {
 	- m_spawnPoint: QPointF
 }
 
-Level "1" -* "1" LevelBuilder
+Level "1" -o "0..1" LevelBuilder
 
 class Body {
 	+ Body(rImagePath: QString, pParent: QGraphicsItem*)
@@ -126,7 +126,7 @@ class GameCore <<QObject>> {
 	+ notifyKeyReleased(key: int)
 }
 
-GameCore -> GameScene
+GameCore --> LevelBuilder
 
 class HeartCharge {
 	+ HeartCharge(id: QString)
@@ -202,8 +202,6 @@ class Level <<QObject>> {
 	- m_pPlayer: Player *
 	- m_spawnPoint: QPointF
 }
-
-Sprite "*" -* "0..1" Level
 
 class MindSignal {
 	+ MindSignal(pParent: QGraphicsItem *)
@@ -315,7 +313,7 @@ class Sprite <<QObject>> <<QGraphicsPixmapItem>> {
 	+ removeTickHandler()
 }
 
-GameScene "0..1" *- "*" Sprite
+GameScene "0..1" *-- "*" Sprite
 
 class GameScene <<QGraphicsScene>> {
 	- m_SpriteList: liste de Sprite
@@ -352,7 +350,7 @@ class MainFrm <<QWidget>> {
 }
 
 MainFrm *-- "1" GameCanvas
-MainFrm *- "1" GameView
+MainFrm --* "1" GameView
 
 class GameView <<QGraphicsView>> {
 	+ setFitToScreenEnabled()
@@ -364,4 +362,8 @@ class GameView <<QGraphicsView>> {
 GameCanvas -> GameView
 
 GameView --> GameScene: Affiche
+
+GameScene "1" --* "0..1" Level
+
+LevelBuilder "0..1" *-- "*" Sprite
 @enduml
