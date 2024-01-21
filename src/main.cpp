@@ -36,7 +36,141 @@
  *
  * Voici un diagramme de séquence qui montre la séquence de démarrage du jeu.
  *
- * \image html UML_sequence.png "Diagramme de séquence" width=100%
+ * @startuml "Diagramme de séquence" width=100%
+ * hide footbox
+ * actor Joueur
+ * participant MainFrm
+ * participant GameView
+ * participant GameCanvas
+ * participant GameCore
+ * participant LevelBuilder
+ * participant fstream
+ * participant Level
+ * participant GameScene
+ * participant LevelBuilder as LB
+ *
+ * Joueur ->> MainFrm: Démarrer le jeu
+ * activate MainFrm
+ * create GameView
+ * MainFrm --> GameView: <<create>>
+ * activate GameView
+ * GameView -> GameView: init()
+ * activate GameView
+ * deactivate GameView
+ * GameView -->> MainFrm: <<return>>
+ * deactivate GameView
+ *
+ * create GameCanvas
+ * MainFrm -->> GameCanvas: <<create>>
+ * activate GameCanvas
+ * GameCanvas -> GameCanvas: initDetailedInfos()
+ * activate GameCanvas
+ * deactivate GameCanvas
+ * [<<-- GameCanvas: <<event>> \n onInit()
+ * GameCanvas -->> MainFrm: <<return>>
+ * deactivate GameCanvas
+ * deactivate MainFrm
+ * [-->> GameCanvas: <<event>> \n onInit()
+ * activate GameCanvas
+ * create GameCore
+ * GameCanvas --> GameCore: <<create>>
+ * activate GameCore
+ * deactivate GameCanvas
+ *
+ * create LevelBuilder
+ * GameCore --> LevelBuilder: <<create>>
+ * activate LevelBuilder
+ *
+ * LevelBuilder -> fstream : Lis le fichier de niveau
+ * activate fstream
+ * fstream --> LevelBuilder: <<return>> \n les lignes du fichier
+ * deactivate fstream
+ *
+ * loop for each line
+ * 	LevelBuilder --> LevelBuilder: <<create>> \n l'élément correspondant
+ * 	activate LevelBuilder
+ * 	LevelBuilder --> LevelBuilder: Ajoute l'élément à la liste
+ * 	deactivate LevelBuilder
+ * end
+ *
+ * LevelBuilder -->> GameCore: <<return>>
+ * deactivate LevelBuilder
+ *
+ * GameCore -> LevelBuilder: build()
+ * activate LevelBuilder
+ * create Level
+ * LevelBuilder --> Level: <<create>>
+ * activate Level
+ * Level -> GameCanvas: createScene()
+ * activate GameCanvas
+ * create GameScene
+ * GameCanvas --> GameScene: <<create>>
+ * GameCanvas -->> Level: <<return>> \n GameScene
+ * deactivate GameCanvas
+ * Level -> GameCanvas: setCurrentScene(GameScene)
+ * activate GameCanvas
+ * GameCanvas -->> Level: <<return>>
+ * deactivate GameCanvas
+ * Level -->> LevelBuilder: <<return>>
+ * deactivate Level
+ *
+ * loop for each created sprite
+ * 	LevelBuilder -> GameScene: addSpriteToScene(sprite)
+ * 	activate GameScene
+ * 	GameScene -->> LevelBuilder: <<return>>
+ * 	deactivate GameScene
+ * end
+ *
+ *
+ * deactivate LevelBuilder
+ * LevelBuilder -->> LevelBuilder: new QThread(LevelBuilder::discoverLevels)
+ *
+ * activate LevelBuilder
+ * loop for each sprite
+ * 	alt sprite is a door
+ * 		create LB
+ * 		LevelBuilder --> LB: <<create>>
+ * 		activate LB
+ * 		LB -> fstream: Lis le fichier de niveau
+ * 		activate fstream
+ * 		fstream -->> LB: <<return>>
+ * 		deactivate fstream
+ *
+ * 		loop for each line
+ * 			LB -> LB: <<create>> \n l'élément correspondant
+ * 			activate LB
+ * 			LB -->> LB: Ajoute l'élément à la liste
+ * 			deactivate LB
+ * 		end
+ *
+ * 		LB -->> LevelBuilder: <<return>>
+ * 		deactivate LB
+ * 		LevelBuilder -> Level: appendLevel(LevelBuilder)
+ * 		activate Level
+ * 		Level -->> LevelBuilder: <<return>>
+ * 		deactivate Level
+ * 	end
+ * end
+ * LevelBuilder -->> GameCore: <<return>> \n Level
+ * deactivate LevelBuilder
+ * GameCore --> LevelBuilder: ~LevelBuilder()
+ * destroy LevelBuilder
+ * GameCore -> GameCanvas: startTick()
+ * activate GameCanvas
+ * deactivate GameCore
+ * deactivate GameCanvas
+ *
+ * loop
+ * [-->> GameCanvas: onTick()
+ * activate GameCanvas
+ * GameCanvas -> GameCore: tick()
+ * activate GameCore
+ * deactivate GameCore
+ * GameCanvas -> GameScene: tick()
+ * activate GameScene
+ * deactivate GameScene
+ * end
+ * @enduml
  *
  * La plupart des jeux d'action ont besoin d'un timing régulier, permettant de
  * déplacer les sprites, détecter les collisions et analyser l'état du jeu.
@@ -58,7 +192,375 @@
  *
  * Voici un diagramme de classes simplifié qui offre une vue globale des classes qui
  * compose de projet.
- * \image html UML_classes.png "Diagramme de classe simplifié" width=100%
+ * @startuml "Diagramme de classes simplifié" width=100%
+hide circle
+skinparam classAttributeIconSize 0
+!theme plain
+
+class LevelBuilder {
+	+ LevelBuilder(levelId: QPoint)
+	+ ~LevelBuilder
+	+ build(pCode: GameCore *, pPlayer: Player *, enteredFrom: Direction): Level *
+	+ LevelId(): QPoint
+	- m_pSprites: QList<Sprite *>
+	- m_levelId: QPoint
+	- loadNeighbouringLevels()
+	- m_pLevel: Level *
+	- m_discoveryThread: QThread
+	- m_spawnPoint: QPointF
+}
+
+Level "1" -o "0..1" LevelBuilder
+
+class Body {
+	+ Body(rImagePath: QString, pParent: QGraphicsItem*)
+	+ tick(elapsedTimeInMilliseconds: long long)
+	+ isAirborne(): boolean
+	+ velocity(): QPointF
+	+ setVelocity(velocity: QPointF)
+	# m_velocity: QPointF
+	# m_acceleration: QPointF
+	# m_maxSpeedX: qreal
+	# m_terminalVelocity: qreal
+	# computeGravity(elapsedTimeInMilliseconds: long long)
+	- collideWithPlatform(platform: Platform *)
+}
+
+Sprite <|-- Body
+
+class Door {
+	+ Door(pos: QPoint, target: QPoint, dir: Direction)
+	+ travel()
+	+ targetLevel(): QPoint
+	- m_targetLevel: QPoint
+	- m_pImage: QImage *
+	- m_dir: Direction
+	-- signals --
+	+doorEntered(targetLevel: QPoint, dir: Direction)
+}
+
+Sprite <|-- Door
+
+class Enemy {
+	# Enemy(rImagePath: QString, pos: QPoint, pParent: QGraphicsItem *)
+	+ tick(elapsedTimeInMilliseconds: long long)
+	+ getDamage(): int
+	+ linkPlayer(pPlayer: Player *)
+	# m_pPlayer: Player *
+	# m_damage: int
+	# die()
+	# getMinCooldown(): int
+	# getMaxCooldown(): int
+	- m_moveCooldown: int
+	- m_hasAttacked: boolean
+	-- slots --
+	{abstract} +moveTowardPlayer()
+}
+
+Entity <|-- Enemy
+
+class Entity {
+	# Entity(rImagePath: QString, pParent: QGraphicsItem *)
+	+ takeDamage(damage: int)
+	+ pack()
+	+ unpack()
+	+ initialize()
+	{abstract} # die()
+	# m_maxHealth: int
+	# m_health: int
+	# m_pHealthBar: QList<HeartIcon *>
+}
+
+Body <|-- Entity
+
+class FallingPlatform {
+	+ FallingPlatform(rect: QRect)
+	+ tick(elapsedTimeInMilliseconds: long long)
+	+ collisionSide(body: Body *): Direction
+	- m_isFalling: boolean
+	- m_fallSpeed: qreal
+}
+
+Platform <|-- FallingPlatform
+
+class FragilePlatform {
+	+ FragilePlatform(rect: QRect)
+	+ tick(elapsedTimeInMilliseconds: long long)
+	+ collisionSide(body: Body *): Direction
+	- m_isBreaking: boolean
+	- m_breakingState: int
+}
+
+Platform <|-- FragilePlatform
+
+class GameCore <<QObject>> {
+	+ GameCore(pGameCanvas: GameCanvas *, parent: QObject*)
+	+ ~GameCore()
+	+ keyPressed(key: int)
+	+ keyReleased(key: int)
+	+ mouseMoved(newMousePosition: QPointF)
+	+ mouseButtonPressed(mousePosition: QPointF, buttons: MouseButtons)
+	+ mouseButtonReleased(mousePosition: QPointF, buttons: MouseButtons)
+	+ tick(elapsedTimeInMilliseconds: long long)
+	+ currentLevel(): Level *
+	+ canvas(): GameCanvas *
+	- m_pGameCanvas: GameCanvas *
+	- m_pPlayer: Player *
+	- m_pPlatforms: QList<Platform *>
+	- m_pLevel: Level *
+	-- slots --
+	+ changeLevel(targetLevel: QPoint, Direction dir)
+	+ spriteQueuedForDeletion(pSprite: Sprite *)
+	+ onPlayerDied()
+	-- signals --
+	+ notifyMouseMoved(newMousePosition: QPointF)
+	+ notifyMouseButtonPressed(mousePosition: QPointF, buttons: MouseButtons)
+	+ notifyMouseButtonReleased(mousePosition: QPointF, buttons: MouseButtons)
+	+ notifyKeyPressed(key: int)
+	+ notifyKeyReleased(key: int)
+}
+
+GameCore --> LevelBuilder
+
+class HeartCharge {
+	+ HeartCharge(id: QString)
+}
+
+Item <|-- HeartCharge
+
+class HeartIcon {
+	+ HeartIcon(pParent: QGraphicsItem *)
+	{static} + SCALE: qreal
+}
+
+HudIcon <|-- HeartIcon
+
+class HudIcon {
+	+ HudIcon(rImagePath: QString, pParent: QGraphicsItem *)
+}
+
+Sprite <|-- HudIcon
+
+class Item {
+	# Item(rImagePath: QString, id: QString, parent: QGraphicsItem *)
+	+ tick(elapsedTimeInMilliseconds: long long)
+	+ getId(): QString
+	# m_id: QString
+	{static} # m_size: qreal
+}
+
+Body <|-- Item
+
+class JumpCharge {
+	+ JumpCharge(id: QString)
+}
+
+Item <|-- JumpCharge
+
+class JumpIcon {
+	+ JumpIcon(pParent: QGraphicsItem *)
+}
+
+HudIcon <|-- JumpIcon
+
+class JumpingPancake {
+	+ JumpingPancake(pos: QPoint, pParent: QGraphicsItem *)
+	+ tick(elapsedTimeInMilliseconds: long long)
+	+ moveTowardPlayer()
+	{static} # JUMP_FORCE: qreal
+	{static} # ENNEMI_WIDTH: qreal
+	{static} # MAX_SPEED_X: qreal
+	{static} # DISTANCE_TO_PLAYER_RATIO: qreal
+	# getMinCooldown(): int
+	# getMaxCooldown(): int
+	- m_jumpAnimationFrame: int
+	- m_jumpAnimationCooldown: int
+	- jumpWithAnimation()
+}
+
+Enemy <|-- JumpingPancake
+
+class Level <<QObject>> {
+	+ Level(pCanvas: GameCanvas *, pPlayer: Player *, levelId: QPoint)
+	+ ~Level()
+	+ neighbouringLevels(): QList<LevelBuilder>
+	+ scene(): GameScene *
+	+ levelId(): QPoint
+	+ appendLevel(level: LevelBuilder *)
+	+ setSpawnPoint(spawnPoint: QPointF)
+	+ initialize()
+	- m_levelId: QPoint
+	- m_pCanvas: GameCanvas *
+	- m_pScene: GameScene *
+	- m_pConnectedLevels: QList<LevelBuilder *>
+	- m_pPlayer: Player *
+	- m_spawnPoint: QPointF
+}
+
+class MindSignal {
+	+ MindSignal(pParent: QGraphicsItem *)
+	+ setDirection(goalPos: QPointF)
+	+ tick(elapsedTimeInMilliseconds: long long)
+	- m_deltaPos: QPointF
+	{static} - ATTACK_SPREAD_SPEED: qreal
+	{static} - ATTACK_SIZE: qreal
+	{static} - ATTACK_POWER: qreal
+	-- signals --
+	+ queueForDeletion(a: MindSignal *)
+}
+
+Sprite <|-- MindSignal
+
+class Platform {
+	# Platform(rect: QRect)
+	+ collisionSide(body: Body*): Direction
+	# m_pImage: QImage *
+	-- signals --
+	+ queuedForDeletion(platform: Platform *)
+}
+
+Sprite <|-- Platform
+
+class Player {
+	+ Player()
+	+ jump()
+	+ tick(elapsedTimeInMilliseconds: long long)
+	+ pack()
+	+ unpack()
+	+ initialize()
+	+ setSpawnPoint(spawnPoint: QPointF)
+	- m_playerInput: QPointF
+	- m_keysPressed: QList<int>
+	- m_maxJumpIcons: int
+	- m_jumpIcons: int
+	- m_hasReleasedJump: boolean
+	- m_spawnPoint: QPointF
+	- m_invincibilityTimeLeft: int
+	{static} - PLAYER_JUMP_FORCE: qreal
+	{static} - ACCELERATION: qreal
+	{static} - PLAYER_FRICTION: qreal
+	- m_pJumpIconsSprites: QList<JumpIcon *>
+	{static} - INVINCIBILITY_TIME: int
+	- m_pAttackSprites: QList<MindSignal *>
+	- die()
+	- takeDamage(damage: int)
+	- updateJumpIcons()
+	- resetPos()
+	- manageEnnemyCollisions()
+	-- slots --
+	+ keyPressed(key: int)
+	+ keyReleased(key: int)
+	+ mouseButtonPressed(mousePosition: QPointF, buttons: MouseButtons)
+	+ mindSignalRemoved(obj: MindSignal *)
+	-- signals --
+	+ playerDied()
+}
+
+Entity <|-- Player
+
+enum PlayerData {
+	{static} + PICKED_UP_UPGRADES
+}
+
+Player +-- PlayerData
+
+class RegenPod {
+	+ RegenPod()
+	+ tick(elapsedTimeInMilliseconds: long long)
+	- m_blinkCounter: int
+}
+Sprite <|-- RegenPod
+
+class SolidPlatform {
+	+ SolidPlatform(rect: QRect)
+}
+
+Platform <|-- SolidPlatform
+
+class TransparentPlatform {
+	+ TransparentPlatform(rect: QRect)
+	+ collisionSide(body: Body *): Direction
+}
+
+Platform <|-- TransparentPlatform
+
+class Sprite <<QObject>> <<QGraphicsPixmapItem>> {
+	+ addAnimationFrame()
+	+ setCurrentAnimationFrame()
+	+ currentAnimationFrame()
+	+ clearAnimationFrame()
+	+ showNextAnimationFrame()
+	+ setAnimationSpeed()
+	+ startAnimation()
+	+ stopAnimation()
+	+ isAnimationRunning()
+
+	+ globalBoundingBox()
+	+ globalShape()
+
+	+ setParentScene()
+	+ parentScene()
+
+	+ tick()
+	+ setTickHandler()
+	+ tickHandler()
+	+ removeTickHandler()
+}
+
+GameScene "0..1" *-- "*" Sprite
+
+class GameScene <<QGraphicsScene>> {
+	- m_SpriteList: liste de Sprite
+	+ addSpriteToScene()
+	+ sprites()
+	+ spriteAt()
+	+ collidingSprites()
+	+ createText()
+	+ setBackgroundImage()
+	+ tick()
+}
+
+GameCanvas *-- "1..*" GameScene
+GameCanvas *-- "1" GameCore
+
+class GameCanvas <<QObject>> {
+	+ startTick(int interval)
+	+ stopTick()
+
+	+ createScene()
+	+ setCurrentScene()
+	+ currentScene()
+
+	+ startMouseTracking()
+	+ stopMouseTracking()
+	+ currentMousePosition
+
+	# eventFilter()
+}
+
+class MainFrm <<QWidget>> {
+
+
+}
+
+MainFrm *-- "1" GameCanvas
+MainFrm --* "1" GameView
+
+class GameView <<QGraphicsView>> {
+	+ setFitToScreenEnabled()
+	+ isFitToScreenEnabled()
+	+ setClipSceneEnabled()
+	+ isClipSceneEnabled()
+}
+
+GameCanvas -> GameView
+
+GameView --> GameScene: Affiche
+
+GameScene "1" --* "0..1" Level
+
+LevelBuilder "0..1" *-- "*" Sprite
+ * @enduml
  *
  * \section afaire_sec Travail à réaliser
  * Développer le jeu au sein de la classe GameCore, en spécialisant la classe Sprite et en créant toutes les autres classes nécessaires au jeu.
