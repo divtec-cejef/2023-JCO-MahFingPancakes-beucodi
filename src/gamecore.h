@@ -24,9 +24,6 @@ class Sprite;
 class Level;
 
 //! \brief Classe qui gère la logique du jeu.
-//!
-//! Dans son état actuel, cette classe crée une scène vide, délimite
-//! sa surface avec une ligne blanche puis démarre la cadence du jeu.
 class GameCore : public QObject {
 Q_OBJECT
 

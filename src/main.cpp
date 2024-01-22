@@ -380,6 +380,8 @@ class JumpingPancake {
 
 Enemy <|-- JumpingPancake
 
+JumpingPancake <|-- FinalBoss
+
 class Level <<QObject>> {
 	+ Level(pCanvas: GameCanvas *, pPlayer: Player *, levelId: QPoint)
 	+ ~Level()

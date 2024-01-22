@@ -44,7 +44,6 @@ GameCore::GameCore(GameCanvas *pGameCanvas, QObject *pParent) : QObject(pParent)
     // sinon le temps passé jusqu’au premier tick (ElapsedTime) peut être élevé et provoquer de gros
     // déplacements, surtout si le débogueur est démarré.
     m_pGameCanvas->startTick();
-    onPlayerDied();
 }
 
 //! Change le niveau actuel.
