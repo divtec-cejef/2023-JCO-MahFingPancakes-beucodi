@@ -380,6 +380,9 @@ class JumpingPancake {
 
 Enemy <|-- JumpingPancake
 
+ class FinalBoss {
+    + FinalBoss(pos: QPoint)
+}
 JumpingPancake <|-- FinalBoss
 
 class Level <<QObject>> {

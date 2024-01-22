@@ -13,7 +13,10 @@ class JumpIcon;
 
 class MindSignal;
 
-//! La classe Player représente le joueur.
+//! \brief Classe représentant le joueur
+//!
+//! Le joueur est le personnage principal du jeu.
+//! Il peut se déplacer, sauter, attaquer, et interagir avec les objets du jeu.
 class Player final : public Entity {
 Q_OBJECT
 

@@ -9,6 +9,11 @@
 
 class Platform;
 
+/**
+ * @brief Classe représentant un corps physique.
+ *
+ * Un corps physique est un sprite qui peut se déplacer et interagir avec d'autres corps physiques.
+ */
 class Body : public Sprite {
 public:
     void tick(long long elapsedTimeInMilliseconds) override;

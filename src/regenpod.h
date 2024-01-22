@@ -8,6 +8,9 @@
 
 #include "sprite.h"
 
+//! \brief Classe représentant un point de régénération
+//!
+//! Lorsque le joueur touche un RegenPod, sa santé est restaurée.
 class RegenPod : public Sprite {
 public:
     RegenPod();

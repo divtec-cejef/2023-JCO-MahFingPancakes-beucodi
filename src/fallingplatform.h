@@ -8,6 +8,9 @@
 #include "platform.h"
 #include "utilities.h"
 
+//! \brief Classe de platforme spécifique qui tombe lorsqu'un joueur se tient dessus
+//!
+//! Cette classe hérite de la classe Platform et implémente la méthode tick() pour faire tomber la plateforme lorsqu'un joueur se tient dessus.
 class FallingPlatform final : public Platform {
 public:
     explicit FallingPlatform(QRect rect);

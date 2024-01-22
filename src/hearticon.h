@@ -7,6 +7,7 @@
 
 #include "hudicon.h"
 
+//! \brief Une icône d'ATH qui représente un point de vie
 class HeartIcon : public HudIcon {
 public:
     explicit HeartIcon(QGraphicsItem *pParent = nullptr);

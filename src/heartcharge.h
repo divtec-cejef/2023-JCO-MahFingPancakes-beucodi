@@ -8,6 +8,7 @@
 
 #include "item.h"
 
+//! \brief Un objet qui permet de rajouter un emplacement de coeur au joueur
 class HeartCharge : public Item {
 public:
     explicit HeartCharge(QString id);

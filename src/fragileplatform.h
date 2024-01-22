@@ -7,6 +7,7 @@
 
 #include "platform.h"
 
+//! \brief Une plateforme fragile qui se brise au contact du joueur
 class FragilePlatform final : public Platform {
 public:
     explicit FragilePlatform(QRect rect);

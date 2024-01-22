@@ -10,6 +10,11 @@
 
 class Level;
 
+/**
+ * @brief Classe représentant une porte.
+ *
+ * Une porte est un sprite qui permet de changer de niveau.
+ */
 class Door final : public Sprite {
 Q_OBJECT
 

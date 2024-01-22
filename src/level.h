@@ -14,6 +14,7 @@ class QString;
 
 class Player;
 
+//! \brief Classe représentant un niveau chargé
 class Level final : public QObject {
 public:
     explicit Level(GameCanvas *pCanvas, Player *pPlayer, QPoint levelId);

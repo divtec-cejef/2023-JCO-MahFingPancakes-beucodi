@@ -7,7 +7,7 @@
 
 #include "enemy.h"
 
-//! Classe représentant un ennemi qui saute
+//! \brief Classe représentant un ennemi qui saute
 class JumpingPancake : public Enemy {
 public:
     explicit JumpingPancake(QPoint pos = {0, 0}, QGraphicsItem *pParent = nullptr);

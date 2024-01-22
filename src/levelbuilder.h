@@ -17,6 +17,11 @@ class GameCore;
 
 class Player;
 
+//! \brief Classe permettant de construire un niveau
+//!
+//! Cette classe permet de construire un niveau à partir d'un fichier de niveau.
+//! Le fichier de niveau est automatiquement chargé et parsé à la construction de l'objet.
+//! Lorsque le niveau est construit, il lance un thread pour charger les niveaux voisins.
 class LevelBuilder {
 public:
     explicit LevelBuilder(QPoint levelId);

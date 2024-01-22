@@ -8,6 +8,10 @@
 #include "platform.h"
 #include "utilities.h"
 
+//! \brief Classe représentant une plateforme à sens unique
+//!
+//! Les plateformes à sens unique sont des plateformes sur lesquelles le joueur peut marcher.
+//! Il peut aussi les traverser par le dessous, mais pas par le dessus.
 class TransparentPlatform final : public Platform {
 public:
     explicit TransparentPlatform(QRect rect);

@@ -7,6 +7,10 @@
 
 #include "sprite.h"
 
+//! \brief Classe représentant une attaque mentale
+//!
+//! Lorsque le joueur effectue une attaque mentale, il envoie une onde de choc
+//! qui endommage les ennemis.
 class MindSignal final : public Sprite {
 Q_OBJECT
 

@@ -10,6 +10,7 @@
 
 class Body;
 
+//! \brief Classe générique pour les plateformes
 class Platform : public Sprite {
 Q_OBJECT;
 

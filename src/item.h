@@ -8,7 +8,7 @@
 
 #include "body.h"
 
-//! Représente un object que l'on peut ramassere au joueur
+//! \brief Classe générique pour les objets ramassables
 class Item : public Body {
 public:
     void tick(long long elapsedTimeInMilliseconds) override;

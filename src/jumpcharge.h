@@ -8,6 +8,10 @@
 
 #include "item.h"
 
+//! \brief Classe représentant un emplacement de saut supplémentaire
+//!
+//! Pour chaque JummpCharge ramassé, le joueur peut effectuer un "double-saut" supplémentaire.
+//! Il peut ainsi atteindre des plateformes plus hautes.
 class JumpCharge final : public Item {
 public:
     explicit JumpCharge(QString id);
