@@ -49,7 +49,8 @@ SOURCES += main.cpp\
     regenpod.cpp \
     solidplatform.cpp \
     transparentplatform.cpp \
-    player.cpp
+    player.cpp \
+    flyingpancake.cpp
 
 HEADERS  += mainfrm.h \
     gamescene.h \
@@ -81,6 +82,7 @@ HEADERS  += mainfrm.h \
     regenpod.h \
     solidplatform.h \
     transparentplatform.h \
-    player.h
+    player.h \
+    flyingpancake.h
     
 FORMS    += mainfrm.ui

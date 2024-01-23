@@ -32,6 +32,7 @@
 #include "heartcharge.h"
 #include "regenpod.h"
 #include "finalboss.h"
+#include "flyingpancake.h"
 
 
 //! Constructeur de la classe LevelBuilder
@@ -133,6 +134,8 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
                     m_pSprites.append(new JumpingPancake(pos));
                 else if (enemyType == "Boss")
                     m_pSprites.append(new FinalBoss(pos));
+		else if (enemyType == "Fly")
+		    m_pSprites.append(new FlyingPancake(pos));
                 else
                     throw std::runtime_error("unknown enemy type");
                 continue;

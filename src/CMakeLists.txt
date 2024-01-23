@@ -79,7 +79,9 @@ qt_add_executable(MahFingPancakes main.cpp
         regenpod.cpp
         regenpod.h
         finalboss.cpp
-        finalboss.h)
+        finalboss.h
+	flyingpancake.h
+	flyingpancake.cpp)
 
 target_link_libraries(MahFingPancakes PRIVATE
         Qt::Core
