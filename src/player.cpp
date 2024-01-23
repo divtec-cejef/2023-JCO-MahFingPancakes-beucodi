@@ -17,7 +17,7 @@
 
 //! Constructeur de player
 Player::Player() : Entity(GameFramework::imagesPath() + "/Ghost GIF Frames/frame_00_delay-0.03s.gif") {
-    m_maxSpeedX = 3;
+    m_maxSpeedX = 10;
     m_maxHealth = 3;
     for (int i = 1; i < 39; i++) {
         QString currentI = "0" + QString::number(i);
@@ -42,6 +42,7 @@ void Player::initialize() {
 //! Permet de mettre a jour le joueur et d'appliquer ses physiques
 //! \param elapsedTimeInMilliseconds temps écoulé depuis le dernier appel de cette fonction
 void Player::tick(const long long elapsedTimeInMilliseconds) {
+    qDebug() << m_velocity << m_maxSpeedX;
     if (m_invincibilityTimeLeft > 0) {
         setOpacity((m_invincibilityTimeLeft % 250) / 100.0 + .25);
         m_invincibilityTimeLeft -= static_cast<int>(elapsedTimeInMilliseconds);
@@ -85,9 +86,9 @@ void Player::tick(const long long elapsedTimeInMilliseconds) {
     const auto airborneState = isAirborne();
 
     // Inputs horizontaux du joueur (A&D)
-    if (m_playerInput.x() > 0) {
+    if (m_playerInput.x() > 0 && qCeil(m_velocity.x()) >= 0) {
         m_acceleration.setX(ACCELERATION);
-    } else if (m_playerInput.x() < 0) {
+    } else if (m_playerInput.x() < 0 && qFloor(m_velocity.x()) <= 0) {
         m_acceleration.setX(-ACCELERATION);
     } else {
         if (airborneState)
