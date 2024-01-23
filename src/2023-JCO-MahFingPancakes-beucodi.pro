@@ -27,7 +27,29 @@ SOURCES += main.cpp\
     gameview.cpp \
     utilities.cpp \
     gamecanvas.cpp \
-    spritetickhandler.cpp
+    spritetickhandler.cpp \
+    body.cpp \
+    door.cpp \
+    enemy.cpp \
+    entity.cpp \
+    fallingplatform.cpp \
+    finalboss.cpp \
+    fragileplatform.cpp \
+    heartcharge.cpp \
+    hearticon.cpp \
+    hudicon.cpp \
+    item.cpp \
+    jumpcharge.cpp \
+    jumpicon.cpp \
+    jumpingpancake.cpp \
+    level.cpp \
+    levelbuilder.cpp \
+    mindsignal.cpp \
+    platform.cpp \
+    regenpod.cpp \
+    solidplatform.cpp \
+    transparentplatform.cpp \
+    player.cpp
 
 HEADERS  += mainfrm.h \
     gamescene.h \
@@ -37,7 +59,28 @@ HEADERS  += mainfrm.h \
     gameview.h \
     utilities.h \
     gamecanvas.h \
-    spritetickhandler.h
-
+    spritetickhandler.h \
+    body.h \
+    door.h \
+    enemy.h \
+    entity.h \
+    fallingplatform.h \
+    finalboss.h \
+    fragileplatform.h \
+    heartcharge.h \
+    hearticon.h \
+    hudicon.h \
+    item.h \
+    jumpcharge.h \
+    jumpicon.h \
+    jumpingpancake.h \
+    level.h \
+    levelbuilder.h \
+    mindsignal.h \
+    platform.h \
+    regenpod.h \
+    solidplatform.h \
+    transparentplatform.h \
+    player.h
+    
 FORMS    += mainfrm.ui
-
