@@ -9,11 +9,26 @@
 //! Constructeur de la classe TransparentPlatform
 TransparentPlatform::TransparentPlatform(const QRect rect) : Platform(rect) {
     m_pImage = new QImage(rect.width(), rect.height(), QImage::Format_RGBA64);
-    m_pImage->fill(QColor::fromRgb(
-            148,
-            148,
-            148
+    m_pImage->fill(QColor::fromRgba64(
+            0,
+            0,
+            0,
+	    0
     ));
+
+    for (int y = 0; y < m_pImage->height() / 2.0; y++) {
+	auto line = (QRgba64*)m_pImage->scanLine(y);
+	for (int x = 0; x < m_pImage->width(); x++) {
+	    QRgba64 &rgb = line[x];
+	    rgb = QRgba64::fromRgba(
+                148,
+		148,
+		148,
+		255
+	    );
+	}
+    }
+
     QPainter painter(m_pImage);
     auto detailColor = QColor::fromRgb(
             80,
@@ -21,7 +36,7 @@ TransparentPlatform::TransparentPlatform(const QRect rect) : Platform(rect) {
             80
     );
     painter.setPen(detailColor);
-    painter.drawRect(0, 0, rect.width() - 1, rect.height() - 1);
+    painter.drawRect(0, 0, rect.width() - 1, rect.height() / 2.0 - 1);
 
     const int boltSize = 4;
     const int boltOffset = 3;
