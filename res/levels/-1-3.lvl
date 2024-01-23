@@ -1,0 +1,22 @@
+door(1270, 76, -1, 4, left)
+door(0, 636, -1, 2, right)
+
+// floor and walls
+// floor
+platformSolid(0, 700, 1280, 20)
+// wall right
+platformSolid(1260, 140, 20, 560)
+platformSolid(1260, 20, 20, 56)
+// ceiling
+platformSolid(0, 0, 1280, 20)
+// wall left
+platformSolid(0, 20, 20, 616)
+
+// platform to outside
+platformTransparent(1160, 560, 100, 20)
+platformTransparent(1160, 420, 100, 20)
+platformTransparent(1160, 280, 100, 20)
+platformTransparent(1160, 140, 100, 20)
+
+// flying enemy introduction
+enemyFly(640,340)

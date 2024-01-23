@@ -1,2 +1,26 @@
-door(0,636,0,3,right)
+
+door(0, 636, 0, 3, right)
+door(0, 76, -1, 3, right)
+door(1270, 20, -1, 5, left)
 spawnPoint(30,640)
+
+// Walls and floor
+// top
+platformSolid(0, 0, 1280, 20)
+// floor
+platformSolid(0, 700, 1280, 20)
+// left
+platformSolid(0, 160, 20, 476)
+platformSolid(0, 20, 20, 56)
+// right 
+platformSolid(1260, 84, 20, 616)
+
+// WallRight platform
+platformSolid(1160, 84, 100, 20)
+
+// WallLeft platforms
+platformSolid(20, 560, 100, 20)
+platformSolid(20, 420, 100, 20)
+platformSolid(20, 280, 100, 20)
+platformSolid(0, 140, 120, 20)
+

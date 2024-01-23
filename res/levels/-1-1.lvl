@@ -1,0 +1,25 @@
+door(1270, 636, -1, 2, left)
+spawnPoint(1250, 650)
+door(0, 636, -1, 0, right)
+
+// walls and floor
+// floor
+platformSolid(0, 700, 1280, 20)
+// wall right
+platformSolid(1260, 20, 20, 616)
+// ceiling
+platformSolid(0, 0, 1280, 20)
+// wall left
+platformSolid(0, 20, 20, 616)
+
+// anti-fly platforms
+// left
+platformTransparent(20, 600, 100, 20)
+// right
+platformTransparent(1160, 600, 100, 20)
+
+//enemies
+enemyFly(500, 360)
+enemyFly(780, 360)
+enemyJmp(500, 650)
+enemyJmp(780, 650)

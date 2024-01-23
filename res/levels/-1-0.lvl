@@ -1,0 +1,15 @@
+door(1270, 636, -1, 1, left)
+
+// walls and floor
+// floor
+platformSolid(0, 700, 1280, 20)
+// wall right
+platformSolid(1260, 20, 20, 616)
+// ceiling
+platformSolid(0, 0, 1280, 20)
+// wall left
+platformSolid(0, 20, 20, 680)
+
+// items
+itemJmp(500, 650, "-1-1-0-jmp")
+itemHlth(680, 650, "-1-0-helth")

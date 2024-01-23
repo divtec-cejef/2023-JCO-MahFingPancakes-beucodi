@@ -1,0 +1,15 @@
+// Pre-boss room
+door(0, 636, -1, 5, right)
+door(1270, 636, -1, 7, left)
+
+// floor
+platformSolid(0, 700, 1280, 20)
+// wall left
+platformSolid(0, 20, 20, 616)
+// wall right
+platformSolid(1260, 20, 20, 616)
+// ceiling
+platformSolid(0, 0, 1280, 20)
+
+enemyJmp(640, 640)
+enemyFly(640, 360)

@@ -1,0 +1,13 @@
+door(0, 636, -1, 7, right)
+
+// floor
+platformSolid(0, 700, 1280, 20)
+// wall left
+platformSolid(0, 20, 20, 616)
+// wall right
+platformSolid(1260, 20, 20, 680)
+// ceiling
+platformSolid(0, 0, 1280, 20)
+
+text(640,230,24,"Félicitation, vous avez vaincu le jeu!")
+
