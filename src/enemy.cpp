@@ -20,10 +20,10 @@ Enemy::Enemy(const QString &rImagePath, QPoint pos, QGraphicsItem *pParent)
 
 //! Permet de faire mourrir un ennemi
 void Enemy::die() {
+    pack();
     m_pParentScene->unregisterSpriteFromTick(this);
     m_pParentScene->removeSpriteFromScene(this);
     deleteLater();
-    pack();
 }
 
 //! Liaison du joueur
