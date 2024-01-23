@@ -51,6 +51,9 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
             if (line.empty())
                 continue;
 
+	    if (std::regex_search(line, std::regex("^ *$")))
+		continue;
+
             std::smatch spriteData;
 
             if (std::regex_search(line, spriteData,
@@ -58,7 +61,7 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
                 continue;
 
             if (std::regex_search(line, spriteData,
-                                  std::regex("platform([A-Za-z]*)\\(([0-9]*),([0-9]*),([0-9]*),([0-9]*)\\)"))) {
+                                  std::regex("platform([A-Za-z]*)\\(([0-9]*), ?([0-9]*), ?([0-9]*), ?([0-9]*)\\)"))) {
                 std::string platformType = spriteData[1].str();
                 QRect rect = {
                         stoi(spriteData[2].str()),
@@ -82,7 +85,7 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
 
             if (std::regex_search(line, spriteData,
                                   std::regex(
-                                          "door\\(([0-9]*),([0-9]*),([0-9\\-]*),([0-9\\-]*),(right|left|up|down)\\)"))) {
+                                          "door\\(([0-9]*), ?([0-9]*), ?([0-9\\-]*), ?([0-9\\-]*), ?(right|left|up|down)\\)"))) {
                 QPoint pos(
                         stoi(spriteData[1].str()),
                         stoi(spriteData[2].str())
@@ -112,7 +115,7 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
             }
 
             if (std::regex_search(line, spriteData,
-                                  std::regex("spawnPoint\\(([0-9]*),([0-9]*)\\)"))) {
+                                  std::regex("spawnPoint\\(([0-9]*), ?([0-9]*)\\)"))) {
                 m_spawnPoint = {
                         stod(spriteData[1].str()),
                         stod(spriteData[2].str())
@@ -120,7 +123,7 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
                 continue;
             }
 
-            if (std::regex_search(line, spriteData, std::regex("enemy([A-Za-z]*)\\(([0-9]*),([0-9]*)\\)"))) {
+            if (std::regex_search(line, spriteData, std::regex("enemy([A-Za-z]*)\\(([0-9]*), ?([0-9]*)\\)"))) {
                 QPoint pos(
                         stoi(spriteData[2].str()),
                         stoi(spriteData[3].str())
@@ -136,7 +139,7 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
             }
 
             if (std::regex_search(line, spriteData, std::regex(
-                    "sprite\\(([0-9]*),([0-9]*),([0-9\\.]*),\"([a-zA-Z0-9\\/\\-\\._]*)\"\\)"))) {
+                    "sprite\\(([0-9]*),([0-9]*), ?([0-9\\.]*), ?\"([a-zA-Z0-9\\/\\-\\._]*)\"\\)"))) {
                 QPoint pos(
                         stoi(spriteData[1].str()),
                         stoi(spriteData[2].str())
@@ -157,7 +160,7 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
                 continue;
             }
 
-            if (std::regex_search(line, spriteData, std::regex("text\\(([0-9]*),([0-9]*),([0-9]*),\"(.*)\"\\)"))) {
+            if (std::regex_search(line, spriteData, std::regex("text\\(([0-9]*), ?([0-9]*), ?([0-9]*), ?\"(.*)\"\\)"))) {
                 QPoint pos(
                         stoi(spriteData[1].str()),
                         stoi(spriteData[2].str())
@@ -177,7 +180,7 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
                 continue;
             }
 
-            if (std::regex_search(line, spriteData, std::regex("item([A-Za-z]*)\\(([0-9]*),([0-9]*),\"(.*)\"\\)"))) {
+            if (std::regex_search(line, spriteData, std::regex("item([A-Za-z]*)\\(([0-9]*), ?([0-9]*), ?\"(.*)\"\\)"))) {
                 QString itemType(spriteData[1].str().c_str());
                 QPoint pos(
                         stoi(spriteData[2].str()),
@@ -199,7 +202,7 @@ LevelBuilder::LevelBuilder(QPoint levelId) {
                 continue;
             }
 
-            if (std::regex_search(line, spriteData, std::regex("regenPod\\(([0-9]*),([0-9]*)\\)"))) {
+            if (std::regex_search(line, spriteData, std::regex("regenPod\\(([0-9]*), ?([0-9]*)\\)"))) {
                 QPoint pos(
                         stoi(spriteData[1].str()),
                         stoi(spriteData[2].str())
