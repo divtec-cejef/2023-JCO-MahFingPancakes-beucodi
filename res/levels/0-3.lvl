@@ -7,6 +7,8 @@ platformSolid(0,76,20,636)
 platformSolid(0,700,1280,20)
 platformSolid(1260,84,20,552)
 
+regenPod(650,650)
+
 platformSolid(700,580,100,20)
 
 platformSolid(600,480,200,20)
