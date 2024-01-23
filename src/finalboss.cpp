@@ -9,4 +9,5 @@
 FinalBoss::FinalBoss(QPoint pos) : JumpingPancake(pos) {
     setScale(1);
     m_damage = 2;
+    m_maxHealth = 10;
 }
