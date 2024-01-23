@@ -42,7 +42,6 @@ void Player::initialize() {
 //! Permet de mettre a jour le joueur et d'appliquer ses physiques
 //! \param elapsedTimeInMilliseconds temps écoulé depuis le dernier appel de cette fonction
 void Player::tick(const long long elapsedTimeInMilliseconds) {
-    qDebug() << m_velocity << m_maxSpeedX;
     if (m_invincibilityTimeLeft > 0) {
         setOpacity((m_invincibilityTimeLeft % 250) / 100.0 + .25);
         m_invincibilityTimeLeft -= static_cast<int>(elapsedTimeInMilliseconds);
@@ -200,7 +199,6 @@ void Player::die() {
 void Player::takeDamage(int damage) {
     Entity::takeDamage(damage);
     m_invincibilityTimeLeft = INVINCIBILITY_TIME;
-    qDebug() << "Player took" << damage << "damage";
 }
 
 //! "Emplaqute" Le joueur; Permet de retirer tous les sprites de la scène générés par le joueur

@@ -28,7 +28,6 @@ void Body::tick(const long long elapsedTimeInMilliseconds) {
      else if (m_velocity.x() < -m_maxSpeedX) 
 	m_acceleration.setX(qMax(m_acceleration.x(), (m_maxSpeedX + m_velocity.x()) * deltaMs / 1000));
 
-     qDebug() << m_acceleration;
     m_velocity.setX(m_velocity.x() + m_acceleration.x() * deltaMs / 1000);
     m_velocity.setY(m_velocity.y() + m_acceleration.y() * deltaMs / 1000);
     m_acceleration = QPointF(0, 0);
