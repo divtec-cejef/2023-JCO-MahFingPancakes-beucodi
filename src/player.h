@@ -68,6 +68,10 @@ private:
     constexpr static int INVINCIBILITY_TIME = 1000;
     //! Liste des sprites de projectiles
     QList<MindSignal *> m_pAttackSprites = QList<MindSignal *>();
+    //! Cooldown pour l'attaque
+    int m_attackCooldown = 0;
+    //! Valeur de cooldown pour l'attaque
+    constexpr static int ATTACK_COOLDOWN = 750;
 
     void die() override;
 

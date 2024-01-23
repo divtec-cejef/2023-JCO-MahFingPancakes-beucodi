@@ -55,6 +55,9 @@ void Player::tick(const long long elapsedTimeInMilliseconds) {
         resetPos();
     }
 
+    if (m_attackCooldown > 0)
+	m_attackCooldown -= elapsedTimeInMilliseconds;
+
     for (const auto sprite: m_pParentScene->collidingSprites(sceneBoundingRect())) {
         if (const auto door = dynamic_cast<Door *>(sprite))
             door->travel();
@@ -252,6 +255,10 @@ void Player::setSpawnPoint(const QPointF &spawnPoint) {
 //! Permet de gérer les clics de souris, en l'occurence pour attaquer
 void Player::mouseButtonPressed(QPointF mousePosition, Qt::MouseButtons buttons) {
     if (buttons & Qt::LeftButton) {
+	if (m_attackCooldown > 0)
+	    return;
+
+	m_attackCooldown = ATTACK_COOLDOWN; 
         const auto newMindSignal = new MindSignal();
         auto center = sceneBoundingRect().size() / 2.0;
         newMindSignal->setPos(pos() + QPointF(center.width(), center.height()));
