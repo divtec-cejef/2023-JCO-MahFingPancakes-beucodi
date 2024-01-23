@@ -10,6 +10,8 @@
 
 class Level;
 
+class Player;
+
 /**
  * @brief Classe représentant une porte.
  *
@@ -25,6 +27,10 @@ public:
 
     [[nodiscard]] QPoint targetLevel() const;
 
+    void tick(long long elapsedTimeInMilliseconds) override;
+    
+    bool isTravellable() const;
+
 signals:
 
     void doorEntered(QPoint targetLevel, GameFramework::Direction dir);
@@ -33,6 +39,7 @@ private:
     QPoint m_targetLevel = QPoint(0, 0);
     QImage *m_pImage = nullptr;
     GameFramework::Direction m_dir = GameFramework::NEUTRAL;
+    bool m_isDoorEnabled = false;
 };
 
 

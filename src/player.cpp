@@ -59,8 +59,55 @@ void Player::tick(const long long elapsedTimeInMilliseconds) {
 	m_attackCooldown -= elapsedTimeInMilliseconds;
 
     for (const auto sprite: m_pParentScene->collidingSprites(sceneBoundingRect())) {
-        if (const auto door = dynamic_cast<Door *>(sprite))
-            door->travel();
+        if (const auto door = dynamic_cast<Door *>(sprite)) {
+     	    if (door->isTravellable()) {	
+                door->travel();
+		continue;
+	    }
+
+	    GameFramework::Direction doorDirection;
+            // Relatif à la porte
+	    const int overlapLeft = right() - door->left();
+	    const int overlapRight = door->right() - left();
+	    const int overlapTop = bottom() - door->top();
+	    const int overlapBottom = door->bottom() - top();
+
+	    if (overlapLeft < overlapRight && overlapLeft < overlapTop && overlapLeft < overlapBottom && overlapTop > 1)
+	        doorDirection = GameFramework::LEFT;
+	    else if (overlapRight < overlapLeft && overlapRight < overlapTop && overlapRight < overlapBottom && overlapTop > 1)
+	        doorDirection = GameFramework::RIGHT;
+	    else if (overlapTop < overlapLeft && overlapTop < overlapRight && overlapTop < overlapBottom)
+	        doorDirection = GameFramework::UP;
+	    else if (overlapBottom < overlapLeft && overlapBottom < overlapRight && overlapBottom < overlapTop)
+	        doorDirection = GameFramework::DOWN;
+	    else 
+		doorDirection = GameFramework::NEUTRAL;
+
+	    switch (doorDirection) {
+            case GameFramework::LEFT:
+                setX(qMin(x(), door->left() - sceneBoundingRect().width()) + 1);
+                m_velocity.setX(qMin(0.0f, m_velocity.x()));
+                m_acceleration.setX(qMin(0.0f, m_acceleration.x()));
+                break;
+            case GameFramework::RIGHT:
+                setX(qMax(x(), static_cast<qreal>(door->right())) - 1);
+                m_velocity.setX(qMax(0.0f, m_velocity.x()));
+                m_acceleration.setX(qMax(0.0f, m_acceleration.x()));
+                break;
+            case GameFramework::UP:
+                setY(qMin(y(), door->top() - sceneBoundingRect().height()) + 1);
+                m_velocity.setY(qMin(0.0f, m_velocity.y()));
+                m_acceleration.setY(qMin(0.0f, m_acceleration.y()));
+                break;
+            case GameFramework::DOWN:
+                setY(qMax(y(), static_cast<qreal>(door->bottom())) - 1);
+                m_velocity.setY(qMax(0.0f, m_velocity.y()));
+                m_acceleration.setY(qMax(0.0f, m_acceleration.y()));
+                break;
+            default:
+                break;
+            }
+	}
 
         if (const auto item = dynamic_cast<Item *>(sprite)) {
             if (const auto jumpCharge = dynamic_cast<JumpCharge *>(item)) {

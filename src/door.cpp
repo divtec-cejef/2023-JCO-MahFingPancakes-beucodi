@@ -5,6 +5,8 @@
 #include "door.h"
 #include "level.h"
 #include <QRgba64>
+#include "enemy.h"
+#include "player.h"
 
 //! Constructeur de la classe Door
 //! \param pos : position de la porte
@@ -22,10 +24,10 @@ Door::Door(const QPoint pos, const QPoint target, const GameFramework::Direction
         for (auto x = 0; x < rect.width(); x++) {
             QRgba64 &rgb = line[x];
             rgb = QRgba64::fromRgba(
-                    255,
-                    255,
-                    255,
-                    static_cast<quint8>((x / static_cast<qreal>(rect.width())) * 255.0)
+                    148,
+                    148,
+                    148,
+                    255.0
             );
         }
     }
@@ -59,4 +61,38 @@ QPoint Door::targetLevel() const {
 //! Permet de changer de niveau
 void Door::travel() {
     emit doorEntered(m_targetLevel, m_dir);
+}
+
+//! Cadence de la porte
+//! \param elapsedTimeInMilliseconds : Temps depuis le dernier appel à cette fonction
+void Door::tick(long long elapsedTimeInMilliseconds) {
+    auto anyEnemyLeft = false;
+    for (auto sprite: parentScene()->sprites()) {
+    	if (dynamic_cast<Enemy*>(sprite)) {
+	    anyEnemyLeft = true;
+	    break;
+	}
+    }
+
+    if(!anyEnemyLeft && !m_isDoorEnabled) {
+        m_isDoorEnabled = true;
+	for (auto y = 0; y < m_pImage->height(); y++) {
+            auto *line = reinterpret_cast<QRgba64 *>(m_pImage->scanLine(y));
+            for (auto x = 0; x < m_pImage->width(); x++) {
+                QRgba64 &rgb = line[x];
+                rgb = QRgba64::fromRgba(
+                    255,
+                    255,
+                    255,
+                    static_cast<quint8>((x / static_cast<qreal>(m_pImage->width())) * 255.0)
+                );
+            }
+        }
+	setPixmap(QPixmap::fromImage(*m_pImage));
+    }
+}
+
+//! Définit si la porte est traversable ou non
+bool Door::isTravellable() const {
+    return m_isDoorEnabled;
 }
