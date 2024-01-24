@@ -1,9 +1,24 @@
 spawnPoint(0,550)
+
+// floor
 platformSolid(0,600,1280,20)
+// ceiling
 platformSolid(0,0,1280,20)
-platformSolid(0,0,20,600)
+// wall left
+platformSolid(0, 84, 20, 516)
+// wall right
 platformSolid(1260,0,20,536)
+
+// platforms to bonus hrt
+platformSolid(20, 460, 100, 20)
+platformFragile(140, 390, 50, 20)
+platformSolid(20, 320, 75, 20)
+platformFragile(140, 250, 50, 20)
+platformSolid(20, 180, 50, 20)
+platformFragile(140, 110, 50, 20)
+
 sprite(600,300,0.75,"keys/A_Key_Light.png")
 sprite(680,300,0.75,"keys/D_Key_Light.png")
 text(640,230,16,"Que la fête commence.")
 door(1270,536,0,1,left)
+door(0, 20, 0, -1, right)
