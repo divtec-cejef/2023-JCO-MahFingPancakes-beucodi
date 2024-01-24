@@ -21,8 +21,6 @@ protected:
     constexpr static qreal ENNEMI_WIDTH = 60;
     //! Vitesse de l'ennemi, en mètres par seconde.
     constexpr static qreal SPEED = 4;
-    //! Rapport de réduction de la vitesse de l'ennemi par rapport a la distance du joueur
-    constexpr static qreal DISTANCE_TO_PLAYER_RATIO = 50;
 
     [[nodiscard]] int getMinCooldown() override {
         return 1;
