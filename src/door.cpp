@@ -60,6 +60,7 @@ QPoint Door::targetLevel() const {
 
 //! Permet de changer de niveau
 void Door::travel() {
+    qDebug() << "player is travelling to " << m_targetLevel;
     emit doorEntered(m_targetLevel, m_dir);
 }
 
