@@ -9,5 +9,5 @@ platformSolid(1260, 20, 20, 680)
 // ceiling
 platformSolid(0, 0, 1280, 20)
 
-text(640,230,24,"Félicitation, vous avez vaincu le jeu!")
+text(640,230,24,"Félicitation, vous avez vaincu Jean-Boss!")
 
