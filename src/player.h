@@ -71,7 +71,7 @@ private:
     //! Cooldown pour l'attaque
     int m_attackCooldown = 0;
     //! Valeur de cooldown pour l'attaque
-    constexpr static int ATTACK_COOLDOWN = 750;
+    constexpr static int ATTACK_COOLDOWN = 400;
 
     void die() override;
 
