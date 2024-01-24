@@ -232,9 +232,11 @@ class Door {
 	+ Door(pos: QPoint, target: QPoint, dir: Direction)
 	+ travel()
 	+ targetLevel(): QPoint
+	+ isTravellable(): boolean
 	- m_targetLevel: QPoint
 	- m_pImage: QImage *
 	- m_dir: Direction
+	- m_isDoorEnabled: boolean 
 	-- signals --
 	+doorEntered(targetLevel: QPoint, dir: Direction)
 }
@@ -380,7 +382,19 @@ class JumpingPancake {
 
 Enemy <|-- JumpingPancake
 
- class FinalBoss {
+class FlyingPancake {
+	+ FlyingPancake(pos: QPoint, pParent: QGraphicsItem *)
+	+ tick(elapsedTimeInMilliseconds: long long)
+	+ moveTowardPlayer()
+	{static} # ENNEMI_WIDTH: qreal
+	{static} # MAX_SPEED: qreal
+	# getMinCooldown(): int
+	# getMaxCooldown(): int
+}
+
+Enemy <|-- FlyingPancake
+
+class FinalBoss {
     + FinalBoss(pos: QPoint)
 }
 JumpingPancake <|-- FinalBoss
